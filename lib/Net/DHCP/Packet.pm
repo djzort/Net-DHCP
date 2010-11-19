@@ -63,13 +63,13 @@ sub new {
           : $self->{giaddr} = "\0\0\0\0";
         exists( $args{Chaddr} )
           ? $self->chaddr( $args{Chaddr} )
-          : $self->{chaddr} = "";
+          : $self->{chaddr} = q||;
         exists( $args{Sname} ) ? $self->sname( $args{Sname} ) : $self->{sname} =
           "";
         exists( $args{File} ) ? $self->file( $args{File} ) : $self->{file} = "";
         exists( $args{Padding} )
           ? $self->padding( $args{Padding} )
-          : $self->{padding} = "";
+          : $self->{padding} = q||;
         exists( $args{IsDhcp} )
           ? $self->isDhcp( $args{IsDhcp} )
           : $self->{isDhcp} = 1;
@@ -285,15 +285,15 @@ sub addOptionValue($$$) {
     my $code  = shift;    # option code
     my $value = shift;
     my $value_bin;        # option value in binary format
-    my $format = '';      # format for the option
 
     carp("addOptionValue: unknown format for code ($code)")
       unless exists( $DHO_FORMATS{$code} );
-    $format = $DHO_FORMATS{$code} if exists( $DHO_FORMATS{$code} );
+
+    my $format = $DHO_FORMATS{$code};
 
     # decompose input value into an array
     my @values;
-    if ( defined($value) && ( $value ne '' ) ) {
+    if ( defined $value &&  $value ne '' ) {
         @values =
           split( /[\s\/,;]+/, $value );    # array of values, split by space
     }
@@ -316,44 +316,34 @@ sub addOptionValue($$$) {
           if ( @values != 1 );
     }
 
-    if ( $format eq 'inet' ) {
-        $value_bin = packinet( $values[0] );
-    }
-    elsif ( ( $format eq 'inets' ) || ( $format eq 'inets2' ) ) {
-        $value_bin = packinets_array(@values);
-    }
-    elsif ( $format eq 'int' ) {
-        $value_bin = pack( 'N', $values[0] );
-    }
-    elsif ( $format eq 'short' ) {
-        $value_bin = pack( 'n', $values[0] );
-    }
-    elsif ( $format eq 'byte' ) {
-        $value_bin = pack( 'C', $values[0] );
-    }
-    elsif ( $format eq 'bytes' ) {
-        $value_bin = pack( 'C*', @values );
-    }
-    elsif ( $format eq 'string' ) {
-        $value_bin = $values[0];
+    my %options = (
+
+      inet    => sub { return packinet(shift) },
+      inets   => sub { return packinets_array(@_) },
+      inets2  => sub { return packinets_array(@_) },
+      int     => sub { return pack('N', shift) },
+      short   => sub { return pack('n', shift) },
+      byte    => sub { return pack('C', shift) },
+      bytes   => sub { return pack('C*', @_) },
+      string  => sub { return shift },
+
+    );
 
         #  } elsif ($format eq 'relays') {
         #    $value_bin = $self->encodeRelayAgent(@values);
         #  } elsif ($format eq 'ids') {
         #    $value_bin = $values[0];
         #    # TBM bad format
-    }
-    else {
-        $value_bin = $values[0];
-    }
 
-    $self->addOptionRaw( $code, $value_bin );
+
+    # decode the option if we know how, otherwise use the original value
+    $self->addOptionRaw( $code,
+                         $options{$format} ? $options{$format}->(@values)
+                                           : $value
+                        );
+
+
 }
-
-#sub getOption {               # deprecated
-#  my $self = shift;
-#  return $self->getOptionRaw(@_);
-#}
 
 sub getOptionRaw {
     my ( $self, $key ) = @_;
@@ -364,43 +354,30 @@ sub getOptionRaw {
 sub getOptionValue($$) {
     my $self = shift;
     my $code = shift;
-    my $format;
 
     carp("getOptionValue: unknown format for code ($code)")
       unless exists( $DHO_FORMATS{$code} );
 
-    $format = $DHO_FORMATS{$code}
-      if exists( $DHO_FORMATS{$code} );
+    my $format = $DHO_FORMATS{$code};
 
     my $value_bin = $self->getOptionRaw($code);
 
-    return undef unless defined($value_bin);
+    return unless defined $value_bin;
 
     my @values;
 
-    if ( $format eq 'inet' ) {
-        $values[0] = unpackinet($value_bin);
-    }
-    elsif ( ( $format eq 'inets' ) || ( $format eq 'inets2' ) ) {
-        @values = unpackinets_array($value_bin);
-    }
-    elsif ( $format eq 'int' ) {
-        $values[0] = unpack( 'N', $value_bin );
-    }
-    elsif ( $format eq 'short' ) {
-        $values[0] = unpack( 'n', $value_bin );
-    }
-    elsif ( $format eq 'shorts' ) {
-        @values = unpack( 'n*', $value_bin );
-    }
-    elsif ( $format eq 'byte' ) {
-        $values[0] = unpack( 'C', $value_bin );
-    }
-    elsif ( $format eq 'bytes' ) {
-        @values = unpack( 'C*', $value_bin );
-    }
-    elsif ( $format eq 'string' ) {
-        $values[0] = $value_bin;
+    # hash out these options for speed and sanity
+    my %options = (
+         inet   => sub { return unpackinets_array(shift) },
+         inets  => sub { return unpackinets_array(shift)},
+         inets2 => sub { return unpackinets_array(shift)},
+         int    => sub { return unpack( 'N', shift ) },
+         short  => sub { return unpack( 'n', shift ) },
+         shorts => sub { return unpack( 'n*', shift ) },
+         byte   => sub { return unpack( 'C', shift ) },
+         bytes  => sub { return unpack( 'C*', shift ) },
+         string => sub { return shift },
+    );
 
         #  } elsif ($format eq 'relays') {
         #    @values = $self->decodeRelayAgent($value_bin);
@@ -408,14 +385,14 @@ sub getOptionValue($$) {
         #  } elsif ($format eq 'ids') {
         #    $values[0] = $value_bin;
         #    # TBM, bad format
-    }
-    else {
-        $values[0] = $value_bin;
-    }
 
-    return join( q| |, @values );
+    # decode the options if we know the format
+    return join( q| |, $options{$format}->($value_bin) )
+        if $options{$format};
 
-    #  return wantarray ? @values : $values[0];
+    # if we cant work out the format
+    return $value_bin;
+
 }
 
 sub removeOption {
@@ -582,7 +559,7 @@ sub decodeRelayAgent($$) {
     use bytes;
     my $self      = shift;
     my ($opt_buf) = @_;
-    my @opt       = ();
+    my @opt;
 
     if ( length($opt_buf) > 1 ) {
         my $pos   = 0;
@@ -692,9 +669,9 @@ sub unpackinet($) {    # bullet-proof version, never complains
     my $ip = shift;
     return '0.0.0.0' unless ( $ip && length($ip) == 4 );
     return
-        ord( substr( $ip, 0, 1 ) ) . '.'
-      . ord( substr( $ip, 1, 1 ) ) . '.'
-      . ord( substr( $ip, 2, 1 ) ) . '.'
+        ord( substr( $ip, 0, 1 ) ) . q|.|
+      . ord( substr( $ip, 1, 1 ) ) . q|.|
+      . ord( substr( $ip, 2, 1 ) ) . q|.|
       . ord( substr( $ip, 3, 1 ) );
 }
 
@@ -730,7 +707,7 @@ sub unpackRelayAgent(%) {     # prints a human readable 'relay agent options'
     my %relay_opt = @_
       or return;
     return
-      join( ",", map { "($_)=" . $relay_opt{$_} } ( sort keys %relay_opt ) );
+      join( q|,|, map { "($_)=" . $relay_opt{$_} } ( sort keys %relay_opt ) );
 }
 
 #=======================================================================
@@ -748,7 +725,7 @@ Net::DHCP::Packet - Object methods to create a DHCP packet.
    use Net::DHCP::Packet;
 
    my $p = new Net::DHCP::Packet->new(
-        'Chaddr' => '000BCDEF', 
+        'Chaddr' => '000BCDEF',
         'Xid' => 0x9F0FD,
         'Ciaddr' => '0.0.0.0',
         'Siaddr' => '0.0.0.0',
@@ -761,7 +738,7 @@ Represents a DHCP packet as specified in RFC 1533, RFC 2132.
 =head1 CONSTRUCTOR
 
 This module only provides basic constructor. For "easy" constructors, you can use
-the L<Net::DHCP::Session> module.  
+the L<Net::DHCP::Session> module.
 
 =over 4
 
@@ -784,10 +761,10 @@ is issued.
 
    use IO::Socket::INET;
    use Net::DHCP::Packet;
-   
+
    $sock = IO::Socket::INET->new(LocalPort => 67, Proto => "udp", Broadcast => 1)
            or die "socket: $@";
-           
+
    while ($sock->recv($newmsg, 1024)) {
        $packet = Net::DHCP::Packet->new($newmsg);
        print $packet->toString();
@@ -797,7 +774,7 @@ To create a fresh new packet C<new()> takes arguments as a key-value pairs :
 
    ARGUMENT   FIELD      OCTETS       DESCRIPTION
    --------   -----      ------       -----------
-   
+
    Op         op            1  Message op code / message type.
                                1 = BOOTREQUEST, 2 = BOOTREPLY
    Htype      htype         1  Hardware address type, see ARP section in "Assigned
@@ -871,7 +848,7 @@ For most NIC's, the MAC address has 6 bytes.
 
 Sets/gets the I<number of hops>.
 
-This field is incremented by each encountered DHCP relay agent. 
+This field is incremented by each encountered DHCP relay agent.
 
 =item xid ( [INTEGER] )
 
@@ -1007,7 +984,7 @@ Return value is either a string or an array, depending on the context.
   $ip  = $pac->getOptionValue(DHO_SUBNET_MASK());
   $ips = $pac->getOptionValue(DHO_NAME_SERVERS());
 
-=item addOptionRaw ( CODE, VALUE ) 
+=item addOptionRaw ( CODE, VALUE )
 
 Adds a DHCP OPTION provided in packed binary format.
 Please see corresponding RFC for manual type conversion.
@@ -1224,7 +1201,7 @@ Converts a Net::DHCP::Packet to a string, ready to put on the network.
 
 =item marshall ( BYTES )
 
-The inverse of serialize. Converts a string, presumably a 
+The inverse of serialize. Converts a string, presumably a
 received UDP packet, into a Net::DHCP::Packet.
 
 If the packet is malformed, a fatal error is produced.
@@ -1296,18 +1273,18 @@ Sending a simple DHCP packet:
 
   #!/usr/bin/perl
   # Simple DHCP client - sending a broadcasted DHCP Discover request
-  
+
   use IO::Socket::INET;
   use Net::DHCP::Packet;
   use Net::DHCP::Constants;
-  
+
   # creat DHCP Packet
   $discover = Net::DHCP::Packet->new(
                         xid => int(rand(0xFFFFFFFF)), # random xid
                         Flags => 0x8000,              # ask for broadcast answer
                         DHO_DHCP_MESSAGE_TYPE() => DHCPDISCOVER()
                         );
-  
+
   # send packet
   $handle = IO::Socket::INET->new(Proto => 'udp',
                                   Broadcast => 1,
@@ -1322,7 +1299,7 @@ Sniffing DHCP packets.
 
   #!/usr/bin/perl
   # Simple DHCP server - listen to DHCP packets and print them
-  
+
   use IO::Socket::INET;
   use Net::DHCP::Packet;
   $sock = IO::Socket::INET->new(LocalPort => 67, Proto => "udp", Broadcast => 1)
@@ -1336,13 +1313,13 @@ Sending a LEASEQUERY (provided by John A. Murphy).
 
   #!/usr/bin/perl
   # Simple DHCP client - send a LeaseQuery (by IP) and receive the response
-  
+
   use IO::Socket::INET;
   use Net::DHCP::Packet;
   use Net::DHCP::Constants;
-  
+
   $usage = "usage: $0 DHCP_SERVER_IP DHCP_CLIENT_IP\n"; $ARGV[1] || die $usage;
-  
+
   # create a socket
   $handle = IO::Socket::INET->new(Proto => 'udp',
                                   Broadcast => 1,
@@ -1350,7 +1327,7 @@ Sending a LEASEQUERY (provided by John A. Murphy).
                                   LocalPort => '67',
                                   PeerAddr => $ARGV[0])
                 or die "socket: $@";     # yes, it uses $@ here
-  
+
   # create DHCP Packet
   $inform = Net::DHCP::Packet->new(
                       op => BOOTREQUEST(),
@@ -1361,10 +1338,10 @@ Sending a LEASEQUERY (provided by John A. Murphy).
                       Xid => int(rand(0xFFFFFFFF)),     # random xid
                       DHO_DHCP_MESSAGE_TYPE() => DHCPLEASEQUERY
                       );
-  
+
   # send request
   $handle->send($inform->serialize()) or die "Error sending LeaseQuery: $!\n";
-  
+
   #receive response
   $handle->recv($newmsg, 1024) or die;
   $packet = Net::DHCP::Packet->new($newmsg);

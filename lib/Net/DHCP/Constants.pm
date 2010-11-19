@@ -6,184 +6,205 @@ package Net::DHCP::Constants;
 # standard module declaration
 use 5.8.0;
 use strict;
-our (@ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $VERSION);
+our ( @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $VERSION );
 use Exporter;
 $VERSION = 0.67;
-@ISA = qw(Exporter);
+@ISA     = qw(Exporter);
 
 @EXPORT = qw(MAGIC_COOKIE);
 
 # Constants
-our (%DHO_CODES, %REV_DHO_CODES);
-our (%DHCP_MESSAGE, %REV_DHCP_MESSAGE);
-our (%BOOTP_CODES, %REV_BOOTP_CODES);
-our (%HTYPE_CODES, %REV_HTYPE_CODES);
+our ( %DHO_CODES,    %REV_DHO_CODES );
+our ( %DHCP_MESSAGE, %REV_DHCP_MESSAGE );
+our ( %BOOTP_CODES,  %REV_BOOTP_CODES );
+our ( %HTYPE_CODES,  %REV_HTYPE_CODES );
 
 %EXPORT_TAGS = (
-  dho_codes => [keys %DHO_CODES],
-  dhcp_message => [keys %DHCP_MESSAGE],
-  bootp_codes => [keys %BOOTP_CODES],
-  htype_codes => [keys %HTYPE_CODES],
-  dhcp_hashes => [ qw(
-            %DHO_CODES %REV_DHO_CODES %DHCP_MESSAGE %REV_DHCP_MESSAGE
-            %BOOTP_CODES %REV_BOOTP_CODES
-            %HTYPE_CODES %REV_HTYPE_CODES
-            )],
-  dhcp_other => [ qw(MAGIC_COOKIE DHCP_UDP_OVERHEAD DHCP_MAX_MTU BOOTP_MIN_LEN BOOTP_ABSOLUTE_MIN_LEN DHCP_MIN_LEN)]
-  );
+    dho_codes    => [ keys %DHO_CODES ],
+    dhcp_message => [ keys %DHCP_MESSAGE ],
+    bootp_codes  => [ keys %BOOTP_CODES ],
+    htype_codes  => [ keys %HTYPE_CODES ],
+    dhcp_hashes  => [
+        qw(
+          %DHO_CODES %REV_DHO_CODES %DHCP_MESSAGE %REV_DHCP_MESSAGE
+          %BOOTP_CODES %REV_BOOTP_CODES
+          %HTYPE_CODES %REV_HTYPE_CODES
+          )
+    ],
+    dhcp_other => [
+        qw(MAGIC_COOKIE DHCP_UDP_OVERHEAD DHCP_MAX_MTU BOOTP_MIN_LEN BOOTP_ABSOLUTE_MIN_LEN DHCP_MIN_LEN)
+    ]
+);
 
 @EXPORT_OK = qw(
-            %DHO_CODES %REV_DHO_CODES %DHCP_MESSAGE %REV_DHCP_MESSAGE
-            %BOOTP_CODES %REV_BOOTP_CODES
-            %HTYPE_CODES %REV_HTYPE_CODES
-            %DHO_FORMATS
-            );
+  %DHO_CODES %REV_DHO_CODES %DHCP_MESSAGE %REV_DHCP_MESSAGE
+  %BOOTP_CODES %REV_BOOTP_CODES
+  %HTYPE_CODES %REV_HTYPE_CODES
+  %DHO_FORMATS
+);
 Exporter::export_tags('dho_codes');
 Exporter::export_tags('dhcp_message');
 Exporter::export_tags('bootp_codes');
 Exporter::export_tags('htype_codes');
 Exporter::export_ok_tags('dhcp_other');
 
-# MAGIC_COOKIE for DHCP (oterhwise it is BOOTP)
+# MAGIC_COOKIE for DHCP (otherwise it is BOOTP)
 use constant MAGIC_COOKIE => "\x63\x82\x53\x63";
 
-use constant DHCP_UDP_OVERHEAD => (14 + 20 + 8);  # Ethernet + IP + UDP
-use constant DHCP_MAX_MTU => 1500;
+use constant DHCP_UDP_OVERHEAD      => ( 14 + 20 + 8 );    # Ethernet + IP + UDP
+use constant DHCP_MAX_MTU           => 1500;
 use constant BOOTP_ABSOLUTE_MIN_LEN => 236;
-use constant BOOTP_MIN_LEN => 300;
-use constant DHCP_MIN_LEN => 548;
+use constant BOOTP_MIN_LEN          => 300;
+use constant DHCP_MIN_LEN           => 548;
 
 BEGIN {
-  %BOOTP_CODES = (
-    'BOOTREQUEST'     =>  1,
-    'BOOTREPLY'       =>  2
-    );
-  
-  %HTYPE_CODES = (
-    'HTYPE_ETHER'     => 1,
-    'HTYPE_IEEE802'   => 6,
-    'HTYPE_FDDI'      => 8
+    %BOOTP_CODES = (
+        'BOOTREQUEST' => 1,
+        'BOOTREPLY'   => 2
     );
 
-  %DHO_CODES = (    # rfc 2132
-    'DHO_PAD' => 0,
-    'DHO_SUBNET_MASK' => 1,
-    'DHO_TIME_OFFSET' => 2,
-    'DHO_ROUTERS' => 3,
-    'DHO_TIME_SERVERS'  => 4,
-    'DHO_NAME_SERVERS'  => 5,
-    'DHO_DOMAIN_NAME_SERVERS' => 6,
-    'DHO_LOG_SERVERS' => 7,
-    'DHO_COOKIE_SERVERS'  => 8,
-    'DHO_LPR_SERVERS' => 9,
-    'DHO_IMPRESS_SERVERS' => 10,
-    'DHO_RESOURCE_LOCATION_SERVERS' => 11,
-    'DHO_HOST_NAME' => 12,
-    'DHO_BOOT_SIZE' => 13,
-    'DHO_MERIT_DUMP'  => 14,
-    'DHO_DOMAIN_NAME' => 15,
-    'DHO_SWAP_SERVER' => 16,
-    'DHO_ROOT_PATH' => 17,
-    'DHO_EXTENSIONS_PATH' => 18,
-    'DHO_IP_FORWARDING' => 19,
-    'DHO_NON_LOCAL_SOURCE_ROUTING'  => 20,
-    'DHO_POLICY_FILTER' => 21,
-    'DHO_MAX_DGRAM_REASSEMBLY'  => 22,
-    'DHO_DEFAULT_IP_TTL'  => 23,
-    'DHO_PATH_MTU_AGING_TIMEOUT'  => 24,
-    'DHO_PATH_MTU_PLATEAU_TABLE'  => 25,
-    'DHO_INTERFACE_MTU' => 26,
-    'DHO_ALL_SUBNETS_LOCAL' => 27,
-    'DHO_BROADCAST_ADDRESS' => 28,
-    'DHO_PERFORM_MASK_DISCOVERY'  => 29,
-    'DHO_MASK_SUPPLIER' => 30,
-    'DHO_ROUTER_DISCOVERY'  => 31,
-    'DHO_ROUTER_SOLICITATION_ADDRESS' => 32,
-    'DHO_STATIC_ROUTES' => 33,
-    'DHO_TRAILER_ENCAPSULATION' => 34,
-    'DHO_ARP_CACHE_TIMEOUT' => 35,
-    'DHO_IEEE802_3_ENCAPSULATION' => 36,
-    'DHO_DEFAULT_TCP_TTL' => 37,
-    'DHO_TCP_KEEPALIVE_INTERVAL'  => 38,
-    'DHO_TCP_KEEPALIVE_GARBAGE' => 39,
-    'DHO_NIS_DOMAIN'  => 40,
-    'DHO_NIS_SERVERS' => 41,
-    'DHO_NTP_SERVERS' => 42,
-    'DHO_VENDOR_ENCAPSULATED_OPTIONS' => 43,
-    'DHO_NETBIOS_NAME_SERVERS'  => 44,
-    'DHO_NETBIOS_DD_SERVER' => 45,
-    'DHO_NETBIOS_NODE_TYPE' => 46,
-    'DHO_NETBIOS_SCOPE' => 47,
-    'DHO_FONT_SERVERS'  => 48,
-    'DHO_X_DISPLAY_MANAGER' => 49,
-    'DHO_DHCP_REQUESTED_ADDRESS'  => 50,
-    'DHO_DHCP_LEASE_TIME' => 51,
-    'DHO_DHCP_OPTION_OVERLOAD'  => 52,
-    'DHO_DHCP_MESSAGE_TYPE' => 53,
-    'DHO_DHCP_SERVER_IDENTIFIER'  => 54,
-    'DHO_DHCP_PARAMETER_REQUEST_LIST' => 55,
-    'DHO_DHCP_MESSAGE'  => 56,
-    'DHO_DHCP_MAX_MESSAGE_SIZE' => 57,
-    'DHO_DHCP_RENEWAL_TIME' => 58,
-    'DHO_DHCP_REBINDING_TIME' => 59,
-    'DHO_VENDOR_CLASS_IDENTIFIER' => 60,
-    'DHO_DHCP_CLIENT_IDENTIFIER'  => 61,
-    'DHO_NWIP_DOMAIN_NAME'  => 62,
-    'DHO_NWIP_SUBOPTIONS' => 63,
-    'DHO_NIS_DOMAIN' => 64,
-    'DHO_NIS_SERVER' => 65,
-    'DHO_TFTP_SERVER' => 66,
-    'DHO_BOOTFILE' => 67,
-    'DHO_MOBILE_IP_HOME_AGENT' => 68,
-    'DHO_SMTP_SERVER' => 69,
-    'DHO_POP3_SERVER' => 70,
-    'DHO_NNTP_SERVER' => 71,
-    'DHO_WWW_SERVER' => 72,
-    'DHO_FINGER_SERVER' => 73,
-    'DHO_IRC_SERVER' => 74,
-    'DHO_STREETTALK_SERVER' => 75,
-    'DHO_STDA_SERVER' => 76,
-    'DHO_USER_CLASS'  => 77,
-    'DHO_FQDN'  => 81,
-    'DHO_DHCP_AGENT_OPTIONS'  => 82,
-    'DHO_NDS_SERVERS' => 85,
-    'DHO_NDS_TREE_NAME' => 86,
-    'DHO_USER_AUTHENTICATION_PROTOCOL' => 98,
-    'DHO_AUTO_CONFIGURE' => 116,
-    'DHO_NAME_SERVICE_SEARCH' => 117,
-    'DHO_SUBNET_SELECTION'  => 118,
-    
-    'DHO_END' => 255
-  );
+    %HTYPE_CODES = (
+        'HTYPE_ETHER'   => 1,
+        'HTYPE_IEEE802' => 6,
+        'HTYPE_FDDI'    => 8
+    );
 
-  %DHCP_MESSAGE = (
-    'DHCPDISCOVER'      => 1,
-    'DHCPOFFER'         => 2,
-    'DHCPREQUEST'       => 3,
-    'DHCPDECLINE'       => 4,
-    'DHCPACK'           => 5,
-    'DHCPNAK'           => 6,
-    'DHCPRELEASE'       => 7,
-    'DHCPINFORM'        => 8,
-    'DHCPFORCERENEW'    => 9,
-    
-    # 'DHCPLEASEQUERY'    => 13,   # Cisco extension, draft-ietf-dhc-leasequery-08.txt
-    'DHCPLEASEQUERY'    => 10,   # This is now ratified in RFC4388. If you have an old crappy CMTS you can comment this line and uncomment the above line.
+    %DHO_CODES = (    # rfc 2132
+        'DHO_PAD'                          => 0,
+        'DHO_SUBNET_MASK'                  => 1,
+        'DHO_TIME_OFFSET'                  => 2,
+        'DHO_ROUTERS'                      => 3,
+        'DHO_TIME_SERVERS'                 => 4,
+        'DHO_NAME_SERVERS'                 => 5,
+        'DHO_DOMAIN_NAME_SERVERS'          => 6,
+        'DHO_LOG_SERVERS'                  => 7,
+        'DHO_COOKIE_SERVERS'               => 8,
+        'DHO_LPR_SERVERS'                  => 9,
+        'DHO_IMPRESS_SERVERS'              => 10,
+        'DHO_RESOURCE_LOCATION_SERVERS'    => 11,
+        'DHO_HOST_NAME'                    => 12,
+        'DHO_BOOT_SIZE'                    => 13,
+        'DHO_MERIT_DUMP'                   => 14,
+        'DHO_DOMAIN_NAME'                  => 15,
+        'DHO_SWAP_SERVER'                  => 16,
+        'DHO_ROOT_PATH'                    => 17,
+        'DHO_EXTENSIONS_PATH'              => 18,
+        'DHO_IP_FORWARDING'                => 19,
+        'DHO_NON_LOCAL_SOURCE_ROUTING'     => 20,
+        'DHO_POLICY_FILTER'                => 21,
+        'DHO_MAX_DGRAM_REASSEMBLY'         => 22,
+        'DHO_DEFAULT_IP_TTL'               => 23,
+        'DHO_PATH_MTU_AGING_TIMEOUT'       => 24,
+        'DHO_PATH_MTU_PLATEAU_TABLE'       => 25,
+        'DHO_INTERFACE_MTU'                => 26,
+        'DHO_ALL_SUBNETS_LOCAL'            => 27,
+        'DHO_BROADCAST_ADDRESS'            => 28,
+        'DHO_PERFORM_MASK_DISCOVERY'       => 29,
+        'DHO_MASK_SUPPLIER'                => 30,
+        'DHO_ROUTER_DISCOVERY'             => 31,
+        'DHO_ROUTER_SOLICITATION_ADDRESS'  => 32,
+        'DHO_STATIC_ROUTES'                => 33,
+        'DHO_TRAILER_ENCAPSULATION'        => 34,
+        'DHO_ARP_CACHE_TIMEOUT'            => 35,
+        'DHO_IEEE802_3_ENCAPSULATION'      => 36,
+        'DHO_DEFAULT_TCP_TTL'              => 37,
+        'DHO_TCP_KEEPALIVE_INTERVAL'       => 38,
+        'DHO_TCP_KEEPALIVE_GARBAGE'        => 39,
+        'DHO_NIS_DOMAIN'                   => 40,
+        'DHO_NIS_SERVERS'                  => 41,
+        'DHO_NTP_SERVERS'                  => 42,
+        'DHO_VENDOR_ENCAPSULATED_OPTIONS'  => 43,
+        'DHO_NETBIOS_NAME_SERVERS'         => 44,
+        'DHO_NETBIOS_DD_SERVER'            => 45,
+        'DHO_NETBIOS_NODE_TYPE'            => 46,
+        'DHO_NETBIOS_SCOPE'                => 47,
+        'DHO_FONT_SERVERS'                 => 48,
+        'DHO_X_DISPLAY_MANAGER'            => 49,
+        'DHO_DHCP_REQUESTED_ADDRESS'       => 50,
+        'DHO_DHCP_LEASE_TIME'              => 51,
+        'DHO_DHCP_OPTION_OVERLOAD'         => 52,
+        'DHO_DHCP_MESSAGE_TYPE'            => 53,
+        'DHO_DHCP_SERVER_IDENTIFIER'       => 54,
+        'DHO_DHCP_PARAMETER_REQUEST_LIST'  => 55,
+        'DHO_DHCP_MESSAGE'                 => 56,
+        'DHO_DHCP_MAX_MESSAGE_SIZE'        => 57,
+        'DHO_DHCP_RENEWAL_TIME'            => 58,
+        'DHO_DHCP_REBINDING_TIME'          => 59,
+        'DHO_VENDOR_CLASS_IDENTIFIER'      => 60,
+        'DHO_DHCP_CLIENT_IDENTIFIER'       => 61,
+        'DHO_NWIP_DOMAIN_NAME'             => 62,
+        'DHO_NWIP_SUBOPTIONS'              => 63,
+        'DHO_NIS_DOMAIN'                   => 64,
+        'DHO_NIS_SERVER'                   => 65,
+        'DHO_TFTP_SERVER'                  => 66,
+        'DHO_BOOTFILE'                     => 67,
+        'DHO_MOBILE_IP_HOME_AGENT'         => 68,
+        'DHO_SMTP_SERVER'                  => 69,
+        'DHO_POP3_SERVER'                  => 70,
+        'DHO_NNTP_SERVER'                  => 71,
+        'DHO_WWW_SERVER'                   => 72,
+        'DHO_FINGER_SERVER'                => 73,
+        'DHO_IRC_SERVER'                   => 74,
+        'DHO_STREETTALK_SERVER'            => 75,
+        'DHO_STDA_SERVER'                  => 76,
+        'DHO_USER_CLASS'                   => 77,
+        'DHO_FQDN'                         => 81,
+        'DHO_DHCP_AGENT_OPTIONS'           => 82,
+        'DHO_NDS_SERVERS'                  => 85,
+        'DHO_NDS_TREE_NAME'                => 86,
+        'DHO_AUTHENTICATION'               => 90,
+        'DHO_USER_AUTHENTICATION_PROTOCOL' => 98,
+        'DHO_PCODE'                        => 100,
+        'DHO_TCODE'                        => 101,
+        'DHO_NETINFO_ADDRESS'              => 112,
+        'DHO_NETINFO_TAG'                  => 113,
+        'DHO_URL'                          => 114,
+        'DHO_AUTO_CONFIGURE'               => 116,
+        'DHO_NAME_SERVICE_SEARCH'          => 117,
+        'DHO_SUBNET_SELECTION'             => 118,
+        'DHO_DOMAIN_SEARCH'                => 119,
+        'DHO_SIP_SERVERS'                  => 120,
+        'DHO_CLASSLESS_STATIC_ROUTE'       => 121,
+        'DHO_CCC'                          => 122,
+        'DHO_GEOCONF'                      => 123,
+
+
+        'DHO_END' => 255
+    );
+
+    %DHCP_MESSAGE = (
+        #RFC2132
+        'DHCPDISCOVER'   => 1,
+        'DHCPOFFER'      => 2,
+        'DHCPREQUEST'    => 3,
+        'DHCPDECLINE'    => 4,
+        'DHCPACK'        => 5,
+        'DHCPNAK'        => 6,
+        'DHCPRELEASE'    => 7,
+        'DHCPINFORM'     => 8,
+        'DHCPFORCERENEW' => 9,
+
+        # RFC4388
+        'DHCPLEASEQUERY' => 10, # This is now ratified in RFC4388. If you have an old crappy CMTS you might need to change it with 13
+        'DHCPLEASEUNASSIGNED' => 11,
+        'DHCPLEASEUNKNOWN' => 12,
+        'DHCPLEASEACTIVE'=> 13,
+
     );
 }
 
-  use constant \%DHO_CODES;
-  %REV_DHO_CODES = reverse %DHO_CODES;
-  
-  use constant \%DHCP_MESSAGE;
-  %REV_DHCP_MESSAGE = reverse %DHCP_MESSAGE;
-  
-  use constant \%BOOTP_CODES;
-  %REV_BOOTP_CODES = reverse %BOOTP_CODES;    # for reverse lookup
-  
-  use constant \%HTYPE_CODES;
-  %REV_HTYPE_CODES = reverse %HTYPE_CODES;    # for reverse lookup
-  
+use constant \%DHO_CODES;
+%REV_DHO_CODES = reverse %DHO_CODES;
+
+use constant \%DHCP_MESSAGE;
+%REV_DHCP_MESSAGE = reverse %DHCP_MESSAGE;
+
+use constant \%BOOTP_CODES;
+%REV_BOOTP_CODES = reverse %BOOTP_CODES;    # for reverse lookup
+
+use constant \%HTYPE_CODES;
+%REV_HTYPE_CODES = reverse %HTYPE_CODES;    # for reverse lookup
+
 #
 # Format of DHCP options : for pretty-printing
 #   void : no parameter
@@ -200,94 +221,98 @@ BEGIN {
 #   id : client identifier : byte (htype) + string (chaddr)
 #
 our %DHO_FORMATS = (
-    DHO_PAD() => 'void',
-    DHO_SUBNET_MASK() => 'inet',
-    DHO_TIME_OFFSET() => 'int',
-    DHO_ROUTERS() => 'inets',
-    DHO_TIME_SERVERS()  => 'inets',
-    DHO_NAME_SERVERS()  => 'inets',
-    DHO_DOMAIN_NAME_SERVERS() => 'inets',
-    DHO_LOG_SERVERS() => 'inets',
-    DHO_COOKIE_SERVERS()  => 'inets',
-    DHO_LPR_SERVERS() => 'inets',
-    DHO_IMPRESS_SERVERS() => 'inets',
-    DHO_RESOURCE_LOCATION_SERVERS() => 'inets',
-    DHO_HOST_NAME() => 'string',
-    DHO_BOOT_SIZE() => 'short',
-    DHO_MERIT_DUMP() => 'string',
-    DHO_DOMAIN_NAME() => 'string',
-    DHO_SWAP_SERVER() => 'inet',
-    DHO_ROOT_PATH() => 'string',
-    DHO_EXTENSIONS_PATH() => 'string',
-    DHO_IP_FORWARDING() => 'byte',
-    DHO_NON_LOCAL_SOURCE_ROUTING() => 'byte',
-    DHO_POLICY_FILTER() => 'inets2',
-    DHO_MAX_DGRAM_REASSEMBLY() => 'short',
-    DHO_DEFAULT_IP_TTL() => 'byte',
-    DHO_PATH_MTU_AGING_TIMEOUT() => 'int',
-    DHO_PATH_MTU_PLATEAU_TABLE()  => 'shorts',
-    DHO_INTERFACE_MTU() => 'short',
-    DHO_ALL_SUBNETS_LOCAL() => 'byte',
-    DHO_BROADCAST_ADDRESS() => 'inet',
-    DHO_PERFORM_MASK_DISCOVERY()  => 'byte',
-    DHO_MASK_SUPPLIER() => 'byte',
-    DHO_ROUTER_DISCOVERY()  => 'byte',
+    DHO_PAD()                         => 'void',
+    DHO_SUBNET_MASK()                 => 'inet',
+    DHO_TIME_OFFSET()                 => 'int',
+    DHO_ROUTERS()                     => 'inets',
+    DHO_TIME_SERVERS()                => 'inets',
+    DHO_NAME_SERVERS()                => 'inets',
+    DHO_DOMAIN_NAME_SERVERS()         => 'inets',
+    DHO_LOG_SERVERS()                 => 'inets',
+    DHO_COOKIE_SERVERS()              => 'inets',
+    DHO_LPR_SERVERS()                 => 'inets',
+    DHO_IMPRESS_SERVERS()             => 'inets',
+    DHO_RESOURCE_LOCATION_SERVERS()   => 'inets',
+    DHO_HOST_NAME()                   => 'string',
+    DHO_BOOT_SIZE()                   => 'short',
+    DHO_MERIT_DUMP()                  => 'string',
+    DHO_DOMAIN_NAME()                 => 'string',
+    DHO_SWAP_SERVER()                 => 'inet',
+    DHO_ROOT_PATH()                   => 'string',
+    DHO_EXTENSIONS_PATH()             => 'string',
+    DHO_IP_FORWARDING()               => 'byte',
+    DHO_NON_LOCAL_SOURCE_ROUTING()    => 'byte',
+    DHO_POLICY_FILTER()               => 'inets2',
+    DHO_MAX_DGRAM_REASSEMBLY()        => 'short',
+    DHO_DEFAULT_IP_TTL()              => 'byte',
+    DHO_PATH_MTU_AGING_TIMEOUT()      => 'int',
+    DHO_PATH_MTU_PLATEAU_TABLE()      => 'shorts',
+    DHO_INTERFACE_MTU()               => 'short',
+    DHO_ALL_SUBNETS_LOCAL()           => 'byte',
+    DHO_BROADCAST_ADDRESS()           => 'inet',
+    DHO_PERFORM_MASK_DISCOVERY()      => 'byte',
+    DHO_MASK_SUPPLIER()               => 'byte',
+    DHO_ROUTER_DISCOVERY()            => 'byte',
     DHO_ROUTER_SOLICITATION_ADDRESS() => 'inet',
-    DHO_STATIC_ROUTES() => 'inets2',
-    DHO_TRAILER_ENCAPSULATION() => 'byte',
-    DHO_ARP_CACHE_TIMEOUT() => 'int',
-    DHO_IEEE802_3_ENCAPSULATION() => 'byte',
-    DHO_DEFAULT_TCP_TTL() => 'byte',
-    DHO_TCP_KEEPALIVE_INTERVAL()  => 'int',
-    DHO_TCP_KEEPALIVE_GARBAGE() => 'byte',
-    DHO_NIS_DOMAIN()  => 'string',
-    DHO_NIS_SERVERS() => 'inets',
-    DHO_NTP_SERVERS() => 'inets',
-#    DHO_VENDOR_ENCAPSULATED_OPTIONS() => '',
-    DHO_NETBIOS_NAME_SERVERS()  => 'inets',
-    DHO_NETBIOS_DD_SERVER() => 'inets',
-    DHO_NETBIOS_NODE_TYPE() => 'byte',
-    DHO_NETBIOS_SCOPE() => 'string',
-    DHO_FONT_SERVERS()  => 'inets',
-    DHO_X_DISPLAY_MANAGER() => 'inets',
-    DHO_DHCP_REQUESTED_ADDRESS()  => 'inet',
-    DHO_DHCP_LEASE_TIME() => 'int',
-    DHO_DHCP_OPTION_OVERLOAD()  => 'byte',
-    DHO_DHCP_MESSAGE_TYPE() => 'byte',
-    DHO_DHCP_SERVER_IDENTIFIER()  => 'inet',
+    DHO_STATIC_ROUTES()               => 'inets2',
+    DHO_TRAILER_ENCAPSULATION()       => 'byte',
+    DHO_ARP_CACHE_TIMEOUT()           => 'int',
+    DHO_IEEE802_3_ENCAPSULATION()     => 'byte',
+    DHO_DEFAULT_TCP_TTL()             => 'byte',
+    DHO_TCP_KEEPALIVE_INTERVAL()      => 'int',
+    DHO_TCP_KEEPALIVE_GARBAGE()       => 'byte',
+    DHO_NIS_DOMAIN()                  => 'string',
+    DHO_NIS_SERVERS()                 => 'inets',
+    DHO_NTP_SERVERS()                 => 'inets',
+
+    #    DHO_VENDOR_ENCAPSULATED_OPTIONS() => '',
+    DHO_NETBIOS_NAME_SERVERS()        => 'inets',
+    DHO_NETBIOS_DD_SERVER()           => 'inets',
+    DHO_NETBIOS_NODE_TYPE()           => 'byte',
+    DHO_NETBIOS_SCOPE()               => 'string',
+    DHO_FONT_SERVERS()                => 'inets',
+    DHO_X_DISPLAY_MANAGER()           => 'inets',
+    DHO_DHCP_REQUESTED_ADDRESS()      => 'inet',
+    DHO_DHCP_LEASE_TIME()             => 'int',
+    DHO_DHCP_OPTION_OVERLOAD()        => 'byte',
+    DHO_DHCP_MESSAGE_TYPE()           => 'byte',
+    DHO_DHCP_SERVER_IDENTIFIER()      => 'inet',
     DHO_DHCP_PARAMETER_REQUEST_LIST() => 'bytes',
-    DHO_DHCP_MESSAGE()  => 'string',
-    DHO_DHCP_MAX_MESSAGE_SIZE() => 'short',
-    DHO_DHCP_RENEWAL_TIME() => 'int',
-    DHO_DHCP_REBINDING_TIME() => 'int',
-    DHO_VENDOR_CLASS_IDENTIFIER() => 'string',
-#    DHO_DHCP_CLIENT_IDENTIFIER()  => 'ids',
-    DHO_NWIP_DOMAIN_NAME()  => 'string',            # rfc 2242
-#    DHO_NWIP_SUBOPTIONS() => '',                    # rfc 2242
-    DHO_NIS_DOMAIN() => 'string',
-    DHO_NIS_SERVER() => 'string',
-    DHO_TFTP_SERVER() => 'string',
-    DHO_BOOTFILE() => 'string',
+    DHO_DHCP_MESSAGE()                => 'string',
+    DHO_DHCP_MAX_MESSAGE_SIZE()       => 'short',
+    DHO_DHCP_RENEWAL_TIME()           => 'int',
+    DHO_DHCP_REBINDING_TIME()         => 'int',
+    DHO_VENDOR_CLASS_IDENTIFIER()     => 'string',
+
+    #    DHO_DHCP_CLIENT_IDENTIFIER()  => 'ids',
+    DHO_NWIP_DOMAIN_NAME() => 'string',    # rfc 2242
+
+    #    DHO_NWIP_SUBOPTIONS() => '',                    # rfc 2242
+    DHO_NIS_DOMAIN()           => 'string',
+    DHO_NIS_SERVER()           => 'string',
+    DHO_TFTP_SERVER()          => 'string',
+    DHO_BOOTFILE()             => 'string',
     DHO_MOBILE_IP_HOME_AGENT() => 'inets',
-    DHO_SMTP_SERVER() => 'inets',
-    DHO_POP3_SERVER() => 'inets',
-    DHO_NNTP_SERVER() => 'inets',
-    DHO_WWW_SERVER() => 'inets',
-    DHO_FINGER_SERVER() => 'inets',
-    DHO_IRC_SERVER() => 'inets',
-    DHO_STREETTALK_SERVER() => 'inets',
-    DHO_STDA_SERVER() => 'inets',
+    DHO_SMTP_SERVER()          => 'inets',
+    DHO_POP3_SERVER()          => 'inets',
+    DHO_NNTP_SERVER()          => 'inets',
+    DHO_WWW_SERVER()           => 'inets',
+    DHO_FINGER_SERVER()        => 'inets',
+    DHO_IRC_SERVER()           => 'inets',
+    DHO_STREETTALK_SERVER()    => 'inets',
+    DHO_STDA_SERVER()          => 'inets',
+
 #    DHO_USER_CLASS()  => '',                        # rfc 3004
 #    DHO_FQDN()  => '',                              # draft-ietf-dhc-fqdn-option-10.txt
 #    DHO_DHCP_AGENT_OPTIONS()  => 'relays',             # rfc 3046
-    DHO_NDS_SERVERS() => 'inets',                   # rfc 2241
-    DHO_NDS_TREE_NAME() => 'string',                # rfc 2241
-    DHO_USER_AUTHENTICATION_PROTOCOL() => 'string', # rfc 2485
-    DHO_AUTO_CONFIGURE() => 'byte',                 # rfc 2563
-    DHO_NAME_SERVICE_SEARCH() => 'shorts',          # rfc 2937
-    DHO_SUBNET_SELECTION()  => 'inet',              # rfc 3011
-    
-  );
+    DHO_NDS_SERVERS()                  => 'inets',     # rfc 2241
+    DHO_NDS_TREE_NAME()                => 'string',    # rfc 2241
+    DHO_USER_AUTHENTICATION_PROTOCOL() => 'string',    # rfc 2485
+    DHO_AUTO_CONFIGURE()               => 'byte',      # rfc 2563
+    DHO_NAME_SERVICE_SEARCH()          => 'shorts',    # rfc 2937
+    DHO_SUBNET_SELECTION()             => 'inet',      # rfc 3011
+
+);
 
 1;
 
@@ -304,7 +329,7 @@ Net::DHCP::Constants - Constants for DHCP codes and options
 
 =head1 DESCRIPTION
 
-Represents constants used in DHCP protocol, defined in RFC 1533, RFC 2132, 
+Represents constants used in DHCP protocol, defined in RFC 1533, RFC 2132,
 RFC 2241, RFC 2485, RFC 2563, RFC 2937, RFC 3004, RFC 3011, RFC 3046.
 
 =head1 TAGS
@@ -453,7 +478,7 @@ L<Net::DHCP::Packet>, L<Net::DHCP::Options>
 
 =head1 AUTHOR
 
-Stephan Hadinger E<lt>shadinger@cpan.orgE<gt>.
+Dean Hamstead E<lt>djzort@cpan.orgE<gt> and past Authors (see README)
 
 =head1 COPYRIGHT
 

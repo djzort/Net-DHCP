@@ -1,6 +1,19 @@
 Net-DHCP version 0.66
 =====================
 
+0. DOCS/ FILES WARNING
+----------------------
+
+Some files in the docs/ directory are copied from iana. 
+They may not be compatible with the Perl license. I have 
+included them in the tar ball as is for the sake of reference.
+Please remove them if needed for distribution packaging etc.
+
+Currently these files are:
+- docs/bootp-dhcp-parameters.txt
+
+All other files are licensed as described at the bottom of this file.
+
 1. DESCRIPTION
 --------------
 
@@ -15,7 +28,7 @@ send me the information described in the BUGS section below.
 The original version of this module was written by Francis van Dun,
 and has been deeply reorganized.
 
-3. PREREQUISITES
+2. PREREQUISITES
 ----------------
 
 Net::DHCP requires Perl 5.8.0 or higher.
@@ -30,7 +43,7 @@ Net::DHCP has been tested with the following:
     RedHat Enterprise Linux 5.5 x86_64
     Debian Squeeze x86_64 (Perl 5.10.1)
 
-2. INSTALLATION
+3. INSTALLATION
 ---------------
 
 To install this module type the following:
@@ -40,7 +53,7 @@ To install this module type the following:
    make test
    make install
 
-3. BUGS
+4. BUGS
 -------
 
 This module has not been deeply tested and any usage in production
