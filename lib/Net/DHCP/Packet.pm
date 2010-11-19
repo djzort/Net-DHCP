@@ -311,14 +311,20 @@ sub getOptionRaw {
 
 sub getOptionValue($$) {
   my $self = shift;
-  my ($code) = @_;
-  my $format = '';
+  my $code = shift;
+  my $format;
 
-  carp("getOptionValue: unknown format for code ($code)") unless exists($DHO_FORMATS{$code});
-  $format = $DHO_FORMATS{$code} if exists($DHO_FORMATS{$code});
+  carp("getOptionValue: unknown format for code ($code)") 
+      unless exists($DHO_FORMATS{$code});
+
+  $format = $DHO_FORMATS{$code} 
+     if exists($DHO_FORMATS{$code});
+
   my $value_bin = $self->getOptionRaw($code);
+
   return undef unless defined($value_bin);
-  my @values = ();
+
+  my @values;
   
   if ($format eq 'inet') {
     $values[0] = unpackinet($value_bin);
@@ -346,7 +352,7 @@ sub getOptionValue($$) {
     $values[0] = $value_bin;
   }
 
-  return join(" ", @values); 
+  return join(q| |, @values); 
 #  return wantarray ? @values : $values[0];
 }
 
@@ -585,7 +591,7 @@ sub toString {
 sub unpackinet($) {		# bullet-proof version, never complains
 	use bytes;
 	my $ip = shift;
-	return '0.0.0.0' if (length($ip) != 4);
+	return '0.0.0.0' unless ($ip && length($ip) == 4);
 	return ord(substr($ip,0,1)).'.'.ord(substr($ip,1,1)).'.'.
 				 ord(substr($ip,2,1)).'.'.ord(substr($ip,3,1));
 }
@@ -593,30 +599,34 @@ sub unpackinet($) {		# bullet-proof version, never complains
 sub packinet($) {		# bullet-proof version, never complains
 	use bytes;
 	my $addr = shift;
-	if ($addr =~ /(\d+)\.(\d+)\.(\d+)\.(\d+)/) {
-  	return chr($1).chr($2).chr($3).chr($4);
+
+	if ($addr && $addr =~ /(\d+)\.(\d+)\.(\d+)\.(\d+)/) {
+		return chr($1).chr($2).chr($3).chr($4);
 	}
-  return "\0\0\0\0";
+
+	return "\0\0\0\0";
 }
 
 sub packinets($) {    # multiple ip addresses, space delimited
-  return join('', map { packinet($_) } split(/[\s\/,;]+/, shift));
+  return join(q(), map { packinet($_) } split(/[\s\/,;]+/, shift || 0));
 }
 
 sub packinets_array(@) {    # multiple ip addresses, space delimited
-  return join('', map { packinet($_) } @_);
+  return unless @_;
+  return join(q(), map { packinet($_) } @_);
 }
 
 sub unpackinets($) {  # multiple ip addresses
-  return join(" ", map { unpackinet($_) } unpack("(a4)*", shift));
+  return join(q| |, map { unpackinet($_) } unpack("(a4)*", shift || 0));
 }
 
 sub unpackinets_array($) {  # multiple ip addresses, returns an array
-  return map { unpackinet($_) } unpack("(a4)*", shift);
+  return map { unpackinet($_) } unpack("(a4)*", shift || 0);
 }
 
 sub unpackRelayAgent(%) { # prints a human readable 'relay agent options'
-  my %relay_opt = @_;
+  my %relay_opt = @_
+    or return;
   return join(",", map { "($_)=".$relay_opt{$_} } (sort keys %relay_opt));
 }
 

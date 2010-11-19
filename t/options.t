@@ -7,9 +7,9 @@ BEGIN { use_ok( 'Net::DHCP::Constants' ); }
 
 use strict;
 
-my $ip0 = "0.0.0.0";
-my $pac0 = "\0\0\0\0";
-my $foo = "foobar";
+my $ip0 = '0.0.0.0';
+my $pac0 = '\0\0\0\0';
+my $foo = 'foobar';
 
 my $pac;
 my @arr;
@@ -18,12 +18,12 @@ $pac = Net::DHCP::Packet->new();
 
 # dhcp message type
 $pac->addOptionValue(DHO_DHCP_MESSAGE_TYPE(), DHCPINFORM());
-is($pac->getOptionValue(DHO_DHCP_MESSAGE_TYPE()), DHCPINFORM(), "testing message type");
+is($pac->getOptionValue(DHO_DHCP_MESSAGE_TYPE()), DHCPINFORM(), 'testing message type');
 is($pac->getOptionRaw(DHO_DHCP_MESSAGE_TYPE()), chr(DHCPINFORM()));
 
 
 $pac = Net::DHCP::Packet->new();
-is($pac->getOptionValue(DHO_SUBNET_MASK()), undef, "testing inet format");
+is($pac->getOptionValue(DHO_SUBNET_MASK()), undef, 'testing inet format');
 # test for 'inet' data type
 $pac->addOptionValue(DHO_SUBNET_MASK(), "255.255.255.0");
 is($pac->getOptionValue(DHO_SUBNET_MASK()), "255.255.255.0");

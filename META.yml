@@ -3,7 +3,9 @@
 name:         Net-DHCP
 version:      0.67
 version_from: lib/Net/DHCP/Packet.pm
+abstract:     DHCP Packet encoder-decoder in pure perl
 installdirs:  site
+license:      perl
 requires:
 
 distribution_type: module
