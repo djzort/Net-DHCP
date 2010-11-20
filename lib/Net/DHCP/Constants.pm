@@ -167,6 +167,24 @@ BEGIN {
         'DHO_CLASSLESS_STATIC_ROUTE'       => 121,
         'DHO_CCC'                          => 122,
         'DHO_GEOCONF'                      => 123,
+        'DHO_VI_VENDOR_CLASS'             => 124,
+        'DHO_VI_VENDOR_SPECIFIC_INFOMATION' => 125,
+        'DHO_DOCSIS_FULL_SECURITY_SERVER_ADDRESS' => 128,
+        'DHO_CALL_SERVER_ADDRESS' => 129,
+        'DHO_DISCRIMINATION_STRING' => 130,
+        'DHO_REMOTE_STATISTICS_SERVER' => 131,
+        'DHO_VLAN_ID' => 132,
+        'DHO_L2_PRIORITY' => 133,
+        'DHO_DSCP' => 134,
+        'DHO_PXE' => 135,
+        'DHO_OPTION_PANA_AGENT' => 136,
+        'DHO_OPTION_PANA_V4_LOST' => 137,
+        'DHO_OPTION_CAPWAP_AC_V4' => 138,
+        'DHO_OPTION_IPV4_ADDRESS_MOS' => 139,
+        'DHO_OPTION_IPV4_FQDN_MOS' => 140,
+        
+        
+        
 
 
         'DHO_END' => 255

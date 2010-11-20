@@ -51,8 +51,6 @@ for my $k (sort {$codes->{$a}->{value} cmp $codes->{$b}->{value}}
 	my $value = $codes->{$k}->{value};
         ok((grep {$value == $_} @val), "Code $value aka $name");
 
-        die unless (grep {$value eq $_} @val);
-
 }
 }
 
