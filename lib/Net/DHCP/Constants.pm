@@ -154,6 +154,7 @@ BEGIN {
         'DHO_NDS_TREE_NAME'                => 86,
         'DHO_AUTHENTICATION'               => 90,
         'DHO_USER_AUTHENTICATION_PROTOCOL' => 98,
+        'DHO_GEOCONF_CIVIC' => 99,
         'DHO_PCODE'                        => 100,
         'DHO_TCODE'                        => 101,
         'DHO_NETINFO_ADDRESS'              => 112,
