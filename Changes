@@ -1,8 +1,20 @@
 Revision history for Perl extension Net::DHCP.
 
+*** 0.68  xxx xx xxxx
+
+Warning: the declaration of DHO_NIS_DOMAIN was overlapping for options
+40 options 64. Therefore, options 64 and 65 where renamed DHO_NISV3_SERVER
+and DHO_NISV3_DOMAIN to remove this overlap and remain consistent.
+
+Constants.pm. Added a vast number of option codes from the IANA listing.
+Added updated DHCP message codes, added Netware IP Codes. Tests were
+added for coverage of constants.
+
+Rearranged the test suite. Added lots of tests.
+
 *** 0.67  Nov 13 2010
 
-Fixing a small bug in marshall (see cpanrt61693), fixed a bug in 
+Fixing a small bug in marshall (see cpanrt61693), fixed a bug in
 Constants.pm (see cpanrt32962), clarified version dependance
 closing out cpanrt19405
 
@@ -14,7 +26,7 @@ Corrected major bug in removeOption(), thanks to Nathan Scarlett.
 
 *** 0.65  Apr 22 2006
 
-Added a sample DHCP Server and tester: dhcpd.pl & dhcpd_test.pl in 
+Added a sample DHCP Server and tester: dhcpd.pl & dhcpd_test.pl in
 the examples folder.
 
 *** 0.64  Mar 06 2006

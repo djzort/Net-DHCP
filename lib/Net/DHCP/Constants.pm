@@ -18,16 +18,18 @@ our ( %DHO_CODES,    %REV_DHO_CODES );
 our ( %DHCP_MESSAGE, %REV_DHCP_MESSAGE );
 our ( %BOOTP_CODES,  %REV_BOOTP_CODES );
 our ( %HTYPE_CODES,  %REV_HTYPE_CODES );
+our ( %NWIP_CODES,   %REV_NWIP_CODES );
 
 %EXPORT_TAGS = (
     dho_codes    => [ keys %DHO_CODES ],
     dhcp_message => [ keys %DHCP_MESSAGE ],
     bootp_codes  => [ keys %BOOTP_CODES ],
     htype_codes  => [ keys %HTYPE_CODES ],
+    nwip_codes   => [ keys %NWIP_CODES ],
     dhcp_hashes  => [
         qw(
           %DHO_CODES %REV_DHO_CODES %DHCP_MESSAGE %REV_DHCP_MESSAGE
-          %BOOTP_CODES %REV_BOOTP_CODES
+          %BOOTP_CODES %REV_BOOTP_CODES %NWIP_CODES
           %HTYPE_CODES %REV_HTYPE_CODES
           )
     ],
@@ -38,7 +40,7 @@ our ( %HTYPE_CODES,  %REV_HTYPE_CODES );
 
 @EXPORT_OK = qw(
   %DHO_CODES %REV_DHO_CODES %DHCP_MESSAGE %REV_DHCP_MESSAGE
-  %BOOTP_CODES %REV_BOOTP_CODES
+  %BOOTP_CODES %REV_BOOTP_CODES %NWIP_CODES %REV_NWIP_CODES
   %HTYPE_CODES %REV_HTYPE_CODES
   %DHO_FORMATS
 );
@@ -134,9 +136,9 @@ BEGIN {
         'DHO_DHCP_CLIENT_IDENTIFIER'       => 61,
         'DHO_NWIP_DOMAIN_NAME'             => 62,
         'DHO_NWIP_SUBOPTIONS'              => 63,
-        'DHO_NIS_DOMAIN'                   => 64,
-        'DHO_NIS_SERVER'                   => 65,
-        'DHO_TFTP_SERVER'                  => 66,
+        'DHO_NISV3_DOMAIN'                   => 64,
+        'DHO_NISV3_SERVER'                   => 65,
+        'DHO_TFTP_SERVER'                  => 66, # actually named 'server name' by iana
         'DHO_BOOTFILE'                     => 67,
         'DHO_MOBILE_IP_HOME_AGENT'         => 68,
         'DHO_SMTP_SERVER'                  => 69,
@@ -148,12 +150,20 @@ BEGIN {
         'DHO_STREETTALK_SERVER'            => 75,
         'DHO_STDA_SERVER'                  => 76,
         'DHO_USER_CLASS'                   => 77,
+        'DHO_DIRECTORY_AGENT' => 78,
+        'DHO_SERVICE_SCOPE' => 79,
+        'DHO_RAPID_COMMIT' => 80,
         'DHO_FQDN'                         => 81,
         'DHO_DHCP_AGENT_OPTIONS'           => 82,
         'DHO_ISNS' => 83,
         'DHO_NDS_SERVERS'                  => 85,
         'DHO_NDS_TREE_NAME'                => 86,
+        'DHO_NDS_CONTEXT' => 87,
+        'DHO_BCMCS_CONTROLLER_DOMAIN_NAME_LIST' => 88,
+        'DHO_BCMCS_CONTROLLER_IPV4_ADDRESS' => 89,
         'DHO_AUTHENTICATION'               => 90,
+        'DHO_CLIENT_LAST_TRANSACTION_TIME' => 91,
+        'DHO_ASSOCIATED_IP' => 92,
         'DHO_CLIENT_SYSTEM' => 93,
         'DHO_CLIENT_NDI' => 94,
         'DHO_LDAP' => 95,
@@ -176,13 +186,19 @@ BEGIN {
         'DHO_VI_VENDOR_CLASS'             => 124,
         'DHO_VI_VENDOR_SPECIFIC_INFOMATION' => 125,
         'DHO_DOCSIS_FULL_SECURITY_SERVER_ADDRESS' => 128,
+        'DHO_TFTP_SERVER_IPPHONE' => 128,
+        'DHO_ETHERBOOT_SIGNATURE' => 128,
         'DHO_CALL_SERVER_ADDRESS' => 129,
+        'DHO_KERNEL_OPTIONS' => 129,
         'DHO_DISCRIMINATION_STRING' => 130,
+        'DHO_ETHERNET_INTERFACE' => 130,
         'DHO_REMOTE_STATISTICS_SERVER' => 131,
         'DHO_VLAN_ID' => 132,
         'DHO_L2_PRIORITY' => 133,
         'DHO_DSCP' => 134,
         'DHO_PXE' => 135,
+        'DHO_HTTP_PROXY_FORPHONES' => 135,
+
         'DHO_OPTION_PANA_AGENT' => 136,
         'DHO_OPTION_PANA_V4_LOST' => 137,
         'DHO_OPTION_CAPWAP_AC_V4' => 138,
@@ -190,8 +206,11 @@ BEGIN {
         'DHO_OPTION_IPV4_FQDN_MOS' => 140,
         'DHO_SIP_UA_CONFIGURATION_SERVICE_DOMAINS' => 141,
         'DHO_GRUB_CONF_PATH' => 150,
+        'DHO_TFTP_SERVER_ADDRESS' => 150, # not to be confused with 66
+        'DHO_ETHERBOOT' => 150,
         'DHO_IP_TELEPHONE' => 176,
         'DHO_PACKETCABLE_DEPRECATED' => 177,
+        'DHO_ETHERBOOT_TENTATIVE' => 177,
         'DHO_PXELINUX_MAGIC' => 208,
         'DHO_CONFIGURATION_FILE' => 209,
         'DHO_PATH_PREFIX' => 210,
@@ -200,13 +219,14 @@ BEGIN {
         'DHO_OPTION_V4_ACCESS_DOMAIN' => 213,
         'DHO_SUBNET_ALLOCATION' => 220,
         'DHO_VIRTUAL_SUBNET' => 221,
-        
-        
+
+
 
 
         'DHO_END' => 255
     );
 
+    # Type 53 codes...
     %DHCP_MESSAGE = (
         #RFC2132
         'DHCPDISCOVER'   => 1,
@@ -226,6 +246,22 @@ BEGIN {
         'DHCPLEASEACTIVE'=> 13,
 
     );
+
+    # Type 63 sub-option codes...
+    %NWIP_CODES = (
+            'NWIP_DOES_NOT_EXIST' => 1,
+            'NWIP_EXIST_IN_OPTIONS_AREA' => 2,
+            'NWIP_EXIST_IN_SNAME_FILE' => 3,
+            'NWIP_EXIST_BUT_TOO_BIG' => 4,
+            'NWIP_NSQ_BROADCAST' => 5,
+            'NWIP_PREFERRED_DSS' => 6,
+            'NWIP_NEAREST_NWIP_SERVER' => 7,
+            'NWIP_AUTORETRIES' => 8,
+            'NWIP_AUTORETRY_SECS' => 9,
+            'NWIP_1_1' => 10,
+            'NWIP_PRIMARY_DSS' => 11,
+            #'Unassigned' => '12-255'
+    );
 }
 
 use constant \%DHO_CODES;
@@ -239,6 +275,9 @@ use constant \%BOOTP_CODES;
 
 use constant \%HTYPE_CODES;
 %REV_HTYPE_CODES = reverse %HTYPE_CODES;    # for reverse lookup
+
+use constant \%NWIP_CODES;
+%REV_NWIP_CODES = reverse %NWIP_CODES;
 
 #
 # Format of DHCP options : for pretty-printing
@@ -323,8 +362,8 @@ our %DHO_FORMATS = (
     DHO_NWIP_DOMAIN_NAME() => 'string',    # rfc 2242
 
     #    DHO_NWIP_SUBOPTIONS() => '',                    # rfc 2242
-    DHO_NIS_DOMAIN()           => 'string',
-    DHO_NIS_SERVER()           => 'string',
+    DHO_NISV3_DOMAIN()           => 'string',
+    DHO_NISV3_SERVER()           => 'string',
     DHO_TFTP_SERVER()          => 'string',
     DHO_BOOTFILE()             => 'string',
     DHO_MOBILE_IP_HOME_AGENT() => 'inets',
@@ -395,6 +434,8 @@ Most common value is HTYPE_ETHER for C<Ethernet>.
 
 Import all DHCP Message codes.
 
+(rfc2132)
+
   (01) DHCPDISCOVER
   (02) DHCPOFFER
   (03) DHCPREQUEST
@@ -404,7 +445,18 @@ Import all DHCP Message codes.
   (07) DHCPRELEASE
   (08) DHCPINFORM
   (09) DHCPFORCERENEW
+
+(rfc4388)
+
   (10) DHCPLEASEQUERY
+  (11) DHCPLEASEUNASSIGNED
+  (12) DHCPLEASEUNKNOWN
+  (13) DHCPLEASEACTIVE
+
+Nb. Previously Cisco used 13 for DHCPLEASEQUERY. If you need to decode
+or encode packets to communicate with such a system, you might simply
+us the integer rather than the constant - or use the updated constant
+and comment in your code appropriately.
 
 =item * dho_codes
 
@@ -506,6 +558,10 @@ Automatic parsing of DHO_VENDOR_ENCAPSULATED_OPTIONS (code 43) is unsupported.
 Automatic parsing of DHO_NWIP_SUBOPTIONS (code 63 - rfc 2242) is unsupported.
 
 Automatic parsing of DHO_USER_CLASS (code 77 - rfc 3004) is unsupported.
+
+Automatic parsing of DHO_CCC (code 122 - rfc 3495) is unsupported.
+
+Automatic parsing of DHO_PACKETCABLE_DEPRECATED (code 177 - rfc 3495) is unsupported.
 
 =head1 SEE ALSO
 
