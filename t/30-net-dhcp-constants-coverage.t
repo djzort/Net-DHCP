@@ -31,25 +31,28 @@ plan skip_all => "Couldnt load iana details, skipping coverage"
 ## MESSAGE TYPES
 {
 	my $codes = $iana{registry}->{'bootp-dhcp-parameters-1'}->{registry}->{'bootp-dhcp-parameters-2'}->{record}; # this is mildy nasty
-	for my $k (sort keys %$codes) {
-		ok($DHCP_MESSAGE{$k},"$k exists in \%DHCP_MESSAGE");
-		ok($DHCP_MESSAGE{$k} == $codes->{$k}->{value}, "$k is ".$codes->{$k}->{value});
+	for my $k (sort {int $codes->{$a}->{value} <=> int $codes->{$b}->{value}}
+		keys %$codes) {
+		ok($DHCP_MESSAGE{$k},"\%DHCP_MESSAGE has $k");
+		ok($DHCP_MESSAGE{$k} == $codes->{$k}->{value}, "...and $k is ".$codes->{$k}->{value});
 	}
 }
 
 # DHO CODES
 {
-my @val = sort {$a <=> $b} values %DHO_CODES;
+my @val = values %DHO_CODES;
 my $codes = $iana{registry}->{'bootp-dhcp-parameters-1'}->{record}; # this is mildy nasty
 
-for my $k (sort {$codes->{$a}->{value} cmp $codes->{$b}->{value}} 
-           grep {$_ !~ m/unassigned/i} 
+for my $k (sort {int $codes->{$a}->{value} <=> int $codes->{$b}->{value}} 
+           grep {$_ !~ m/unassigned|private use/i} 
            keys %$codes) {
 
 	my $name = $k;
 	$name =~ s/\n+//;
 	my $value = $codes->{$k}->{value};
-        ok((grep {$value == $_} @val), "Code $value aka $name");
+        ok((grep {$value == $_} @val), "\%DHO_CODES has $value aka $name");
+
+#die unless (grep {$value == $_} @val);
 
 }
 }
