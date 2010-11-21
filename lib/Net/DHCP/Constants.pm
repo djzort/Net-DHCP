@@ -19,6 +19,7 @@ our ( %DHCP_MESSAGE, %REV_DHCP_MESSAGE );
 our ( %BOOTP_CODES,  %REV_BOOTP_CODES );
 our ( %HTYPE_CODES,  %REV_HTYPE_CODES );
 our ( %NWIP_CODES,   %REV_NWIP_CODES );
+our ( %CCC_CODES,    %REV_CCC_CODES );
 
 %EXPORT_TAGS = (
     dho_codes    => [ keys %DHO_CODES ],
@@ -26,10 +27,11 @@ our ( %NWIP_CODES,   %REV_NWIP_CODES );
     bootp_codes  => [ keys %BOOTP_CODES ],
     htype_codes  => [ keys %HTYPE_CODES ],
     nwip_codes   => [ keys %NWIP_CODES ],
+    ccc_codes    => [ keys %CCC_CODES ],
     dhcp_hashes  => [
         qw(
           %DHO_CODES %REV_DHO_CODES %DHCP_MESSAGE %REV_DHCP_MESSAGE
-          %BOOTP_CODES %REV_BOOTP_CODES %NWIP_CODES
+          %BOOTP_CODES %REV_BOOTP_CODES %NWIP_CODES %CCC_CODES
           %HTYPE_CODES %REV_HTYPE_CODES
           )
     ],
@@ -41,13 +43,15 @@ our ( %NWIP_CODES,   %REV_NWIP_CODES );
 @EXPORT_OK = qw(
   %DHO_CODES %REV_DHO_CODES %DHCP_MESSAGE %REV_DHCP_MESSAGE
   %BOOTP_CODES %REV_BOOTP_CODES %NWIP_CODES %REV_NWIP_CODES
-  %HTYPE_CODES %REV_HTYPE_CODES
+  %HTYPE_CODES %REV_HTYPE_CODES %CCC_CODES %REV_CCC_CODES
   %DHO_FORMATS
 );
 Exporter::export_tags('dho_codes');
 Exporter::export_tags('dhcp_message');
 Exporter::export_tags('bootp_codes');
 Exporter::export_tags('htype_codes');
+Exporter::export_tags('nwip_codes');
+Exporter::export_tags('ccc_codes');
 Exporter::export_ok_tags('dhcp_other');
 
 # MAGIC_COOKIE for DHCP (otherwise it is BOOTP)
@@ -262,6 +266,22 @@ BEGIN {
             'NWIP_PRIMARY_DSS' => 11,
             #'Unassigned' => '12-255'
     );
+
+    # Type 122 sub option codes
+    %CCC_CODES = (
+
+            'CCC_PRIMARY_DHCP_SERVER' => 1,
+            'CCC_SECONDARY_DHCP_SERVER' => 2,
+            'CCC_PROVISIONING_SERVER' => 3,
+            'CCC_AS_REQ_AS_REP_BACKOFFRETRY' => 4,
+            'CCC_AP_REQ_AS_REP_BACKOFFRETRY' => 5,
+                        'CCC_KERBEROS_REALM' => 6,
+                                        'CCC_TICKET_SERVER_UTILIZATION' => 7,
+                                        'CCC_PROVISIONING_TIMER' => 8,
+                                        'CCC_SECURITY_TICKET_CONTROL' => 9,
+                                        'CCC_KDC_SERVER' => 10,
+
+    );
 }
 
 use constant \%DHO_CODES;
@@ -278,6 +298,10 @@ use constant \%HTYPE_CODES;
 
 use constant \%NWIP_CODES;
 %REV_NWIP_CODES = reverse %NWIP_CODES;
+
+use constant \%CCC_CODES;
+%REV_CCC_CODES = reverse %CCC_CODES;
+
 
 #
 # Format of DHCP options : for pretty-printing

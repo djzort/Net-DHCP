@@ -4,7 +4,7 @@ use Test::More 'no_plan';
 
 BEGIN { use_ok('Net::DHCP::Constants'); }
 
-use Net::DHCP::Constants qw(%DHO_CODES %DHCP_MESSAGE %NWIP_CODES);
+use Net::DHCP::Constants qw(%DHO_CODES %DHCP_MESSAGE %NWIP_CODES %CCC_CODES);
 
 use strict;
 use warnings;
@@ -91,6 +91,35 @@ plan skip_all => "Couldnt load iana details, skipping coverage"
         ok(
             ( grep { $value == $_ } @val ),
             "\%NWIP_CODES has $value aka $name"
+        );
+
+        #die unless (grep {$value == $_} @val);
+
+    }
+}
+
+## CCC CODES - bootp-dhcp-parameters-4
+{
+
+    my @val = values %CCC_CODES;
+
+    my $codes =
+      $iana{registry}->{'bootp-dhcp-parameters-1'}->{registry}
+      ->{'bootp-dhcp-parameters-4'}->{record};    # this is mildy nasty
+
+    for my $k (
+        sort { int $a->{value} <=> int $b->{value} }
+        grep { $_->{description} !~ m/unassigned|private use/i }
+        @$codes
+      )
+    {
+
+        my $name = $k->{description};
+        $name =~ s/\n+//;
+        my $value = $k->{value};
+        ok(
+            ( grep { $value == $_ } @val ),
+            "\%CCC_CODES has $value aka $name"
         );
 
         #die unless (grep {$value == $_} @val);
