@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 
-use Test::More 'no_plan';
+use Test::More tests => 207;
 
 BEGIN { use_ok('Net::DHCP::Constants'); }
 
-use Net::DHCP::Constants qw(%DHO_CODES %DHCP_MESSAGE %NWIP_CODES %CCC_CODES);
+use Net::DHCP::Constants qw(%DHO_CODES %DHCP_MESSAGE %NWIP_CODES %CCC_CODES %GEOCONF_CODES %DRA_CODES);
 
 use strict;
 use warnings;
@@ -126,5 +126,71 @@ plan skip_all => "Couldnt load iana details, skipping coverage"
 
     }
 }
+
+## GEOCONF CODES - bootp-dhcp-parameters-5
+{
+
+    my @val = values %CCC_CODES;
+
+    my $codes =
+      $iana{registry}->{'bootp-dhcp-parameters-1'}->{registry}
+      ->{'bootp-dhcp-parameters-5'}->{record};    # this is mildy nasty
+
+    for my $k (
+        sort { int $a->{value} <=> int $b->{value} }
+        grep { $_->{description} !~ m/unassigned|private use/i }
+        @$codes
+      )
+    {
+
+        my $name = $k->{description};
+        $name =~ s/\n+//;
+        my $value = $k->{value};
+        ok(
+            ( grep { $value == $_ } @val ),
+            "\%GEOCONF_CODES has $value aka $name"
+        );
+
+        #die unless (grep {$value == $_} @val);
+
+    }
+}
+## GEOCONF CODES - bootp-dhcp-parameters-6
+
+# im not quite sure what to do with geoconf
+
+## CCC PacketCable mask bits. also not sure - bootp-dhcp-parameters-7
+
+## DHCP RELAY SUB OPTIONS CODES - bootp-dhcp-parameters-8
+{
+
+    my @val = values %DRA_CODES;
+
+    my $codes =
+      $iana{registry}->{'bootp-dhcp-parameters-8'}->{record};    # this is mildy nasty
+
+    for my $k (
+        sort { int $a->{value} <=> int $b->{value} }
+        grep { $_->{description} !~ m/unassigned|private use|reserved/i }
+        @$codes
+      )
+    {
+
+        my $name = $k->{description};
+        $name =~ s/\n+//;
+        my $value = $k->{value};
+        ok(
+            ( grep { $value == $_ } @val ),
+            "\%DRA_CODES has $value aka $name"
+        );
+
+        #die unless (grep {$value == $_} @val);
+
+    }
+}
+
+## DHCP RELAY SUB OPTIONS CODES - suboptions are defined in - bootp-dhcp-parameters-9
+## DHCP RELAY SUB OPTIONS CODES - suboptions are defined in - bootp-dhcp-parameters-10
+# neither of which i have any idea what to do with yet
 
 1;

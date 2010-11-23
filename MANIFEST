@@ -2,12 +2,8 @@ Changes
 Makefile.PL
 MANIFEST
 README
-t/Net-DHCP.t
-t/options.t
-t/packet_empty.t
-t/packet_sanity.t
-t/packinet.t
 examples/dhcp_sniffer.pl
+examples/dumpianatoxml.pl
 lib/Net/DHCP/Packet.pm
 lib/Net/DHCP/Constants.pm
 examples/dhcp_sniffer.pl
@@ -16,3 +12,17 @@ examples/lease_query.pl
 examples/dhcpd.pl
 examples/dhcpd_test.pl
 META.yml                                 Module meta-data (added by MakeMaker)
+t/00.load.t
+t/.iana.pl
+t/52-net-dhcp-packet-new-empty.t
+t/99-perlcritic.t
+t/51-net-dhcp-packet-new-basic.t
+t/01.pod.t
+t/22-net-dhcp-packet-options.t
+t/53-net-dhcp-packet-new-broken.t
+t/21-net-dhcp-packet-packinet.t
+t/02.pod-coverage.t
+t/30-net-dhcp-constants-coverage.t
+t/.perlcriticrc
+t/03.manifest.t
+docs/bootp-dhcp-parameters.txt

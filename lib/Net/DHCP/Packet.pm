@@ -1002,8 +1002,6 @@ I<Removed as of version 0.60. Please use C<addOptionRaw()> instead.>
 
 I<Removed as of version 0.60. Please use C<getOptionRaw()> instead.>
 
-=back
-
 =item I<removeOption ( CODE )>
 
 Remove option from option list.
