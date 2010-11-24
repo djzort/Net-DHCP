@@ -18,6 +18,7 @@ use Socket;
 use Carp;
 use Net::DHCP::Constants qw(:DEFAULT :dhcp_hashes :dhcp_other %DHO_FORMATS);
 use Scalar::Util qw(looks_like_number);    # for numerical testing
+use List::Util qw(first);
 
 #=======================================================================
 sub new {
@@ -398,10 +399,10 @@ sub getOptionValue($$) {
 sub removeOption {
     my ( $self, $key ) = @_;
     if ( exists( $self->{options}->{$key} ) ) {
-        my $i;
-        for ( $i = 0 ; $i < @{ $self->{options_order} } ; $i++ ) {
-            last if ( $self->{options_order}->[$i] == $key );
-        }
+        my $i = first { $self->{options_order}->[$_] == $key } 0..$#{ $self->{options_order} };
+#        for ( $i = 0 ; $i < @{ $self->{options_order} } ; $i++ ) {
+#            last if ( $self->{options_order}->[$i] == $key );
+#        }
         if ( $i < @{ $self->{options_order} } ) {
             splice @{ $self->{options_order} }, $i, 1;
         }
