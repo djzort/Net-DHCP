@@ -66,8 +66,8 @@ sub new {
           ? $self->chaddr( $args{Chaddr} )
           : $self->{chaddr} = q||;
         exists( $args{Sname} ) ? $self->sname( $args{Sname} ) : $self->{sname} =
-          "";
-        exists( $args{File} ) ? $self->file( $args{File} ) : $self->{file} = "";
+          q||;
+        exists( $args{File} ) ? $self->file( $args{File} ) : $self->{file} = q||;
         exists( $args{Padding} )
           ? $self->padding( $args{Padding} )
           : $self->{padding} = q||;
@@ -118,11 +118,11 @@ sub hlen {
     my $self = shift;
     if (@_) { $self->{hlen} = shift }
     if ( $self->{hlen} < 0 ) {
-        carp( "hlen must not be < 0 (currently " . $self->{hlen} . ")" );
+        carp( 'hlen must not be < 0 (currently ' . $self->{hlen} . ')' );
         $self->{hlen} = 0;
     }
     if ( $self->{hlen} > 16 ) {
-        carp( "hlen must not be > 16 (currently " . $self->{hlen} . ")" );
+        carp( 'hlen must not be > 16 (currently ' . $self->{hlen} . ')' );
         $self->{hlen} = 16;
     }
     return $self->{hlen};
@@ -232,9 +232,9 @@ sub sname {
     my $self = shift;
     if (@_) { $self->{sname} = shift }
     if ( length( $self->{sname} ) > 63 ) {
-        carp(   "'sname' must not be > 63 bytes, (currently "
+        carp(   q|'sname' must not be > 63 bytes, (currently |
               . length( $self->{sname} )
-              . ")" );
+              . ')' );
         $self->{sname} = substr( $self->{sname}, 0, 63 );
     }
     return $self->{sname};
@@ -246,9 +246,9 @@ sub file {
     my $self = shift;
     if (@_) { $self->{file} = shift }
     if ( length( $self->{file} ) > 127 ) {
-        carp(   "'file' must not be > 127 bytes, (currently "
+        carp(   q|'file' must not be > 127 bytes, (currently |
               . length( $self->{file} )
-              . ")" );
+              . ')' );
         $self->{file} = substr( $self->{file}, 0, 127 );
     }
     return $self->{file};
@@ -294,7 +294,7 @@ sub addOptionValue($$$) {
 
     # decompose input value into an array
     my @values;
-    if ( defined $value &&  $value ne '' ) {
+    if ( defined $value &&  $value ne q|| ) {
         @values =
           split( /[\s\/,;]+/, $value );    # array of values, split by space
     }
@@ -349,7 +349,7 @@ sub addOptionValue($$$) {
 sub getOptionRaw {
     my ( $self, $key ) = @_;
     return $self->{options}->{$key} if exists( $self->{options}->{$key} );
-    return undef;
+    return;
 }
 
 sub getOptionValue($$) {
@@ -370,8 +370,8 @@ sub getOptionValue($$) {
     # hash out these options for speed and sanity
     my %options = (
          inet   => sub { return unpackinets_array(shift) },
-         inets  => sub { return unpackinets_array(shift)},
-         inets2 => sub { return unpackinets_array(shift)},
+         inets  => sub { return unpackinets_array(shift) },
+         inets2 => sub { return unpackinets_array(shift) },
          int    => sub { return unpack( 'N', shift ) },
          short  => sub { return unpack( 'n', shift ) },
          shorts => sub { return unpack( 'n*', shift ) },
@@ -446,9 +446,9 @@ sub serialize {
 
     # test if packet is not bigger than absolute maximum MTU
     if ( length($bytes) > DHCP_MAX_MTU() ) {
-        croak(  "serialize: packet too big ("
+        croak(  'serialize: packet too big ('
               . length($bytes)
-              . " greater than max MAX_MTU ("
+              . ' greater than max MAX_MTU ('
               . DHCP_MAX_MTU() );
     }
 
@@ -462,9 +462,9 @@ sub serialize {
 
             # relevant message size
             if ( length($bytes) > $max_message_size ) {
-                croak(  "serialize: message is bigger than allowed ("
+                croak(  'serialize: message is bigger than allowed ('
                       . length($bytes)
-                      . "), max specified :"
+                      . '), max specified :'
                       . $max_message_size );
             }
         }
@@ -480,21 +480,21 @@ sub marshall {
     my $opt_buf;
 
     if ( length($buf) < BOOTP_ABSOLUTE_MIN_LEN() ) {
-        croak(  "marshall: packet too small ("
+        croak(  'marshall: packet too small ('
               . length($buf)
-              . "), absolute minimum size is "
+              . '), absolute minimum size is '
               . BOOTP_ABSOLUTE_MIN_LEN() );
     }
     if ( length($buf) < BOOTP_MIN_LEN() ) {
-        carp(   "marshall: packet too small ("
+        carp(   'marshall: packet too small ('
               . length($buf)
-              . "), minimum size is "
+              . '), minimum size is '
               . BOOTP_MIN_LEN() );
     }
     if ( length($buf) > DHCP_MAX_MTU() ) {
-        croak(  "marshall: packet too big ("
+        croak(  'marshall: packet too big ('
               . length($buf)
-              . "), max MTU size is "
+              . '), max MTU size is '
               . DHCP_MAX_MTU() );
     }
 
@@ -535,7 +535,7 @@ sub marshall {
 
         # verify that we ended with an "END" code
         if ( $type != DHO_END() ) {
-            croak("marshall: unexpected end of options");
+            croak('marshall: unexpected end of options');
         }
 
         # put remaining bytes in the padding attribute
@@ -543,13 +543,14 @@ sub marshall {
             $self->{padding} = substr( $opt_buf, $pos, $total - $pos );
         }
         else {
-            $self->{padding} = '';
+            $self->{padding} = q||;
         }
     }
     else {
 
         # in bootp, everything is padding
         $self->{padding} = $opt_buf;
+
     }
 
     return $self;
@@ -580,8 +581,8 @@ sub decodeRelayAgent($$) {
 sub encodeRelayAgent($@) {
     use bytes;
     my $self = shift;
-    my @opt  = @_;      # expect key-value pairs
-    my $buf  = '';
+    my @opt;      # expect key-value pairs
+    my $buf;
 
     while ( defined( my $key = shift(@opt) ) ) {
         my $value = shift(@opt);
@@ -824,6 +825,10 @@ Note: DHCP options are created in the same order as key-value pairs.
 
 =over 4
 
+=item comment( [STRING] )
+
+Sets or gets the comment attribute (object meta-data only)
+
 =item op( [BYTE] )
 
 Sets/gets the I<BOOTP opcode>.
@@ -867,7 +872,7 @@ Sets/gets the 16 bits I<flags>.
 
   0x8000 = Broadcast reply requested.
 
-=item ciaddr ( [STRING])
+=item ciaddr ( [STRING] )
 
 Sets/gets the I<client IP address>.
 
@@ -995,6 +1000,23 @@ Please see corresponding RFC for manual type conversion.
 Gets a DHCP OPTION provided in packed binary format.
 Please see corresponding RFC for manual type conversion.
 
+=item removeOption ( CODE )
+
+Remove option from option list.
+
+=item encodeRelayAgent ()
+
+These are half baked, but will encode the relay agent options in the future
+
+=item decodeRelayAgent ()
+
+These are half baked, but will decode the relay agent options in the future
+
+=item unpackRelayAgent ( HASH )
+
+returns a human readable 'relay agent options', not to be confused with
+C<decodeRelayAgent>
+
 =item I<addOption ( CODE, VALUE )>
 
 I<Removed as of version 0.60. Please use C<addOptionRaw()> instead.>
@@ -1003,9 +1025,7 @@ I<Removed as of version 0.60. Please use C<addOptionRaw()> instead.>
 
 I<Removed as of version 0.60. Please use C<getOptionRaw()> instead.>
 
-=item I<removeOption ( CODE )>
-
-Remove option from option list.
+=item 
 
 =back
 
@@ -1225,6 +1245,10 @@ These are simple never failing versions of inet_ntoa and inet_aton.
 
 Transforms a list of space delimited IP addresses into a packed bytes string.
 
+=item packinets_array( LIST )
+
+Transforms an array (list) of IP addresses into a packed bytes string.
+
 =item unpackinet ( STRING )
 
 Transforms a packed bytes IP address into a "xx.xx.xx.xx" string.
@@ -1233,6 +1257,11 @@ Transforms a packed bytes IP address into a "xx.xx.xx.xx" string.
 
 Transforms a packed bytes liste of IP addresses into a list of
 "xx.xx.xx.xx" space delimited string.
+
+=item unpackinets_array ( STRING )
+
+Transforms a packed bytes liste of IP addresses into a array of
+"xx.xx.xx.xx" strings.
 
 =back
 
@@ -1352,7 +1381,8 @@ this server.
 
 =head1 AUTHOR
 
-Stephan Hadinger E<lt>shadinger@cpan.orgE<gt>.
+Dean Hamstead E<lt>djzort@cpan.orgE<gt>
+Previously Stephan Hadinger E<lt>shadinger@cpan.orgE<gt>.
 Original version by F. van Dun.
 
 =head1 BUGS
@@ -1367,7 +1397,5 @@ Perl itself.
 =head1 SEE ALSO
 
 L<Net::DHCP::Options>, L<Net::DHCP::Constants>.
-
-Note: there is a Java version of this library: L<http://dhcp4java.sourceforge.net/>.
 
 =cut
