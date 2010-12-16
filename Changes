@@ -1,6 +1,6 @@
 Revision history for Perl extension Net::DHCP.
 
-*** 0.68  xxx xx xxxx
+*** 0.67_1  Dec 16 2010
 
 Warning: the declaration of DHO_NIS_DOMAIN was overlapping for options
 40 options 64. Therefore, options 64 and 65 where renamed DHO_NISV3_SERVER
@@ -9,6 +9,11 @@ and DHO_NISV3_DOMAIN to remove this overlap and remain consistent.
 Constants.pm. Added a vast number of option codes from the IANA listing.
 Added updated DHCP message codes, added Netware IP Codes. Tests were
 added for coverage of constants.
+
+Packet.pm. Changed a whole bunch of stuff. Including removing some then
+then else orgies, tidying up lots of warnings.
+
+Tests. I'd added a bunch more tests :)
 
 Rearranged the test suite. Added lots of tests.
 
