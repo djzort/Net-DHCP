@@ -343,7 +343,7 @@ use constant \%DRA_CODES;
 #   inets : list of 4 bytess IP addresses
 #   inets2 : liste of 4 bytes IP addresses pairs (multiple of 8 bytes)
 #   int : 4 bytes integer
-#   short : 2 bytes intteger
+#   short : 2 bytes integer
 #   shorts : list of 2 bytes integers
 #   byte : 1 byte int
 #   bytes : list of 1 byte code

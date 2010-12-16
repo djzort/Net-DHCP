@@ -281,7 +281,7 @@ sub addOptionRaw {
     push @{ $self->{options_order} }, ($key);
 }
 
-sub addOptionValue($$$) {
+sub addOptionValue {
     my $self  = shift;
     my $code  = shift;    # option code
     my $value = shift;
@@ -324,8 +324,8 @@ sub addOptionValue($$$) {
       inets2  => sub { return packinets_array(@_) },
       int     => sub { return pack('N', shift) },
       short   => sub { return pack('n', shift) },
-      byte    => sub { return pack('C', shift) },
-      bytes   => sub { return pack('C*', @_) },
+      byte    => sub { return pack('C', 255 & shift) }, # 255 & trims the input to single octet
+      bytes   => sub { return pack('C*', map {255 & $_} @_) },
       string  => sub { return shift },
 
     );
@@ -352,7 +352,7 @@ sub getOptionRaw {
     return;
 }
 
-sub getOptionValue($$) {
+sub getOptionValue {
     my $self = shift;
     my $code = shift;
 
@@ -557,7 +557,7 @@ sub marshall {
 }
 
 #=======================================================================
-sub decodeRelayAgent($$) {
+sub decodeRelayAgent {
     use bytes;
     my $self      = shift;
     my ($opt_buf) = @_;
@@ -578,7 +578,7 @@ sub decodeRelayAgent($$) {
     return @opt;
 }
 
-sub encodeRelayAgent($@) {
+sub encodeRelayAgent {
     use bytes;
     my $self = shift;
     my @opt;      # expect key-value pairs
@@ -642,7 +642,7 @@ sub toString {
         }
         else {
             if ( exists( $DHO_FORMATS{$key} ) ) {
-                $value = join( " ", $self->getOptionValue($key) );
+                $value = join( q| |, $self->getOptionValue($key) );
             }
             else {
                 $value = $self->getOptionRaw($key);
@@ -666,7 +666,7 @@ sub toString {
 #=======================================================================
 # internal utility functions
 # never failing versions of the "Socket" module functions
-sub unpackinet($) {    # bullet-proof version, never complains
+sub unpackinet {    # bullet-proof version, never complains
     use bytes;
     my $ip = shift;
     return '0.0.0.0' unless ( $ip && length($ip) == 4 );
@@ -677,7 +677,7 @@ sub unpackinet($) {    # bullet-proof version, never complains
       . ord( substr( $ip, 3, 1 ) );
 }
 
-sub packinet($) {      # bullet-proof version, never complains
+sub packinet {      # bullet-proof version, never complains
     use bytes;
     my $addr = shift;
 
@@ -688,24 +688,24 @@ sub packinet($) {      # bullet-proof version, never complains
     return "\0\0\0\0";
 }
 
-sub packinets($) {     # multiple ip addresses, space delimited
+sub packinets {     # multiple ip addresses, space delimited
     return join( q(), map { packinet($_) } split( /[\s\/,;]+/, shift || 0 ) );
 }
 
-sub packinets_array(@) {    # multiple ip addresses, space delimited
+sub packinets_array {    # multiple ip addresses, space delimited
     return unless @_;
     return join( q(), map { packinet($_) } @_ );
 }
 
-sub unpackinets($) {        # multiple ip addresses
+sub unpackinets {        # multiple ip addresses
     return join( q| |, map { unpackinet($_) } unpack( "(a4)*", shift || 0 ) );
 }
 
-sub unpackinets_array($) {    # multiple ip addresses, returns an array
+sub unpackinets_array {    # multiple ip addresses, returns an array
     return map { unpackinet($_) } unpack( "(a4)*", shift || 0 );
 }
 
-sub unpackRelayAgent(%) {     # prints a human readable 'relay agent options'
+sub unpackRelayAgent {     # prints a human readable 'relay agent options'
     my %relay_opt = @_
       or return;
     return
