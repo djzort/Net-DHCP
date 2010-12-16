@@ -9,7 +9,7 @@ use 5.8.0;
 use strict;
 our ( @ISA, @EXPORT, @EXPORT_OK, $VERSION );
 use Exporter;
-$VERSION   = 0.67;
+$VERSION   = 0.67_1;
 @ISA       = qw(Exporter);
 @EXPORT    = qw( packinet packinets unpackinet unpackinets );
 @EXPORT_OK = qw( );
