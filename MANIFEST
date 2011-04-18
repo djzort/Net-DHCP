@@ -9,6 +9,7 @@ lib/Net/DHCP/Constants.pm
 examples/dhcp_sniffer.pl
 examples/send_packet.pl
 examples/lease_query.pl
+examples/list_dho.pl
 examples/dhcpd.pl
 examples/dhcpd_test.pl
 META.yml                                 Module meta-data (added by MakeMaker)
