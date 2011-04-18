@@ -1,5 +1,12 @@
 Revision history for Perl extension Net::DHCP.
 
+
+*** 0.67_2  Arp 18 2011
+
+Updated pod. Please be awair that i have added the word "CableLabs" to
+to pod. This may be of concern to Debian. Im not sure how their licensing
+works exactly vs CableLabs copyrights. Im reasonably certain its aok.
+
 *** 0.67_1  Dec 16 2010
 
 Warning: the declaration of DHO_NIS_DOMAIN was overlapping for options

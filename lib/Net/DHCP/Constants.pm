@@ -349,7 +349,8 @@ use constant \%DRA_CODES;
 #   bytes : list of 1 byte code
 #   string : char* (just kidding)
 #   relays : DHCP sub-options (rfc 3046)
-#   id : client identifier : byte (htype) + string (chaddr)
+#   ids : client identifier : byte (htype) + string (chaddr)
+#   suboptions : hex encoded sub options
 #
 our %DHO_FORMATS = (
     DHO_PAD()                         => 'void',
@@ -396,7 +397,7 @@ our %DHO_FORMATS = (
     DHO_NIS_SERVERS()                 => 'inets',
     DHO_NTP_SERVERS()                 => 'inets',
 
-    #    DHO_VENDOR_ENCAPSULATED_OPTIONS() => '',
+    DHO_VENDOR_ENCAPSULATED_OPTIONS() => 'suboptions',
     DHO_NETBIOS_NAME_SERVERS()        => 'inets',
     DHO_NETBIOS_DD_SERVER()           => 'inets',
     DHO_NETBIOS_NODE_TYPE()           => 'byte',
@@ -418,7 +419,7 @@ our %DHO_FORMATS = (
     #    DHO_DHCP_CLIENT_IDENTIFIER()  => 'ids',
     DHO_NWIP_DOMAIN_NAME() => 'string',    # rfc 2242
 
-    #    DHO_NWIP_SUBOPTIONS() => '',                    # rfc 2242
+    DHO_NWIP_SUBOPTIONS()      => 'suboptions',                    # rfc 2242
     DHO_NISV3_DOMAIN()         => 'string',
     DHO_NISV3_SERVER()         => 'string',
     DHO_TFTP_SERVER()          => 'string',
@@ -432,6 +433,8 @@ our %DHO_FORMATS = (
     DHO_IRC_SERVER()           => 'inets',
     DHO_STREETTALK_SERVER()    => 'inets',
     DHO_STDA_SERVER()          => 'inets',
+
+    DHO_CCC                    => 'suboptions',
 
 #    DHO_USER_CLASS()  => '',                        # rfc 3004
 #    DHO_FQDN()  => '',                              # draft-ietf-dhc-fqdn-option-10.txt
@@ -659,6 +662,21 @@ Import all DHCP option codes.
   (220) DHO_SUBNET_ALLOCATION
   (221) DHO_VIRTUAL_SUBNET
   (255) DHO_END
+
+=item * ccc_codes
+
+Import all CableLabs Client Configuration
+
+  (001) CCC_PRIMARY_DHCP_SERVER
+  (002) CCC_SECONDARY_DHCP_SERVER
+  (003) CCC_PROVISIONING_SERVER
+  (004) CCC_AS_REQ_AS_REP_BACKOFFRETRY
+  (005) CCC_AP_REQ_AS_REP_BACKOFFRETRY
+  (006) CCC_KERBEROS_REALM
+  (007) CCC_TICKET_SERVER_UTILIZATION
+  (008) CCC_PROVISIONING_TIMER
+  (009) CCC_SECURITY_TICKET_CONTROL
+  (010) CCC_KDC_SERVER
 
 =back
 
