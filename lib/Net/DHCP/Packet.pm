@@ -28,16 +28,19 @@ sub new {
         options       => {},    # DHCP options
         options_order => []     # order in which the options were added
     };
+
     bless $self, $class;
     if ( scalar @_ == 1 ) {     # we build the packet from a binary string
         $self->marshall(shift);
     }
     else {
+
         my %args         = @_;
         my @ordered_args = @_;
+
         exists( $args{Comment} )
-          ? $self->comment( $args{Comment} )
-          : $self->{comment} = undef;
+            ? $self->comment( $args{Comment} )
+            : $self->{comment} = undef;
 
         exists( $args{Op} )
             ? $self->op( $args{Op} )
@@ -91,7 +94,9 @@ sub new {
             ? $self->sname( $args{Sname} )
             : $self->{sname} = q||;
 
-        exists( $args{File} ) ? $self->file( $args{File} ) : $self->{file} = q||;
+        exists( $args{File} )
+            ? $self->file( $args{File} )
+            : $self->{file} = q||;
 
         exists( $args{Padding} )
             ? $self->padding( $args{Padding} )
@@ -102,14 +107,15 @@ sub new {
             : $self->{isDhcp} = 1;
 
         # TBM add DHCP option parsing
-        while ( defined( my $key = shift(@ordered_args) ) ) {
+        while ( defined( my $key = shift @ordered_args ) ) {
 
-            my $value = shift(@ordered_args);
+            my $value = shift @ordered_args;
             my $is_numeric;
             {
                 no warnings;
                 $is_numeric = ( $key eq ( 0 + $key ) );
             }
+
             if ($is_numeric) {
                 $self->addOptionValue( $key, $value );
             }
@@ -356,6 +362,7 @@ sub addOptionValue {
       byte    => sub { return pack('C', 255 & shift) }, # 255 & trims the input to single octet
       bytes   => sub { return pack('C*', map {255 & $_} @_) },
       string  => sub { return shift },
+      suboptions => sub { return packsuboptions() },
 
     );
 
@@ -377,7 +384,8 @@ sub addOptionValue {
 
 sub getOptionRaw {
     my ( $self, $key ) = @_;
-    return $self->{options}->{$key} if exists( $self->{options}->{$key} );
+    return $self->{options}->{$key}
+        if exists( $self->{options}->{$key} );
     return;
 }
 
@@ -458,7 +466,7 @@ sub serialize {
 
     if ( $self->{isDhcp} ) {    # add MAGIC_COOKIE and options
         $bytes .= MAGIC_COOKIE();
-        foreach my $key ( @{ $self->{options_order} } ) {
+        for my $key ( @{ $self->{options_order} } ) {
             $bytes .= pack( 'C',    $key );
             $bytes .= pack( 'C/a*', $self->{options}->{$key} );
         }
@@ -482,8 +490,11 @@ sub serialize {
     }
 
     # test if packet length is not bigger than DHO_DHCP_MAX_MESSAGE_SIZE
-    if ( $options && exists( $options->{ DHO_DHCP_MAX_MESSAGE_SIZE() } ) )
-    {    # maximum packet size is specified
+    if ( $options &&
+            exists( $options->{ DHO_DHCP_MAX_MESSAGE_SIZE() } )
+        )
+    {
+        # maximum packet size is specified
         my $max_message_size = $options->{ DHO_DHCP_MAX_MESSAGE_SIZE() };
         if (   ( $max_message_size >= BOOTP_MIN_LEN() )
             && ( $max_message_size < DHCP_MAX_MTU() ) )
@@ -505,6 +516,7 @@ sub serialize {
 
 #=======================================================================
 sub marshall {
+
     use bytes;
     my ( $self, $buf ) = @_;
     my $opt_buf;
@@ -554,6 +566,7 @@ sub marshall {
         my $type;
 
         while ( $pos < $total ) {
+
             $type = ord( substr( $opt_buf, $pos++, 1 ) );
             next if ( $type eq DHO_PAD() );  # Skip padding bytes
             last if ( $type eq DHO_END() );  # Type 'FF' signals end of options.
@@ -561,6 +574,7 @@ sub marshall {
             my $option = substr( $opt_buf, $pos, $len );
             $pos += $len;
             $self->addOptionRaw( $type, $option );
+
         }
 
         # verify that we ended with an "END" code
@@ -590,12 +604,14 @@ sub marshall {
 
 #=======================================================================
 sub decodeRelayAgent {
+
     use bytes;
     my $self      = shift;
     my ($opt_buf) = @_;
     my @opt;
 
     if ( length($opt_buf) > 1 ) {
+
         my $pos   = 0;
         my $total = length($opt_buf);
 
@@ -606,8 +622,11 @@ sub decodeRelayAgent {
             $pos += $len;
             push @opt, $type, $option;
         }
+
     }
-    return @opt;
+
+    return @opt
+
 }
 
 sub encodeRelayAgent {
@@ -662,7 +681,7 @@ sub toString {
     $s .= sprintf( "file = %s\n",  $self->file() );
     $s .= "Options : \n";
 
-    foreach my $key ( @{ $self->{options_order} } ) {
+    for my $key ( @{ $self->{options_order} } ) {
         my $value;    # value of option to be printed
 
         if ( $key == DHO_DHCP_MESSAGE_TYPE() ) {
@@ -699,17 +718,6 @@ sub toString {
 #=======================================================================
 # internal utility functions
 # never failing versions of the "Socket" module functions
-sub unpackinet {    # bullet-proof version, never complains
-    use bytes;
-    my $ip = shift;
-    return '0.0.0.0' unless ( $ip && length($ip) == 4 );
-    return
-        ord( substr( $ip, 0, 1 ) ) . q|.|
-      . ord( substr( $ip, 1, 1 ) ) . q|.|
-      . ord( substr( $ip, 2, 1 ) ) . q|.|
-      . ord( substr( $ip, 3, 1 ) );
-}
-
 sub packinet {      # bullet-proof version, never complains
     use bytes;
     my $addr = shift;
@@ -721,8 +729,26 @@ sub packinet {      # bullet-proof version, never complains
     return "\0\0\0\0";
 }
 
+sub unpackinet {    # bullet-proof version, never complains
+    use bytes;
+    my $ip = shift;
+    return '0.0.0.0' unless ( $ip && length($ip) == 4 );
+    return
+        ord( substr( $ip, 0, 1 ) ) . q|.|
+      . ord( substr( $ip, 1, 1 ) ) . q|.|
+      . ord( substr( $ip, 2, 1 ) ) . q|.|
+      . ord( substr( $ip, 3, 1 ) );
+}
+
 sub packinets {     # multiple ip addresses, space delimited
-    return join( q(), map { packinet($_) } split( /[\s\/,;]+/, shift || 0 ) );
+    return join( q(),
+            map { packinet($_) }
+            split( /[\s\/,;]+/, shift || 0 )
+            );
+}
+
+sub unpackinets {        # multiple ip addresses
+    return join( q| |, map { unpackinet($_) } unpack( "(a4)*", shift || 0 ) );
 }
 
 sub packinets_array {    # multiple ip addresses, space delimited
@@ -730,19 +756,28 @@ sub packinets_array {    # multiple ip addresses, space delimited
     return join( q(), map { packinet($_) } @_ );
 }
 
-sub unpackinets {        # multiple ip addresses
-    return join( q| |, map { unpackinet($_) } unpack( "(a4)*", shift || 0 ) );
-}
-
 sub unpackinets_array {    # multiple ip addresses, returns an array
     return map { unpackinet($_) } unpack( "(a4)*", shift || 0 );
 }
 
+sub packsuboptions {
+
+}
+
+sub unpacksuboptions {
+
+}
+
 sub unpackRelayAgent {     # prints a human readable 'relay agent options'
+
     my %relay_opt = @_
       or return;
-    return
-      join( q|,|, map { "($_)=" . $relay_opt{$_} } ( sort keys %relay_opt ) );
+
+    return join( q|,|,
+           map { "($_)=" . $relay_opt{$_} }
+           ( sort keys %relay_opt )
+           )
+
 }
 
 #=======================================================================
