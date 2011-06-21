@@ -38,45 +38,72 @@ sub new {
         exists( $args{Comment} )
           ? $self->comment( $args{Comment} )
           : $self->{comment} = undef;
-        exists( $args{Op} ) ? $self->op( $args{Op} ) : $self->{op} =
-          BOOTREQUEST();
-        exists( $args{Htype} ) ? $self->htype( $args{Htype} ) : $self->{htype} =
-          1;                    # 10mb ethernet
-        exists( $args{Hlen} ) ? $self->hlen( $args{Hlen} ) : $self->{hlen} =
-          6;                    # Use 6 bytes MAC
-        exists( $args{Hops} ) ? $self->hops( $args{Hops} ) : $self->{hops} = 0;
-        exists( $args{Xid} ) ? $self->xid( $args{Xid} ) : $self->{xid} =
-          0x12345678;
-        exists( $args{Secs} ) ? $self->secs( $args{Secs} ) : $self->{secs} = 0;
-        exists( $args{Flags} ) ? $self->flags( $args{Flags} ) : $self->{flags} =
-          0;
+
+        exists( $args{Op} )
+            ? $self->op( $args{Op} )
+            : $self->{op} = BOOTREQUEST();
+
+        exists( $args{Htype} )
+            ? $self->htype( $args{Htype} )
+            : $self->{htype} = 1; # 10mb ethernet
+
+        exists( $args{Hlen} )
+            ? $self->hlen( $args{Hlen} )
+            : $self->{hlen} = 6; # Use 6 bytes MAC
+
+        exists( $args{Hops} )
+            ? $self->hops( $args{Hops} )
+            : $self->{hops} = 0;
+
+        exists( $args{Xid} )
+            ? $self->xid( $args{Xid} )
+            : $self->{xid} = 0x12345678;
+
+        exists( $args{Secs} )
+            ? $self->secs( $args{Secs} )
+            : $self->{secs} = 0;
+
+        exists( $args{Flags} )
+            ? $self->flags( $args{Flags} )
+            : $self->{flags} = 0;
+
         exists( $args{Ciaddr} )
-          ? $self->ciaddr( $args{Ciaddr} )
-          : $self->{ciaddr} = "\0\0\0\0";
+            ? $self->ciaddr( $args{Ciaddr} )
+            : $self->{ciaddr} = "\0\0\0\0";
+
         exists( $args{Yiaddr} )
-          ? $self->yiaddr( $args{Yiaddr} )
-          : $self->{yiaddr} = "\0\0\0\0";
+            ? $self->yiaddr( $args{Yiaddr} )
+            : $self->{yiaddr} = "\0\0\0\0";
+
         exists( $args{Siaddr} )
-          ? $self->siaddr( $args{Siaddr} )
-          : $self->{siaddr} = "\0\0\0\0";
+            ? $self->siaddr( $args{Siaddr} )
+            : $self->{siaddr} = "\0\0\0\0";
+
         exists( $args{Giaddr} )
-          ? $self->giaddr( $args{Giaddr} )
-          : $self->{giaddr} = "\0\0\0\0";
+            ? $self->giaddr( $args{Giaddr} )
+            : $self->{giaddr} = "\0\0\0\0";
+
         exists( $args{Chaddr} )
-          ? $self->chaddr( $args{Chaddr} )
-          : $self->{chaddr} = q||;
-        exists( $args{Sname} ) ? $self->sname( $args{Sname} ) : $self->{sname} =
-          q||;
+            ? $self->chaddr( $args{Chaddr} )
+            : $self->{chaddr} = q||;
+
+        exists( $args{Sname} )
+            ? $self->sname( $args{Sname} )
+            : $self->{sname} = q||;
+
         exists( $args{File} ) ? $self->file( $args{File} ) : $self->{file} = q||;
+
         exists( $args{Padding} )
-          ? $self->padding( $args{Padding} )
-          : $self->{padding} = q||;
+            ? $self->padding( $args{Padding} )
+            : $self->{padding} = q||;
+
         exists( $args{IsDhcp} )
-          ? $self->isDhcp( $args{IsDhcp} )
-          : $self->{isDhcp} = 1;
+            ? $self->isDhcp( $args{IsDhcp} )
+            : $self->{isDhcp} = 1;
 
         # TBM add DHCP option parsing
         while ( defined( my $key = shift(@ordered_args) ) ) {
+
             my $value = shift(@ordered_args);
             my $is_numeric;
             {
@@ -88,7 +115,9 @@ sub new {
             }
         }
     }
-    return $self;
+
+    return $self
+
 }
 
 #=======================================================================
@@ -344,7 +373,7 @@ sub addOptionValue {
                         );
 
 
-}
+} # end AddOptionValue
 
 sub getOptionRaw {
     my ( $self, $key ) = @_;
@@ -392,9 +421,9 @@ sub getOptionValue {
         if $options{$format};
 
     # if we cant work out the format
-    return $value_bin;
+    return $value_bin
 
-}
+} # getOptionValue
 
 sub removeOption {
     my ( $self, $key ) = @_;
@@ -470,8 +499,9 @@ sub serialize {
         }
     }
 
-    return $bytes;
-}
+    return $bytes
+
+} # end sub serialize
 
 #=======================================================================
 sub marshall {
@@ -545,6 +575,7 @@ sub marshall {
         else {
             $self->{padding} = q||;
         }
+
     }
     else {
 
@@ -553,8 +584,9 @@ sub marshall {
 
     }
 
-    return $self;
-}
+    return $self
+
+} # end sub marshall
 
 #=======================================================================
 sub decodeRelayAgent {
@@ -660,8 +692,9 @@ sub toString {
         unpack( 'H*', $self->{padding} )
     );
 
-    return $s;
-}
+    return $s
+
+} # end toString
 
 #=======================================================================
 # internal utility functions
@@ -1025,7 +1058,7 @@ I<Removed as of version 0.60. Please use C<addOptionRaw()> instead.>
 
 I<Removed as of version 0.60. Please use C<getOptionRaw()> instead.>
 
-=item 
+=item
 
 =back
 
