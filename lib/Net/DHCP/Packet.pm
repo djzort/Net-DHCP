@@ -305,10 +305,6 @@ sub padding {
 }
 
 #=======================================================================
-#sub addOption {               # deprecated
-#  my $self = shift;
-#  return $self->addOptionRaw(@_);
-#}
 
 sub addOptionRaw {
     my ( $self, $key, $value_bin ) = @_;
@@ -320,12 +316,17 @@ sub addOptionValue {
     my $self  = shift;
     my $code  = shift;    # option code
     my $value = shift;
-    my $value_bin;        # option value in binary format
+    # my $value_bin;        # option value in binary format
 
     carp("addOptionValue: unknown format for code ($code)")
       unless exists( $DHO_FORMATS{$code} );
 
     my $format = $DHO_FORMATS{$code};
+
+    if ($format eq 'suboption') {
+        carp 'Use addSubOptionValue to add sub options';
+        return
+    }
 
     # decompose input value into an array
     my @values;
@@ -362,7 +363,6 @@ sub addOptionValue {
       byte    => sub { return pack('C', 255 & shift) }, # 255 & trims the input to single octet
       bytes   => sub { return pack('C*', map {255 & $_} @_) },
       string  => sub { return shift },
-      suboptions => sub { return packsuboptions() },
 
     );
 
@@ -381,6 +381,78 @@ sub addOptionValue {
 
 
 } # end AddOptionValue
+
+sub addSubOptionRaw {
+    my ( $self, $key, $subkey, $value_bin ) = @_;
+    $self->{options}->{$key}->{$subkey} = $value_bin;
+
+    # sub options should be ordered numerically
+    # push @{ $self->{options_order} }, ($key);
+}
+
+sub addSubOptionValue {
+
+    my $self  = shift;
+    my $code  = shift;    # option code
+    my $subcode = shift; # sub option code
+    my $value = shift;
+    my $value_bin;        # option value in binary format
+
+    # FIXME
+    #carp("addSubOptionValue: unknown format for code ($code)")
+    #  unless exists( $DHO_FORMATS{$code} );
+
+    #~ my $format = $DHO_FORMATS{$code};
+
+    #~ # decompose input value into an array
+    #~ my @values;
+    #~ if ( defined $value && $value ne q|| ) {
+        #~ @values =
+          #~ split( /[\s\/,;]+/, $value );    # array of values, split by space
+    #~ }
+
+    #~ # verify number of parameters
+    #~ if ( $format eq 'string' ) {
+        #~ @values = ($value);                # don't change format
+    #~ }
+    #~ elsif ( $format =~ /s$/ )
+    #~ {    # ends with an 's', meaning any number of parameters
+        #~ ;
+    #~ }
+    #~ elsif ( $format =~ /2$/ ) { # ends with a '2', meaning couples of parameters
+        #~ croak(
+            #~ "addOptionValue: only pairs of values expected for option '$code'")
+          #~ if ( ( @values % 2 ) != 0 );
+    #~ }
+    #~ else {                      # only one parameter
+        #~ croak("addOptionValue: exactly one value expected for option '$code'")
+          #~ if ( @values != 1 );
+    #~ }
+
+    #~ my %options = (
+
+      #~ inet    => sub { return packinet(shift) },
+      #~ inets   => sub { return packinets_array(@_) },
+      #~ inets2  => sub { return packinets_array(@_) },
+      #~ int     => sub { return pack('N', shift) },
+      #~ short   => sub { return pack('n', shift) },
+      #~ byte    => sub { return pack('C', 255 & shift) }, # 255 & trims the input to single octet
+      #~ bytes   => sub { return pack('C*', map {255 & $_} @_) },
+      #~ string  => sub { return shift },
+
+    #~ );
+
+        #  } elsif ($format eq 'relays') {
+        #    $value_bin = $self->encodeRelayAgent(@values);
+        #  } elsif ($format eq 'ids') {
+        #    $value_bin = $values[0];
+        #    # TBM bad format
+
+
+    # decode the option if we know how, otherwise use the original value
+    $self->addSubOptionRaw( $code, $subcode, $value );
+
+}
 
 sub getOptionRaw {
     my ( $self, $key ) = @_;
@@ -415,6 +487,7 @@ sub getOptionValue {
          byte   => sub { return unpack( 'C', shift ) },
          bytes  => sub { return unpack( 'C*', shift ) },
          string => sub { return shift },
+
     );
 
         #  } elsif ($format eq 'relays') {
@@ -432,6 +505,13 @@ sub getOptionValue {
     return $value_bin
 
 } # getOptionValue
+
+sub getSubOptionRaw {
+    my ( $self, $key, $subkey ) = @_;
+    return $self->{options}->{$key}->{$subkey}
+        if exists( $self->{options}->{$key}->{$subkey} );
+    return;
+}
 
 sub removeOption {
     my ( $self, $key ) = @_;
@@ -762,6 +842,15 @@ sub unpackinets_array {    # multiple ip addresses, returns an array
 
 sub packsuboptions {
 
+    my $bytes;
+
+    for my $key ( @{ $self->{options_order} } ) {
+        $bytes .= pack( 'C',    $key );
+        $bytes .= pack( 'C/a*', $self->{options}->{$key} );
+    }
+    $bytes .= pack( 'C', 255 );
+
+    return $bytes
 }
 
 sub unpacksuboptions {
