@@ -14,14 +14,15 @@ $VERSION = 0.67_1;
 @EXPORT = qw(MAGIC_COOKIE);
 
 # Constants
-our ( %DHO_CODES,     %REV_DHO_CODES );
-our ( %DHCP_MESSAGE,  %REV_DHCP_MESSAGE );
-our ( %BOOTP_CODES,   %REV_BOOTP_CODES );
-our ( %HTYPE_CODES,   %REV_HTYPE_CODES );
-our ( %NWIP_CODES,    %REV_NWIP_CODES );
-our ( %CCC_CODES,     %REV_CCC_CODES );
-our ( %GEOCONF_CODES, %REV_GEOCONF_CODES );
-our ( %DRA_CODES,     %REV_DRA_CODES );
+our ( %DHO_CODES,        %REV_DHO_CODES );
+our ( %DHCP_MESSAGE,     %REV_DHCP_MESSAGE );
+our ( %BOOTP_CODES,      %REV_BOOTP_CODES );
+our ( %HTYPE_CODES,      %REV_HTYPE_CODES );
+our ( %NWIP_CODES,       %REV_NWIP_CODES );
+our ( %CCC_CODES,        %REV_CCC_CODES );
+our ( %GEOCONF_CODES,    %REV_GEOCONF_CODES );
+our ( %RELAYAGENT_CODES, %REV_RELAYAGENT_CODES );
+our ( %SUBOPTION_CODES );
 
 %EXPORT_TAGS = (
     dho_codes     => [ keys %DHO_CODES ],
@@ -31,13 +32,13 @@ our ( %DRA_CODES,     %REV_DRA_CODES );
     nwip_codes    => [ keys %NWIP_CODES ],
     ccc_codes     => [ keys %CCC_CODES ],
     geoconf_codes => [ keys %GEOCONF_CODES ],
-    dra_codes     => [ keys %DRA_CODES ],
+    ra_codes      => [ keys %RELAYAGENT_CODES ],
     dhcp_hashes   => [
         qw(
           %DHO_CODES %REV_DHO_CODES %DHCP_MESSAGE %REV_DHCP_MESSAGE
           %BOOTP_CODES %REV_BOOTP_CODES %NWIP_CODES %CCC_CODES
           %HTYPE_CODES %REV_HTYPE_CODES %GEOCONF_CODES %REV_GEOCONF_CODES
-          %DRA_CODES %REV_DRA_CODES
+          %RELAYAGENT_CODES %REV_RELAYAGENT_CODES %SUBOPTION_CODES
           )
     ],
     dhcp_other => [
@@ -50,7 +51,8 @@ our ( %DRA_CODES,     %REV_DRA_CODES );
   %BOOTP_CODES %REV_BOOTP_CODES %NWIP_CODES %REV_NWIP_CODES
   %HTYPE_CODES %REV_HTYPE_CODES %CCC_CODES %REV_CCC_CODES
   %DHO_FORMATS %GEOCONF_CODES %REV_GEOCONF_CODES
-  %DRA_CODES %REV_DRA_CODES
+  %RELAYAGENT_CODES %REV_RELAYAGENT_CODES
+  %SUBOPTION_CODES
 );
 Exporter::export_tags('dho_codes');
 Exporter::export_tags('dhcp_message');
@@ -83,132 +85,132 @@ BEGIN {
     );
 
     %DHO_CODES = (    # rfc 2132
-        'DHO_PAD'                         => 0,
-        'DHO_SUBNET_MASK'                 => 1,
-        'DHO_TIME_OFFSET'                 => 2,
-        'DHO_ROUTERS'                     => 3,
-        'DHO_TIME_SERVERS'                => 4,
-        'DHO_NAME_SERVERS'                => 5,
-        'DHO_DOMAIN_NAME_SERVERS'         => 6,
-        'DHO_LOG_SERVERS'                 => 7,
-        'DHO_COOKIE_SERVERS'              => 8,
-        'DHO_LPR_SERVERS'                 => 9,
-        'DHO_IMPRESS_SERVERS'             => 10,
-        'DHO_RESOURCE_LOCATION_SERVERS'   => 11,
-        'DHO_HOST_NAME'                   => 12,
-        'DHO_BOOT_SIZE'                   => 13,
-        'DHO_MERIT_DUMP'                  => 14,
-        'DHO_DOMAIN_NAME'                 => 15,
-        'DHO_SWAP_SERVER'                 => 16,
-        'DHO_ROOT_PATH'                   => 17,
-        'DHO_EXTENSIONS_PATH'             => 18,
-        'DHO_IP_FORWARDING'               => 19,
-        'DHO_NON_LOCAL_SOURCE_ROUTING'    => 20,
-        'DHO_POLICY_FILTER'               => 21,
-        'DHO_MAX_DGRAM_REASSEMBLY'        => 22,
-        'DHO_DEFAULT_IP_TTL'              => 23,
-        'DHO_PATH_MTU_AGING_TIMEOUT'      => 24,
-        'DHO_PATH_MTU_PLATEAU_TABLE'      => 25,
-        'DHO_INTERFACE_MTU'               => 26,
-        'DHO_ALL_SUBNETS_LOCAL'           => 27,
-        'DHO_BROADCAST_ADDRESS'           => 28,
-        'DHO_PERFORM_MASK_DISCOVERY'      => 29,
-        'DHO_MASK_SUPPLIER'               => 30,
-        'DHO_ROUTER_DISCOVERY'            => 31,
-        'DHO_ROUTER_SOLICITATION_ADDRESS' => 32,
-        'DHO_STATIC_ROUTES'               => 33,
-        'DHO_TRAILER_ENCAPSULATION'       => 34,
-        'DHO_ARP_CACHE_TIMEOUT'           => 35,
-        'DHO_IEEE802_3_ENCAPSULATION'     => 36,
-        'DHO_DEFAULT_TCP_TTL'             => 37,
-        'DHO_TCP_KEEPALIVE_INTERVAL'      => 38,
-        'DHO_TCP_KEEPALIVE_GARBAGE'       => 39,
-        'DHO_NIS_DOMAIN'                  => 40,
-        'DHO_NIS_SERVERS'                 => 41,
-        'DHO_NTP_SERVERS'                 => 42,
-        'DHO_VENDOR_ENCAPSULATED_OPTIONS' => 43,
-        'DHO_NETBIOS_NAME_SERVERS'        => 44,
-        'DHO_NETBIOS_DD_SERVER'           => 45,
-        'DHO_NETBIOS_NODE_TYPE'           => 46,
-        'DHO_NETBIOS_SCOPE'               => 47,
-        'DHO_FONT_SERVERS'                => 48,
-        'DHO_X_DISPLAY_MANAGER'           => 49,
-        'DHO_DHCP_REQUESTED_ADDRESS'      => 50,
-        'DHO_DHCP_LEASE_TIME'             => 51,
-        'DHO_DHCP_OPTION_OVERLOAD'        => 52,
-        'DHO_DHCP_MESSAGE_TYPE'           => 53,
-        'DHO_DHCP_SERVER_IDENTIFIER'      => 54,
-        'DHO_DHCP_PARAMETER_REQUEST_LIST' => 55,
-        'DHO_DHCP_MESSAGE'                => 56,
-        'DHO_DHCP_MAX_MESSAGE_SIZE'       => 57,
-        'DHO_DHCP_RENEWAL_TIME'           => 58,
-        'DHO_DHCP_REBINDING_TIME'         => 59,
-        'DHO_VENDOR_CLASS_IDENTIFIER'     => 60,
-        'DHO_DHCP_CLIENT_IDENTIFIER'      => 61,
-        'DHO_NWIP_DOMAIN_NAME'            => 62,
-        'DHO_NWIP_SUBOPTIONS'             => 63,
-        'DHO_NISV3_DOMAIN'                => 64,
-        'DHO_NISV3_SERVER'                => 65,
-        'DHO_TFTP_SERVER'                 => 66, # actually named 'server name' by iana
-        'DHO_BOOTFILE'                    => 67,
-        'DHO_MOBILE_IP_HOME_AGENT'        => 68,
-        'DHO_SMTP_SERVER'                 => 69,
-        'DHO_POP3_SERVER'                 => 70,
-        'DHO_NNTP_SERVER'                 => 71,
-        'DHO_WWW_SERVER'                  => 72,
-        'DHO_FINGER_SERVER'               => 73,
-        'DHO_IRC_SERVER'                  => 74,
-        'DHO_STREETTALK_SERVER'           => 75,
-        'DHO_STDA_SERVER'                 => 76,
-        'DHO_USER_CLASS'                  => 77,
-        'DHO_DIRECTORY_AGENT'             => 78,
-        'DHO_SERVICE_SCOPE'               => 79,
-        'DHO_RAPID_COMMIT'                => 80,
-        'DHO_FQDN'                        => 81,
-        'DHO_DHCP_AGENT_OPTIONS'          => 82,
-        'DHO_ISNS'                        => 83,
-        'DHO_NDS_SERVERS'                 => 85,
-        'DHO_NDS_TREE_NAME'               => 86,
-        'DHO_NDS_CONTEXT'                 => 87,
-        'DHO_BCMCS_CONTROLLER_DOMAIN_NAME_LIST'   => 88,
-        'DHO_BCMCS_CONTROLLER_IPV4_ADDRESS'       => 89,
-        'DHO_AUTHENTICATION'                      => 90,
-        'DHO_CLIENT_LAST_TRANSACTION_TIME'        => 91,
-        'DHO_ASSOCIATED_IP'                       => 92,
-        'DHO_CLIENT_SYSTEM'                       => 93,
-        'DHO_CLIENT_NDI'                          => 94,
-        'DHO_LDAP'                                => 95,
-        'DHO_UUID_GUID'                           => 97,
-        'DHO_USER_AUTHENTICATION_PROTOCOL'        => 98,
-        'DHO_GEOCONF_CIVIC'                       => 99,
-        'DHO_PCODE'                               => 100,
-        'DHO_TCODE'                               => 101,
-        'DHO_NETINFO_ADDRESS'                     => 112,
-        'DHO_NETINFO_TAG'                         => 113,
-        'DHO_URL'                                 => 114,
-        'DHO_AUTO_CONFIGURE'                      => 116,
-        'DHO_NAME_SERVICE_SEARCH'                 => 117,
-        'DHO_SUBNET_SELECTION'                    => 118,
-        'DHO_DOMAIN_SEARCH'                       => 119,
-        'DHO_SIP_SERVERS'                         => 120,
-        'DHO_CLASSLESS_STATIC_ROUTE'              => 121,
-        'DHO_CCC'                                 => 122,
-        'DHO_GEOCONF'                             => 123,
-        'DHO_VI_VENDOR_CLASS'                     => 124,
-        'DHO_VI_VENDOR_SPECIFIC_INFOMATION'       => 125,
-        'DHO_DOCSIS_FULL_SECURITY_SERVER_ADDRESS' => 128,
-        'DHO_TFTP_SERVER_IPPHONE'                 => 128,
-        'DHO_ETHERBOOT_SIGNATURE'                 => 128,
-        'DHO_CALL_SERVER_ADDRESS'                 => 129,
-        'DHO_KERNEL_OPTIONS'                      => 129,
-        'DHO_DISCRIMINATION_STRING'               => 130,
-        'DHO_ETHERNET_INTERFACE'                  => 130,
-        'DHO_REMOTE_STATISTICS_SERVER'            => 131,
-        'DHO_VLAN_ID'                             => 132,
-        'DHO_L2_PRIORITY'                         => 133,
-        'DHO_DSCP'                                => 134,
-        'DHO_PXE'                                 => 135,
-        'DHO_HTTP_PROXY_FORPHONES'                => 135,
+        'DHO_PAD'                                  => 0,
+        'DHO_SUBNET_MASK'                          => 1,
+        'DHO_TIME_OFFSET'                          => 2,
+        'DHO_ROUTERS'                              => 3,
+        'DHO_TIME_SERVERS'                         => 4,
+        'DHO_NAME_SERVERS'                         => 5,
+        'DHO_DOMAIN_NAME_SERVERS'                  => 6,
+        'DHO_LOG_SERVERS'                          => 7,
+        'DHO_COOKIE_SERVERS'                       => 8,
+        'DHO_LPR_SERVERS'                          => 9,
+        'DHO_IMPRESS_SERVERS'                      => 10,
+        'DHO_RESOURCE_LOCATION_SERVERS'            => 11,
+        'DHO_HOST_NAME'                            => 12,
+        'DHO_BOOT_SIZE'                            => 13,
+        'DHO_MERIT_DUMP'                           => 14,
+        'DHO_DOMAIN_NAME'                          => 15,
+        'DHO_SWAP_SERVER'                          => 16,
+        'DHO_ROOT_PATH'                            => 17,
+        'DHO_EXTENSIONS_PATH'                      => 18,
+        'DHO_IP_FORWARDING'                        => 19,
+        'DHO_NON_LOCAL_SOURCE_ROUTING'             => 20,
+        'DHO_POLICY_FILTER'                        => 21,
+        'DHO_MAX_DGRAM_REASSEMBLY'                 => 22,
+        'DHO_DEFAULT_IP_TTL'                       => 23,
+        'DHO_PATH_MTU_AGING_TIMEOUT'               => 24,
+        'DHO_PATH_MTU_PLATEAU_TABLE'               => 25,
+        'DHO_INTERFACE_MTU'                        => 26,
+        'DHO_ALL_SUBNETS_LOCAL'                    => 27,
+        'DHO_BROADCAST_ADDRESS'                    => 28,
+        'DHO_PERFORM_MASK_DISCOVERY'               => 29,
+        'DHO_MASK_SUPPLIER'                        => 30,
+        'DHO_ROUTER_DISCOVERY'                     => 31,
+        'DHO_ROUTER_SOLICITATION_ADDRESS'          => 32,
+        'DHO_STATIC_ROUTES'                        => 33,
+        'DHO_TRAILER_ENCAPSULATION'                => 34,
+        'DHO_ARP_CACHE_TIMEOUT'                    => 35,
+        'DHO_IEEE802_3_ENCAPSULATION'              => 36,
+        'DHO_DEFAULT_TCP_TTL'                      => 37,
+        'DHO_TCP_KEEPALIVE_INTERVAL'               => 38,
+        'DHO_TCP_KEEPALIVE_GARBAGE'                => 39,
+        'DHO_NIS_DOMAIN'                           => 40,
+        'DHO_NIS_SERVERS'                          => 41,
+        'DHO_NTP_SERVERS'                          => 42,
+        'DHO_VENDOR_ENCAPSULATED_OPTIONS'          => 43,
+        'DHO_NETBIOS_NAME_SERVERS'                 => 44,
+        'DHO_NETBIOS_DD_SERVER'                    => 45,
+        'DHO_NETBIOS_NODE_TYPE'                    => 46,
+        'DHO_NETBIOS_SCOPE'                        => 47,
+        'DHO_FONT_SERVERS'                         => 48,
+        'DHO_X_DISPLAY_MANAGER'                    => 49,
+        'DHO_DHCP_REQUESTED_ADDRESS'               => 50,
+        'DHO_DHCP_LEASE_TIME'                      => 51,
+        'DHO_DHCP_OPTION_OVERLOAD'                 => 52,
+        'DHO_DHCP_MESSAGE_TYPE'                    => 53,
+        'DHO_DHCP_SERVER_IDENTIFIER'               => 54,
+        'DHO_DHCP_PARAMETER_REQUEST_LIST'          => 55,
+        'DHO_DHCP_MESSAGE'                         => 56,
+        'DHO_DHCP_MAX_MESSAGE_SIZE'                => 57,
+        'DHO_DHCP_RENEWAL_TIME'                    => 58,
+        'DHO_DHCP_REBINDING_TIME'                  => 59,
+        'DHO_VENDOR_CLASS_IDENTIFIER'              => 60,
+        'DHO_DHCP_CLIENT_IDENTIFIER'               => 61,
+        'DHO_NWIP_DOMAIN_NAME'                     => 62,
+        'DHO_NWIP_SUBOPTIONS'                      => 63,
+        'DHO_NISV3_DOMAIN'                         => 64,
+        'DHO_NISV3_SERVER'                         => 65,
+        'DHO_TFTP_SERVER'                          => 66, # actually named 'server name' by iana
+        'DHO_BOOTFILE'                             => 67,
+        'DHO_MOBILE_IP_HOME_AGENT'                 => 68,
+        'DHO_SMTP_SERVER'                          => 69,
+        'DHO_POP3_SERVER'                          => 70,
+        'DHO_NNTP_SERVER'                          => 71,
+        'DHO_WWW_SERVER'                           => 72,
+        'DHO_FINGER_SERVER'                        => 73,
+        'DHO_IRC_SERVER'                           => 74,
+        'DHO_STREETTALK_SERVER'                    => 75,
+        'DHO_STDA_SERVER'                          => 76,
+        'DHO_USER_CLASS'                           => 77,
+        'DHO_DIRECTORY_AGENT'                      => 78,
+        'DHO_SERVICE_SCOPE'                        => 79,
+        'DHO_RAPID_COMMIT'                         => 80,
+        'DHO_FQDN'                                 => 81,
+        'DHO_DHCP_AGENT_OPTIONS'                   => 82,
+        'DHO_ISNS'                                 => 83,
+        'DHO_NDS_SERVERS'                          => 85,
+        'DHO_NDS_TREE_NAME'                        => 86,
+        'DHO_NDS_CONTEXT'                          => 87,
+        'DHO_BCMCS_CONTROLLER_DOMAIN_NAME_LIST'    => 88,
+        'DHO_BCMCS_CONTROLLER_IPV4_ADDRESS'        => 89,
+        'DHO_AUTHENTICATION'                       => 90,
+        'DHO_CLIENT_LAST_TRANSACTION_TIME'         => 91,
+        'DHO_ASSOCIATED_IP'                        => 92,
+        'DHO_CLIENT_SYSTEM'                        => 93,
+        'DHO_CLIENT_NDI'                           => 94,
+        'DHO_LDAP'                                 => 95,
+        'DHO_UUID_GUID'                            => 97,
+        'DHO_USER_AUTHENTICATION_PROTOCOL'         => 98,
+        'DHO_GEOCONF_CIVIC'                        => 99,
+        'DHO_PCODE'                                => 100,
+        'DHO_TCODE'                                => 101,
+        'DHO_NETINFO_ADDRESS'                      => 112,
+        'DHO_NETINFO_TAG'                          => 113,
+        'DHO_URL'                                  => 114,
+        'DHO_AUTO_CONFIGURE'                       => 116,
+        'DHO_NAME_SERVICE_SEARCH'                  => 117,
+        'DHO_SUBNET_SELECTION'                     => 118,
+        'DHO_DOMAIN_SEARCH'                        => 119,
+        'DHO_SIP_SERVERS'                          => 120,
+        'DHO_CLASSLESS_STATIC_ROUTE'               => 121,
+        'DHO_CCC'                                  => 122,
+        'DHO_GEOCONF'                              => 123,
+        'DHO_VI_VENDOR_CLASS'                      => 124,
+        'DHO_VI_VENDOR_SPECIFIC_INFOMATION'        => 125,
+        'DHO_DOCSIS_FULL_SECURITY_SERVER_ADDRESS'  => 128,
+        'DHO_TFTP_SERVER_IPPHONE'                  => 128,
+        'DHO_ETHERBOOT_SIGNATURE'                  => 128,
+        'DHO_CALL_SERVER_ADDRESS'                  => 129,
+        'DHO_KERNEL_OPTIONS'                       => 129,
+        'DHO_DISCRIMINATION_STRING'                => 130,
+        'DHO_ETHERNET_INTERFACE'                   => 130,
+        'DHO_REMOTE_STATISTICS_SERVER'             => 131,
+        'DHO_VLAN_ID'                              => 132,
+        'DHO_L2_PRIORITY'                          => 133,
+        'DHO_DSCP'                                 => 134,
+        'DHO_PXE'                                  => 135,
+        'DHO_HTTP_PROXY_FORPHONES'                 => 135,
 
         'DHO_OPTION_PANA_AGENT'                    => 136,
         'DHO_OPTION_PANA_V4_LOST'                  => 137,
@@ -276,7 +278,6 @@ BEGIN {
 
     # Type 122 sub option codes
     %CCC_CODES = (
-
         'CCC_PRIMARY_DHCP_SERVER'        => 1,
         'CCC_SECONDARY_DHCP_SERVER'      => 2,
         'CCC_PROVISIONING_SERVER'        => 3,
@@ -287,28 +288,26 @@ BEGIN {
         'CCC_PROVISIONING_TIMER'         => 8,
         'CCC_SECURITY_TICKET_CONTROL'    => 9,
         'CCC_KDC_SERVER'                 => 10,
-
     );
 
-# Type 123 sub option codes (there are more, but im not sure how to deal with them)
+    # Type 123 sub option codes (there are more, but im not sure how to deal with them)
     %GEOCONF_CODES = (
         'GEO_METERS' => 1,
         'GEO_FLOORS' => 2,
     );
 
-    %DRA_CODES = (
-
-        'DRA_CIRCUIT_ID'         => 1,
-        'DRA_REMOTE_ID'          => 2,
-        'DRA_DOCSIS_CLASS'       => 4,
-        'DRA_LINK_SELECTION'     => 5,
-        'DRA_SUBSCRIBER_ID'      => 6,
-        'DRA_RADIUS_ATTRIBUTES'  => 7,
-        'DRA_AUTHENTICATION'     => 8,
-        'DRA_VENDOR_INFO'        => 9,
-        'DRA_FLAGS'              => 10,
-        'DRA_SERVER_ID_OVERRIDE' => 11,
-
+    # Type 82 sub option codes
+    %RELAYAGENT_CODES = (
+        'RA_CIRCUIT_ID'         => 1,
+        'RA_REMOTE_ID'          => 2,
+        'RA_DOCSIS_CLASS'       => 4,
+        'RA_LINK_SELECTION'     => 5,
+        'RA_SUBSCRIBER_ID'      => 6,
+        'RA_RADIUS_ATTRIBUTES'  => 7,
+        'RA_AUTHENTICATION'     => 8,
+        'RA_VENDOR_INFO'        => 9,
+        'RA_FLAGS'              => 10,
+        'RA_SERVER_ID_OVERRIDE' => 11,
     );
 }
 
@@ -333,8 +332,8 @@ use constant \%CCC_CODES;
 use constant \%GEOCONF_CODES;
 %REV_GEOCONF_CODES = reverse %GEOCONF_CODES;
 
-use constant \%DRA_CODES;
-%REV_DRA_CODES = reverse %DRA_CODES;
+use constant \%RELAYAGENT_CODES;
+%REV_RELAYAGENT_CODES = reverse %RELAYAGENT_CODES;
 
 #
 # Format of DHCP options : for pretty-printing
@@ -417,24 +416,24 @@ our %DHO_FORMATS = (
     DHO_VENDOR_CLASS_IDENTIFIER()     => 'string',
 
     #    DHO_DHCP_CLIENT_IDENTIFIER()  => 'ids',
-    DHO_NWIP_DOMAIN_NAME() => 'string',    # rfc 2242
+    DHO_NWIP_DOMAIN_NAME()            => 'string',    # rfc 2242
 
-    DHO_NWIP_SUBOPTIONS()      => 'suboptions',                    # rfc 2242
-    DHO_NISV3_DOMAIN()         => 'string',
-    DHO_NISV3_SERVER()         => 'string',
-    DHO_TFTP_SERVER()          => 'string',
-    DHO_BOOTFILE()             => 'string',
-    DHO_MOBILE_IP_HOME_AGENT() => 'inets',
-    DHO_SMTP_SERVER()          => 'inets',
-    DHO_POP3_SERVER()          => 'inets',
-    DHO_NNTP_SERVER()          => 'inets',
-    DHO_WWW_SERVER()           => 'inets',
-    DHO_FINGER_SERVER()        => 'inets',
-    DHO_IRC_SERVER()           => 'inets',
-    DHO_STREETTALK_SERVER()    => 'inets',
-    DHO_STDA_SERVER()          => 'inets',
+    DHO_NWIP_SUBOPTIONS()             => 'suboptions',                    # rfc 2242
+    DHO_NISV3_DOMAIN()                => 'string',
+    DHO_NISV3_SERVER()                => 'string',
+    DHO_TFTP_SERVER()                 => 'string',
+    DHO_BOOTFILE()                    => 'string',
+    DHO_MOBILE_IP_HOME_AGENT()        => 'inets',
+    DHO_SMTP_SERVER()                 => 'inets',
+    DHO_POP3_SERVER()                 => 'inets',
+    DHO_NNTP_SERVER()                 => 'inets',
+    DHO_WWW_SERVER()                  => 'inets',
+    DHO_FINGER_SERVER()               => 'inets',
+    DHO_IRC_SERVER()                  => 'inets',
+    DHO_STREETTALK_SERVER()           => 'inets',
+    DHO_STDA_SERVER()                 => 'inets',
 
-    DHO_CCC                    => 'suboptions',
+    DHO_CCC                           => 'suboptions',
 
 #    DHO_USER_CLASS()  => '',                        # rfc 3004
 #    DHO_FQDN()  => '',                              # draft-ietf-dhc-fqdn-option-10.txt
@@ -447,6 +446,14 @@ our %DHO_FORMATS = (
     DHO_NAME_SERVICE_SEARCH()          => 'shorts',    # rfc 2937
     DHO_SUBNET_SELECTION()             => 'inet',      # rfc 3011
 
+);
+
+# Links option codes with their suboption values
+our %SUBOPTION_CODES = (
+    $DHO_CODES{'DHO_NWIP_SUBOPTIONS'}    => \%NWIP_CODES, # option 63
+    $DHO_CODES{'DHO_DHCP_AGENT_OPTIONS'} => \%RELAYAGENT_CODES, # option 82
+    $DHO_CODES{'DHO_CCC'}                => \%CCC_CODES,  # option 122
+    $DHO_CODES{'DHO_GEOCONF'}            => \%GEOCONF_CODES, # option 123
 );
 
 1;

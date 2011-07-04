@@ -4,7 +4,7 @@ use Test::More tests => 207;
 
 BEGIN { use_ok('Net::DHCP::Constants'); }
 
-use Net::DHCP::Constants qw(%DHO_CODES %DHCP_MESSAGE %NWIP_CODES %CCC_CODES %GEOCONF_CODES %DRA_CODES);
+use Net::DHCP::Constants qw(%DHO_CODES %DHCP_MESSAGE %NWIP_CODES %CCC_CODES %GEOCONF_CODES %RELAYAGENT_CODES);
 
 use strict;
 use warnings;
@@ -164,7 +164,7 @@ plan skip_all => "Couldnt load iana details, skipping coverage"
 ## DHCP RELAY SUB OPTIONS CODES - bootp-dhcp-parameters-8
 {
 
-    my @val = values %DRA_CODES;
+    my @val = values %RELAYAGENT_CODES;
 
     my $codes =
       $iana{registry}->{'bootp-dhcp-parameters-8'}->{record};    # this is mildy nasty
@@ -181,7 +181,7 @@ plan skip_all => "Couldnt load iana details, skipping coverage"
         my $value = $k->{value};
         ok(
             ( grep { $value == $_ } @val ),
-            "\%DRA_CODES has $value aka $name"
+            "\%RELAYAGENT_CODES has $value aka $name"
         );
 
         #die unless (grep {$value == $_} @val);
