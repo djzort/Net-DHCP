@@ -1,6 +1,7 @@
 #!/usr/bin/perl -wT
 
-use Test::More tests => 32;
+use Test::More tests => 33;
+use Test::Warn;
 
 BEGIN { use_ok('Net::DHCP::Packet'); }
 BEGIN { use_ok('Net::DHCP::Constants'); }
@@ -29,31 +30,37 @@ my $ref_packet = pack( 'H*',
       . '0000000000000000000000000000000000000000000000000000000000000000'
       . '0000' );
 
-warn 'Warnings are OK.';
-my $packet = Net::DHCP::Packet->new(
-    op                           => BOOTREQUEST(),
-    Htype                        => HTYPE_ETHER(),
-    Hlen                         => 6,
-    Hops                         => 0,
-    Xid                          => 0x11223344,
-    Flags                        => 0x8000,
-    Ciaddr                       => '10.0.0.1',
-    Yiaddr                       => '10.0.0.2',
-    Siaddr                       => '10.0.0.3',
-    Giaddr                       => '10.0.0.4',
-    Chaddr                       => '00112233445566778899AABBCCDDEEFF00',
-    Sname                        => $str200,
-    File                         => $str200,
-    DHO_DHCP_MESSAGE_TYPE()      => DHCPDISCOVER(),
-    DHO_DHCP_SERVER_IDENTIFIER() => '12.34.56.68',
-    DHO_DHCP_LEASE_TIME()        => 86400,
-    DHO_SUBNET_MASK()            => '255.255.255.0',
-    DHO_ROUTERS()                => '10.0.0.254',
-    DHO_STATIC_ROUTES()          => '22.33.44.55 10.0.0.254',
-    DHO_NTP_SERVERS()            => '10.0.0.5',
-    DHO_WWW_SERVER()             => '10.0.0.6',
-    Padding                      => "\x00" x 256
-);
+my $packet;
+warnings_are {
+    $packet = Net::DHCP::Packet->new(
+        op                           => BOOTREQUEST(),
+        Htype                        => HTYPE_ETHER(),
+        Hlen                         => 6,
+        Hops                         => 0,
+        Xid                          => 0x11223344,
+        Flags                        => 0x8000,
+        Ciaddr                       => '10.0.0.1',
+        Yiaddr                       => '10.0.0.2',
+        Siaddr                       => '10.0.0.3',
+        Giaddr                       => '10.0.0.4',
+        Chaddr                       => '00112233445566778899AABBCCDDEEFF00',
+        Sname                        => $str200,
+        File                         => $str200,
+        DHO_DHCP_MESSAGE_TYPE()      => DHCPDISCOVER(),
+        DHO_DHCP_SERVER_IDENTIFIER() => '12.34.56.68',
+        DHO_DHCP_LEASE_TIME()        => 86400,
+        DHO_SUBNET_MASK()            => '255.255.255.0',
+        DHO_ROUTERS()                => '10.0.0.254',
+        DHO_STATIC_ROUTES()          => '22.33.44.55 10.0.0.254',
+        DHO_NTP_SERVERS()            => '10.0.0.5',
+        DHO_WWW_SERVER()             => '10.0.0.6',
+        Padding                      => "\x00" x 256
+    );
+}
+[
+    q|'sname' must not be > 63 bytes, (currently 200)|,
+    q|'file' must not be > 127 bytes, (currently 200)|
+];
 
 my $packet2 = Net::DHCP::Packet->new($ref_packet);
 
