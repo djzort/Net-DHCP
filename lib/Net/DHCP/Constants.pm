@@ -450,7 +450,7 @@ our %DHO_FORMATS = (
 );
 
 # Links option codes with their suboption values
-our %SUBOPTION_CODES = (
+%SUBOPTION_CODES = (
     $DHO_CODES{'DHO_NWIP_SUBOPTIONS'}    => \%NWIP_CODES, # option 63
     $DHO_CODES{'DHO_DHCP_AGENT_OPTIONS'} => \%RELAYAGENT_CODES, # option 82
     $DHO_CODES{'DHO_CCC'}                => \%CCC_CODES,  # option 122
