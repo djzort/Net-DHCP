@@ -1,6 +1,7 @@
+#!/bin/false`
 # Net::DHCP::Packet.pm
-# Original Author: F. van Dun, S. Hadinger
 # Author : D. Hamstead
+# Original Author: F. van Dun, S. Hadinger
 
 package Net::DHCP::Packet;
 

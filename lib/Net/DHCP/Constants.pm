@@ -1,3 +1,4 @@
+#!/bin/false
 # Net::DHCP::Constants.pm
 # Author: Dean Hamstead, Stephan Hadinger
 
