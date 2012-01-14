@@ -34,6 +34,10 @@ Represents a DHCP packet as specified in RFC 1533, RFC 2132.
 
 Dean Hamstead E<lt>djzort@cpan.orgE<gt>
 
+=head1 SOURCE REPO
+
+See L<https://github.com/djzort/Net-DHCP>
+
 =head1 BUGS
 
 See L<https://rt.cpan.org/Dist/Display.html?Queue=Net-DHCP>

@@ -14,6 +14,9 @@ Currently these files are:
 
 All other files are licensed as described at the bottom of this file.
 
+You can fork and submit enhancements etc via https://github.com/djzort/Net-DHCP
+Sorry, I know github sucks but its popular.
+
 1. DESCRIPTION
 --------------
 
@@ -41,7 +44,11 @@ Net::DHCP has been tested with the following:
     Windows XP with ActivePerl
     
     RedHat Enterprise Linux 5.5 x86_64
+    CentOS Linux 5.5 x86_64
     Debian Squeeze x86_64 (Perl 5.10.1)
+    Debian Wheezy x86_64 (Perl 5.14.2)
+
+    Plus CPAN testers
 
 3. INSTALLATION
 ---------------
