@@ -1,4 +1,4 @@
-#!/bin/false`
+#!/bin/false
 # Net::DHCP::Packet.pm
 # Author : D. Hamstead
 # Original Author: F. van Dun, S. Hadinger
@@ -10,7 +10,7 @@ use 5.8.0;
 use strict;
 our ( @ISA, @EXPORT, @EXPORT_OK, $VERSION );
 use Exporter;
-$VERSION   = 0.67_2;
+$VERSION   = 0.68;
 @ISA       = qw(Exporter);
 @EXPORT    = qw( packinet packinets unpackinet unpackinets );
 @EXPORT_OK = qw( );
