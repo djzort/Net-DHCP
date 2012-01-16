@@ -6,7 +6,7 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 WriteMakefile(
     NAME         => 'Net::DHCP',
-    VERSION_FROM => 'lib/Net/DHCP/Packet.pm',    # finds $VERSION
+    VERSION_FROM => 'lib/Net/DHCP.pm',    # finds $VERSION
     LICENSE => 'perl',
     PREREQ_PM    => {
         'Exporter'     => 0,
