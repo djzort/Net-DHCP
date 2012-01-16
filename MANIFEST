@@ -4,6 +4,7 @@ MANIFEST
 README
 examples/dhcp_sniffer.pl
 examples/dumpianatoxml.pl
+lib/Net/DHCP.pm
 lib/Net/DHCP/Packet.pm
 lib/Net/DHCP/Constants.pm
 examples/dhcp_sniffer.pl
