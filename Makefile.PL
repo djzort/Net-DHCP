@@ -15,18 +15,11 @@ WriteMakefile(
         'Scalar::Util' => 0,
         'List::Util'   => 0,
     },                                           # e.g., Module::Name => 1.1
-    (
-        $] >= 5.005
-        ?    ## Add these new keywords supported since 5.005
-          (
-            ABSTRACT_FROM       => 'lib/Net/DHCP.pm',
-            AUTHOR         => 'Dean Hamstead <djzort@cpan.org>',
-            BUILD_REQUIRES => {
-                'Test::More' => 0,
-                'Test::Warn' => 0,
-                'File::Spec' => 0,
-            },
-          )
-        : ()
-    ),
+    ABSTRACT_FROM       => 'lib/Net/DHCP.pm',
+    AUTHOR         => 'Dean Hamstead <djzort@cpan.org>',
+    BUILD_REQUIRES => {
+	'Test::More' => 0,
+	'Test::Warn' => 0,
+	'File::Spec' => 0,
+    },
 );
