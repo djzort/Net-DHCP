@@ -1276,6 +1276,14 @@ Please see corresponding RFC for manual type conversion.
 Gets a DHCP SUB-OPTION provided in packed binary format.
 Please see corresponding RFC for manual type conversion.
 
+=item getSubOptionValue ()
+
+This is an empty stub for now
+
+=item removeSubOption ()
+
+This is an empty stub for now
+
 =item removeOption ( CODE )
 
 Remove option from option list.
