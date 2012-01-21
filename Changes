@@ -4,6 +4,8 @@ Revision history for Perl extension Net::DHCP.
 
 Minor update to tests sent in from Gregory Herrmann via RT#74187. Thanks for that!
 
+Updated pod to complete coverage
+
 *** 0.681  Jan 16 2012
 
 Forgot to update MANIFEST file... woops. Also some po updates.
