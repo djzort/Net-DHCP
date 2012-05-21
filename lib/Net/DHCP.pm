@@ -3,7 +3,7 @@ package Net::DHCP;
 use strict;
 use warnings;
 
-our $VERSION = 0.683;
+our $VERSION = 0.684;
 
 1;
 
