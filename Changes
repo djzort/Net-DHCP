@@ -1,5 +1,9 @@
 Revision history for Perl extension Net::DHCP.
 
+*** 0.684  May 21 2012
+
+Changed to using Dist::Zilla.
+
 *** 0.683  Jan 21 2012
 
 Still chasing the Build requires issue. 
