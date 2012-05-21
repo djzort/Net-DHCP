@@ -1,139 +1,136 @@
 Revision history for Perl extension Net::DHCP.
-
-*** 0.684  May 21 2012
-
-Changed to using Dist::Zilla.
-
-*** 0.683  Jan 21 2012
-
-Still chasing the Build requires issue. 
-
-*** 0.682  Jan 21 2012
-
-Minor update to tests sent in from Gregory Herrmann via RT#74187. Thanks for that!
-
-Updated pod to complete coverage
-
-*** 0.681  Jan 16 2012
-
-Forgot to update MANIFEST file... woops. Also some po updates.
-
-*** 0.68   Jan 14 2012
-
-Added Net/DHCP.pm stub.
-
-*** 0.67_2  Apr 18 2011
-
-Updated pod. Please be awair that i have added the word "CableLabs" to
-to pod. This may be of concern to Debian. Im not sure how their licensing
-works exactly vs CableLabs copyrights. Im reasonably certain its aok.
-
-Minor changes for RT#73972
-
-Improvements to tests
-
-*** 0.67_1  Dec 16 2010
-
-Warning: the declaration of DHO_NIS_DOMAIN was overlapping for options
-40 options 64. Therefore, options 64 and 65 where renamed DHO_NISV3_SERVER
-and DHO_NISV3_DOMAIN to remove this overlap and remain consistent.
-
-Constants.pm. Added a vast number of option codes from the IANA listing.
-Added updated DHCP message codes, added Netware IP Codes. Tests were
-added for coverage of constants.
-
-Packet.pm. Changed a whole bunch of stuff. Including removing some then
-then else orgies, tidying up lots of warnings.
-
-Tests. I'd added a bunch more tests :)
-
-Rearranged the test suite. Added lots of tests.
-
-*** 0.67  Nov 13 2010
-
-Fixing a small bug in marshall (see cpanrt61693), fixed a bug in
-Constants.pm (see cpanrt32962), clarified version dependance
-closing out cpanrt19405
-
-*** 0.66  Jul 12 2006
-
-Module is definitely not compatible with Perl 5.6.0. Minimum version
-is Perl 5.8.0.
-Corrected major bug in removeOption(), thanks to Nathan Scarlett.
-
-*** 0.65  Apr 22 2006
-
-Added a sample DHCP Server and tester: dhcpd.pl & dhcpd_test.pl in
-the examples folder.
-
-*** 0.64  Mar 06 2006
-
-Added removeOption() function
-
-*** 0.63  Jan 01 2006
-
-Major bug corrected in Net::DHCP::Packet->new() while parsing
-attributes.
-
-*** 0.62  Oct 07 2005
-
-Minor change to make module compatible Perl 5.6.0 instead of
-only 5.8.0.
-
-*** 0.61  Apr 29 2005
-
-Changed minimal acceptable packet length in marshall() method.
-
-*** 0.60  Mar 29 2005
-
-Lots of tests added.
-
-getOption() and addOption() removed and replaced by:
-- getOptionValue() & addOptionValue() which provide automatic
-  type conversion to/from text representation
-- getOptionRaw() & addOptionRaw() to manipulate binary
-  format packed into strings.
-new() now behaves differently for DHCP options, requiring text
-values and not packed binary values.
-
-toString() now escapes unprintable characters.
-
-Added methods : ciaddrRaw, giaddrRaw, siaddrRaw, yiaddrRaw that
-use packed binary formats. They are provided for performance enhancements
-when you want to avoid unnecessary type conversion.
-
-Pad options (0x00) are now supported.
-
-Example of DHCPLeaseQuery provided by John A. Murphy.
-
-*** 0.53  Mar 02 2005
-
-Performance enhancement in Packet->new() avoirding unnecessary
-type conversion and function calls.
-
-Support for DHCPLEASEQUERY, Cisco extension (draft-ietf-dhc-leasequery-05.txt).
-Corrected bug in Packet->new() not allowing '0' in Hlen and Htype parameters.
-Thanks to John A. Murphy.
-
-*** 0.52  Feb 24 2005
-
-Performance enhancements in Packet.pm.
-
-*** 0.51  Feb 20 2005
-
-Added encoding and decoding functions for Relay Agent information
-(option 82 - RFC 3046).
-
-Comment field added in the Packet object. This lets you put any comment
-in the Packet object, such as a transaction number. This field not processed.
-
-*** 0.50  Feb  8 2005
-
-Deeply rewritten version based on Net::DHCP v0.11 by Francis
-van Dun.
-
-Net::DHCP::Session is momentarily missing, it should be
-reintroduced soon.
-
----
-Stephan Hadinger <shadinger@cpan.org>
+  
+0.684  May 21 2012
+  
+  Changed to using Dist::Zilla.
+  
+0.683  Jan 21 2012
+  
+  Still chasing the Build requires issue. 
+  
+0.682  Jan 21 2012
+  
+  Minor update to tests sent in from Gregory Herrmann via RT#74187. Thanks for that!
+  
+  Updated pod to complete coverage
+  
+0.681  Jan 16 2012
+  
+  Forgot to update MANIFEST file... woops. Also some po updates.
+  
+0.68   Jan 14 2012
+  
+  Added Net/DHCP.pm stub.
+  
+0.67_2  Apr 18 2011
+  
+  Updated pod. Please be awair that i have added the word "CableLabs" to
+  to pod. This may be of concern to Debian. Im not sure how their licensing
+  works exactly vs CableLabs copyrights. Im reasonably certain its aok.
+  
+  Minor changes for RT#73972
+  
+  Improvements to tests
+  
+0.67_1  Dec 16 2010
+  
+  Warning: the declaration of DHO_NIS_DOMAIN was overlapping for options
+  40 options 64. Therefore, options 64 and 65 where renamed DHO_NISV3_SERVER
+  and DHO_NISV3_DOMAIN to remove this overlap and remain consistent.
+  
+  Constants.pm. Added a vast number of option codes from the IANA listing.
+  Added updated DHCP message codes, added Netware IP Codes. Tests were
+  added for coverage of constants.
+  
+  Packet.pm. Changed a whole bunch of stuff. Including removing some then
+  then else orgies, tidying up lots of warnings.
+  
+  Tests. I'd added a bunch more tests :)
+  
+  Rearranged the test suite. Added lots of tests.
+  
+0.67  Nov 13 2010
+  
+  Fixing a small bug in marshall (see cpanrt61693), fixed a bug in
+  Constants.pm (see cpanrt32962), clarified version dependance
+  closing out cpanrt19405
+  
+0.66  Jul 12 2006
+  
+  Module is definitely not compatible with Perl 5.6.0. Minimum version
+  is Perl 5.8.0.
+  Corrected major bug in removeOption(), thanks to Nathan Scarlett.
+  
+0.65  Apr 22 2006
+  
+  Added a sample DHCP Server and tester: dhcpd.pl & dhcpd_test.pl in
+  the examples folder.
+  
+0.64  Mar 06 2006
+  
+  Added removeOption() function
+  
+0.63  Jan 01 2006
+  
+  Major bug corrected in Net::DHCP::Packet->new() while parsing
+  attributes.
+  
+0.62  Oct 07 2005
+  
+  Minor change to make module compatible Perl 5.6.0 instead of
+  only 5.8.0.
+  
+0.61  Apr 29 2005
+  
+  Changed minimal acceptable packet length in marshall() method.
+  
+0.60  Mar 29 2005
+  
+  Lots of tests added.
+  
+  getOption() and addOption() removed and replaced by:
+  - getOptionValue() & addOptionValue() which provide automatic
+    type conversion to/from text representation
+  - getOptionRaw() & addOptionRaw() to manipulate binary
+    format packed into strings.
+  new() now behaves differently for DHCP options, requiring text
+  values and not packed binary values.
+  
+  toString() now escapes unprintable characters.
+  
+  Added methods : ciaddrRaw, giaddrRaw, siaddrRaw, yiaddrRaw that
+  use packed binary formats. They are provided for performance enhancements
+  when you want to avoid unnecessary type conversion.
+  
+  Pad options (0x00) are now supported.
+  
+  Example of DHCPLeaseQuery provided by John A. Murphy.
+  
+0.53  Mar 02 2005
+  
+  Performance enhancement in Packet->new() avoirding unnecessary
+  type conversion and function calls.
+  
+  Support for DHCPLEASEQUERY, Cisco extension (draft-ietf-dhc-leasequery-05.txt).
+  Corrected bug in Packet->new() not allowing '0' in Hlen and Htype parameters.
+  Thanks to John A. Murphy.
+  
+0.52  Feb 24 2005
+  
+  Performance enhancements in Packet.pm.
+  
+0.51  Feb 20 2005
+  
+  Added encoding and decoding functions for Relay Agent information
+  (option 82 - RFC 3046).
+  
+  Comment field added in the Packet object. This lets you put any comment
+  in the Packet object, such as a transaction number. This field not processed.
+  
+0.50  Feb  8 2005
+  
+  Deeply rewritten version based on Net::DHCP v0.11 by Francis
+  van Dun.
+  
+  Net::DHCP::Session is momentarily missing, it should be
+  reintroduced soon.
