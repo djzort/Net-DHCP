@@ -8,9 +8,11 @@ package Net::DHCP::Packet;
 # standard module declaration
 use 5.8.0;
 use strict;
+use warnings;
+
 our ( @ISA, @EXPORT, @EXPORT_OK, $VERSION );
 use Exporter;
-$VERSION   = 0.68;
+$VERSION   = 0.69;
 @ISA       = qw(Exporter);
 @EXPORT    = qw( packinet packinets unpackinet unpackinets );
 @EXPORT_OK = qw( );

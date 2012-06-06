@@ -7,9 +7,11 @@ package Net::DHCP::Constants;
 # standard module declaration
 use 5.8.0;
 use strict;
+use warnings;
+
 our ( @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $VERSION );
 use Exporter;
-$VERSION = 0.67_1;
+$VERSION = 0.69;
 @ISA     = qw(Exporter);
 
 @EXPORT = qw(MAGIC_COOKIE);
