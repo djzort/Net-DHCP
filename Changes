@@ -1,5 +1,6 @@
 Net::DHCP - A DHCP packet object
 0.691  2012-08-24
+
 	- Updated changelog for Kawlitee
 
 0.69  2012-06-06
@@ -22,7 +23,6 @@ Net::DHCP - A DHCP packet object
 0.682  2012-01-21
 
 	- Minor update to tests sent in from Gregory Herrmann via RT#74187. Thanks for that!
-
 	- Updated pod to complete coverage
 
 0.681  2012-01-16
@@ -36,22 +36,16 @@ Net::DHCP - A DHCP packet object
 0.67_2  2011-04-18
 
 	- Updated pod. Please be awair that i have added the word "CableLabs" to to pod. This 05-be of concern to Debian. Im not sure how their licensing works exactly vs CableLabs copyrights. Im reasonably certain its aok.
-
 	- Minor changes for RT#73972
-
 	- Improvements to tests
 
 0.67_1  2010-12-16
 
 	- Warning: the declaration of DHO_NIS_DOMAIN was overlapping for options 40 options 64. Therefore, options 64 and 65 where renamed DHO_NISV3_SERVER and DHO_NISV3_DOMAIN to remove this overlap and remain consistent.
-
 	- Constants.pm. Added a vast number of option codes from the IANA listing.
 	- Added updated DHCP message codes, added Netware IP Codes. Tests were added for coverage of constants.
-
 	- Packet.pm. Changed a whole bunch of stuff. Including removing some then then else orgies, tidying up lots of warnings.
-
 	- Tests. I'd added a bunch more tests :)
-
 	- Rearranged the test suite. Added lots of tests.
 
 0.67  2010-11-13
@@ -86,27 +80,19 @@ Net::DHCP - A DHCP packet object
 0.60  2005-03-29
 
 	- Lots of tests added.
-
 	- getOption() and addOption() removed and replaced by:
 	  * getOptionValue() & addOptionValue() which provide automatic
 	  type conversion to/from text representation
-	  * getOptionRaw() & addOptionRaw() to manipulate binary
-	  format packed into strings.
-
+	  * getOptionRaw() & addOptionRaw() to manipulate binary format packed into strings.
 	- new() now behaves differently for DHCP options, requiring text values and not packed binary values.
-
 	- toString() now escapes unprintable characters.
-
 	- Added methods : ciaddrRaw, giaddrRaw, siaddrRaw, yiaddrRaw that use packed binary formats. They are provided for performance enhancements when you want to avoid unnecessary type conversion.
-
 	- Pad options (0x00) are now supported.
-
 	- Example of DHCPLeaseQuery provided by John A. Murphy.
 
 0.53  2005-03-02
 
 	- Performance enhancement in Packet->new() avoirding unnecessary type conversion and function calls.
-
 	- Support for DHCPLEASEQUERY, Cisco extension (draft-ietf-dhc-leasequery-05.txt).
 	- Corrected bug in Packet->new() not allowing '0' in Hlen and Htype parameters.  Thanks to John A. Murphy.
 
@@ -117,11 +103,9 @@ Net::DHCP - A DHCP packet object
 0.51  2005-04-20
 
 	- Added encoding and decoding functions for Relay Agent information (option 82 - RFC 3046).
-
 	- Comment field added in the Packet object. This lets you put any comment in the Packet object, such as a transaction number. This field not processed.
 
 0.50  2005-04-8
 
 	- Deeply rewritten version based on Net::DHCP v0.11 by Francis van Dun.
-
 	- Net::DHCP::Session is momentarily missing, it should be reintroduced soon.
