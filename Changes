@@ -1,4 +1,8 @@
 Net::DHCP - A DHCP packet object
+0.692  2012-09-05
+
+	- Minor typo in pod
+
 0.691  2012-08-24
 
 	- Updated changelog for Kawlitee
