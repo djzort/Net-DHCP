@@ -976,7 +976,7 @@ Net::DHCP::Packet - Object methods to create a DHCP packet.
 
    use Net::DHCP::Packet;
 
-   my $p = new Net::DHCP::Packet->new(
+   my $p = Net::DHCP::Packet->new(
         'Chaddr' => '000BCDEF',
         'Xid' => 0x9F0FD,
         'Ciaddr' => '0.0.0.0',
