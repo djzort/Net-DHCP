@@ -361,7 +361,7 @@ sub addOptionValue {
     }
 
     # verify number of parameters
-    if ( $format eq 'string' ) {
+    if ( $format eq 'string' || $format eq 'csr' ) {
         @values = ($value);                # don't change format
     }
     elsif ( $format =~ /s$/ )
@@ -391,6 +391,7 @@ sub addOptionValue {
             return pack( 'C*', map { 255 & $_ } @_ );
         },
         string => sub { return shift },
+        csr    => sub { return packcsr(shift) },
 
     );
 
@@ -529,6 +530,7 @@ sub getOptionValue {
         byte   => sub { return unpack( 'C', shift ) },
         bytes  => sub { return unpack( 'C*', shift ) },
         string => sub { return shift },
+        csr    => sub { return unpackcsr(shift) },
 
     );
 
@@ -656,8 +658,15 @@ sub serialize {
     if ( $self->{isDhcp} ) {    # add MAGIC_COOKIE and options
         $bytes .= MAGIC_COOKIE();
         for my $key ( @{ $self->{options_order} } ) {
-            $bytes .= pack( 'C',    $key );
-            $bytes .= pack( 'C/a*', $self->{options}->{$key} );
+            if ( ref($self->{options}->{$key}) eq 'ARRAY' ) {
+                for my $value ( @{$self->{options}->{$key}} ) {
+                    $bytes .= pack( 'C',    $key );
+                    $bytes .= pack( 'C/a*', $value );
+                }
+            } else {
+                $bytes .= pack( 'C',    $key );
+                $bytes .= pack( 'C/a*', $self->{options}->{$key} );
+            }
         }
         $bytes .= pack( 'C', 255 );
     }
@@ -959,6 +968,36 @@ sub unpackRelayAgent {     # prints a human readable 'relay agent options'
 
     return
       join( q|,|, map { "($_)=" . $relay_opt{$_} } ( sort keys %relay_opt ) )
+
+}
+
+sub packcsr {
+    # catch empty value
+    my $results = [ '' ];
+
+    for my $pair ( @{$_[0]} ) {
+        push @$results, ''
+        	if (length($results->[-1]) > 255 - 8);
+
+        my ($ip, $mask) = split /\//, $pair->[0];
+        $mask = '32'
+		unless (defined($mask));
+
+        my $addr = packinet($ip);
+        $addr = substr $addr, 0, int(($mask - 1)/8 + 1);
+
+        $results->[-1] .= pack('C', $mask) . $addr;
+        $results->[-1] .= packinet($pair->[1]);
+    }
+
+    return $results;
+}
+
+sub unpackcsr {
+    my $csr = shift
+      or return;
+
+   croak('unpack csr field still WIP');
 
 }
 

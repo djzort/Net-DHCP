@@ -236,6 +236,8 @@ BEGIN {
         'DHO_SUBNET_ALLOCATION'                    => 220,
         'DHO_VIRTUAL_SUBNET'                       => 221,
 
+        'DHO_CLASSLESS_STATIC_ROUTE_MS'            => 249,
+
         'DHO_END' => 255
     );
 
@@ -352,6 +354,7 @@ use constant \%RELAYAGENT_CODES;
 #   string : char* (just kidding)
 #   relays : DHCP sub-options (rfc 3046)
 #   ids : client identifier : byte (htype) + string (chaddr)
+#   csr : classless static routes (rfc 3442)
 #   suboptions : hex encoded sub options
 #
 our %DHO_FORMATS = (
@@ -449,6 +452,8 @@ our %DHO_FORMATS = (
     DHO_NAME_SERVICE_SEARCH()          => 'shorts',    # rfc 2937
     DHO_SUBNET_SELECTION()             => 'inet',      # rfc 3011
 
+    DHO_CLASSLESS_STATIC_ROUTE()      => 'csr',        # rfc 3442
+    DHO_CLASSLESS_STATIC_ROUTE_MS()   => 'csr',
 );
 
 # Links option codes with their suboption values
@@ -671,6 +676,7 @@ Import all DHCP option codes.
   (213) DHO_OPTION_V4_ACCESS_DOMAIN
   (220) DHO_SUBNET_ALLOCATION
   (221) DHO_VIRTUAL_SUBNET
+  (249) DHO_CLASSLESS_STATIC_ROUTE_MS
   (255) DHO_END
 
 =item * ccc_codes
