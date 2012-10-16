@@ -12,7 +12,7 @@ use warnings;
 
 our ( @ISA, @EXPORT, @EXPORT_OK, $VERSION );
 use Exporter;
-$VERSION   = 0.69;
+$VERSION   = 0.693;
 @ISA       = qw(Exporter);
 @EXPORT    = qw( packinet packinets unpackinet unpackinets );
 @EXPORT_OK = qw( );

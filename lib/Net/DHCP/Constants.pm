@@ -11,7 +11,7 @@ use warnings;
 
 our ( @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $VERSION );
 use Exporter;
-$VERSION = 0.69;
+$VERSION = 0.693;
 @ISA     = qw(Exporter);
 
 @EXPORT = qw(MAGIC_COOKIE);
