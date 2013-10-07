@@ -1350,8 +1350,6 @@ I<Removed as of version 0.60. Please use C<addOptionRaw()> instead.>
 
 I<Removed as of version 0.60. Please use C<getOptionRaw()> instead.>
 
-=item
-
 =back
 
 =head2 DHCP OPTIONS TYPES
