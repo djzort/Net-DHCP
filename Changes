@@ -1,4 +1,7 @@
 Net::DHCP - A DHCP packet object
+
+	- Fix for RT89267
+
 0.693  2012-10-16
 
         - Changes kindly sent in my Alexander Clouter
