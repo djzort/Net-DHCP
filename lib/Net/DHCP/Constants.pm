@@ -11,7 +11,7 @@ use warnings;
 
 our ( @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $VERSION );
 use Exporter;
-$VERSION = 0.693;
+$VERSION = 0.694;
 @ISA     = qw(Exporter);
 
 @EXPORT = qw(MAGIC_COOKIE);
@@ -715,6 +715,12 @@ L<Net::DHCP::Packet>, L<Net::DHCP::Options>
 =head1 AUTHOR
 
 Dean Hamstead E<lt>djzort@cpan.orgE<gt> and past Authors (see README)
+
+=head1 GOT PATCHES?
+
+Many young people like to use Github, so by all means send me pull requests at
+
+https://github.com/djzort/NetAddr-MAC
 
 =head1 COPYRIGHT
 

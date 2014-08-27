@@ -1,6 +1,10 @@
 Net::DHCP - A DHCP packet object
 
+0.694  2014-08-27
+
 	- Fix for RT89267
+	- Added github details
+	- Some minor code style changes
 
 0.693  2012-10-16
 
