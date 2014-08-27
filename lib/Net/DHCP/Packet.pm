@@ -1342,6 +1342,14 @@ These are half baked, but will decode the relay agent options in the future
 returns a human readable 'relay agent options', not to be confused with
 C<decodeRelayAgent>
 
+=item I packcsr( ARRAYREF )
+
+returns the packed Classless Static Route option built from a list of cidr style address/mask combos
+
+=item I<unpackcsr>
+
+Not implemented, currently croaks.
+
 =item I<addOption ( CODE, VALUE )>
 
 I<Removed as of version 0.60. Please use C<addOptionRaw()> instead.>
