@@ -42,7 +42,7 @@ Net::DHCP has been tested with the following:
 
     Windows XP with cygwin
     Windows XP with ActivePerl
-    
+
     RedHat Enterprise Linux 5.5 x86_64
     CentOS Linux 5.5 x86_64
     Debian Squeeze x86_64 (Perl 5.10.1)
@@ -79,7 +79,7 @@ COPYRIGHT AND LICENCE
 
 Copyright (C) 2002 by Francis van Dun.
 Copyright (C) 2005,2006 by Stephan Hadinger.
-Copyright (C) 2010-2012 by Dean Hamstead.
+Copyright (C) 2010-2014 by Dean Hamstead.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.5 or,
