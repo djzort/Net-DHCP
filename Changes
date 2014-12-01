@@ -1,5 +1,8 @@
 Net::DHCP - A DHCP packet object
 
+0.695  2014-12-02
+	- Corrected github details
+
 0.694  2014-08-27
 
 	- Fix for RT89267
@@ -8,9 +11,9 @@ Net::DHCP - A DHCP packet object
 
 0.693  2012-10-16
 
-        - Changes kindly sent in my Alexander Clouter
-        - Allows static routes to be included in dhcp packets
-        - (no tests yet)
+	- Changes kindly sent in my Alexander Clouter
+	- Allows static routes to be included in dhcp packets
+	- (no tests yet)
 
 0.692  2012-09-05
 
