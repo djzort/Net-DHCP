@@ -720,7 +720,7 @@ Dean Hamstead E<lt>djzort@cpan.orgE<gt> and past Authors (see README)
 
 Many young people like to use Github, so by all means send me pull requests at
 
-https://github.com/djzort/NetAddr-MAC
+https://github.com/djzort/Net-DHCP
 
 =head1 COPYRIGHT
 

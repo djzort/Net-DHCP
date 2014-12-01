@@ -1724,7 +1724,7 @@ See L<https://rt.cpan.org/Dist/Display.html?Queue=Net-DHCP>
 
 Many young people like to use Github, so by all means send me pull requests at
 
-https://github.com/djzort/NetAddr-MAC
+https://github.com/djzort/Net-DHCP
 
 =head1 COPYRIGHT
 
