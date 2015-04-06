@@ -4,8 +4,8 @@ Net-DHCP version 0.66
 0. DOCS/ FILES WARNING
 ----------------------
 
-Some files in the docs/ directory are copied from iana. 
-They may not be compatible with the Perl license. I have 
+Some files in the docs/ directory are copied from IANA.
+They may not be compatible with the Perl license. I have
 included them in the tar ball as-is for the sake of reference.
 Please remove them if needed for distribution packaging etc.
 

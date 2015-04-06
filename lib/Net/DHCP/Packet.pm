@@ -1102,7 +1102,7 @@ To create a fresh new packet C<new()> takes arguments as a key-value pairs :
                                See Net::DHCP::Constants.
    Padding    padding       *  Optional padding at the end of the packet
 
-See below methods for values and syntax descrption.
+See below methods for values and syntax description.
 
 Note: DHCP options are created in the same order as key-value pairs.
 
@@ -1201,7 +1201,7 @@ See L<Special methods> below.
 
 Sets/gets the I<client hardware address>. Its length is given by the C<hlen> attribute.
 
-Valude is formatted as an Hexadecimal string representation.
+Value is formatted as an Hexadecimal string representation.
 
   Example: "0010A706DFFF" for 6 bytes mac address.
 
@@ -1257,7 +1257,7 @@ depending on their format as defined by RFC 2132.
 Please see L<DHCP OPTION TYPES> for supported options and corresponding
 formats.
 
-If you nedd access to the raw binary values, please use C<addOptionRaw()>.
+If you need access to the raw binary values, please use C<addOptionRaw()>.
 
    $pac = Net::DHCP::Packet->new();
    $pac->addOption(DHO_DHCP_MESSAGE_TYPE(), DHCPINFORM());
@@ -1273,7 +1273,7 @@ depending on their format as defined by RFC 2132.
 Please see L<DHCP OPTION TYPES> for supported options and corresponding
 formats.
 
-If you nedd access to the raw binary values, please use C<addSubOptionRaw()>.
+If you need access to the raw binary values, please use C<addSubOptionRaw()>.
 
    $pac = Net::DHCP::Packet->new();
    # FIXME update exampls
@@ -1290,7 +1290,7 @@ as defined in RFC 2132.
 Please see L<DHCP OPTION TYPES> for supported options and corresponding
 formats.
 
-If you nedd access to the raw binary values, please use C<getOptionRaw()>.
+If you need access to the raw binary values, please use C<getOptionRaw()>.
 
 Return value is either a string or an array, depending on the context.
 
@@ -1344,7 +1344,7 @@ C<decodeRelayAgent>
 
 =item I packcsr( ARRAYREF )
 
-returns the packed Classless Static Route option built from a list of cidr style address/mask combos
+returns the packed Classless Static Route option built from a list of CIDR style address/mask combos
 
 =item I<unpackcsr>
 
@@ -1362,7 +1362,7 @@ I<Removed as of version 0.60. Please use C<getOptionRaw()> instead.>
 
 =head2 DHCP OPTIONS TYPES
 
-This section describes supported option types (cf. rfc 2132).
+This section describes supported option types (cf. RFC 2132).
 
 For unsupported data types, please use C<getOptionRaw()> and
 C<addOptionRaw> to manipulate binary format directly.
@@ -1586,12 +1586,12 @@ Transforms a packed bytes IP address into a "xx.xx.xx.xx" string.
 
 =item unpackinets ( STRING )
 
-Transforms a packed bytes liste of IP addresses into a list of
+Transforms a packed bytes list of IP addresses into a list of
 "xx.xx.xx.xx" space delimited string.
 
 =item unpackinets_array ( STRING )
 
-Transforms a packed bytes liste of IP addresses into a array of
+Transforms a packed bytes list of IP addresses into a array of
 "xx.xx.xx.xx" strings.
 
 =back

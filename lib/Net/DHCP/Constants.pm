@@ -87,7 +87,7 @@ BEGIN {
         'HTYPE_FDDI'    => 8
     );
 
-    %DHO_CODES = (    # rfc 2132
+    %DHO_CODES = (    # RFC 2132
         'DHO_PAD'                                  => 0,
         'DHO_SUBNET_MASK'                          => 1,
         'DHO_TIME_OFFSET'                          => 2,
@@ -154,7 +154,7 @@ BEGIN {
         'DHO_NWIP_SUBOPTIONS'                      => 63,
         'DHO_NISV3_DOMAIN'                         => 64,
         'DHO_NISV3_SERVER'                         => 65,
-        'DHO_TFTP_SERVER'                          => 66, # actually named 'server name' by iana
+        'DHO_TFTP_SERVER'                          => 66, # actually named 'server name' by IANA
         'DHO_BOOTFILE'                             => 67,
         'DHO_MOBILE_IP_HOME_AGENT'                 => 68,
         'DHO_SMTP_SERVER'                          => 69,
@@ -344,8 +344,8 @@ use constant \%RELAYAGENT_CODES;
 # Format of DHCP options : for pretty-printing
 #   void : no parameter
 #   inet : 4 bytes IP address
-#   inets : list of 4 bytess IP addresses
-#   inets2 : liste of 4 bytes IP addresses pairs (multiple of 8 bytes)
+#   inets : list of 4 bytes IP addresses
+#   inets2 : list of 4 bytes IP addresses pairs (multiple of 8 bytes)
 #   int : 4 bytes integer
 #   short : 2 bytes integer
 #   shorts : list of 2 bytes integers
@@ -531,7 +531,7 @@ Import all DHCP Message codes.
 
 Nb. Previously Cisco used 13 for DHCPLEASEQUERY. If you need to decode
 or encode packets to communicate with such a system, you might simply
-us the integer rather than the constant - or use the updated constant
+use the integer rather than the constant - or use the updated constant
 and comment in your code appropriately.
 
 =item * dho_codes
