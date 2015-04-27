@@ -47,7 +47,7 @@ Net::DHCP - A DHCP packet object
 
 0.681  2012-01-16
 
-	- Forgot to update MANIFEST file... woops. Also some po updates.
+	- Forgot to update MANIFEST file... woops. Also some pod updates.
 
 0.68   2012-01-14
 
