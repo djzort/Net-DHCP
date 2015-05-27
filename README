@@ -63,9 +63,6 @@ To install this module type the following:
 4. BUGS
 -------
 
-This module has not been deeply tested and any usage in production
-DHCP client or server must be considered cautiously.
-
 If you find a bug, please report it to the author along with the
 following information:
 
@@ -79,7 +76,7 @@ COPYRIGHT AND LICENCE
 
 Copyright (C) 2002 by Francis van Dun.
 Copyright (C) 2005,2006 by Stephan Hadinger.
-Copyright (C) 2010-2014 by Dean Hamstead.
+Copyright (C) 2010-2015 by Dean Hamstead.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.5 or,
