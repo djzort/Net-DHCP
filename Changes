@@ -1,4 +1,7 @@
 Net::DHCP - A DHCP packet object
+0.696  2015-06-10
+	- Fixed up dist.ini
+	- YAPC::NA release
 
 0.695  2014-12-02
 	- Corrected github details
