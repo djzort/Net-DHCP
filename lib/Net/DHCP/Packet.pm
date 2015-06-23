@@ -50,7 +50,9 @@ my %newargs = (
 );
 
 sub new {
-    my $class = shift;
+
+    my $p = shift;
+    my $class = ref($p) || $p;
 
     my $self = {
         options       => {},    # DHCP options
@@ -86,12 +88,12 @@ sub new {
         my %args         = @_;
         my @ordered_args = @_;
 
-        while (my($k,$v) = each %args) {
+        for my $k (sort keys %args) { # keep the processing order consistent
 
             next if $k =~ m/^\d+$/; # ignore numbered args
 
             if ($newargs{$k}) {
-                $newargs{$k}->($self, $v);
+                $newargs{$k}->($self, $args{$k});
                 next
             }
 

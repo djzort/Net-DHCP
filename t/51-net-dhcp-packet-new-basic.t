@@ -58,8 +58,8 @@ warnings_are {
     );
 }
 [
+    q|'file' must not be > 127 bytes, (currently 200)|,
     q|'sname' must not be > 63 bytes, (currently 200)|,
-    q|'file' must not be > 127 bytes, (currently 200)|
 ];
 
 my $packet2 = Net::DHCP::Packet->new($ref_packet);
