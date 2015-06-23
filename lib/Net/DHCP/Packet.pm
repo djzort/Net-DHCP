@@ -24,12 +24,57 @@ use Scalar::Util qw(looks_like_number);    # for numerical testing
 use List::Util qw(first);
 
 #=======================================================================
+
+{
+
+my %newargs = (
+
+    Comment => \&comment,
+    Op      => \&op,
+    Htype   => \&htype,
+    Hlen    => \&hlen,
+    Hops    => \&hops,
+    Xid     => \&xid,
+    Secs    => \&secs,
+    Flags   => \&flags,
+    Ciaddr  => \&ciaddr,
+    Yiaddr  => \&yiaddr,
+    Siaddr  => \&siaddr,
+    Giaddr  => \&giaddr,
+    Chaddr  => \&chaddr,
+    Sname   => \&sname,
+    File    => \&file,
+    Padding => \&padding,
+    isDhcp  => \&isDhcp,
+
+);
+
 sub new {
     my $class = shift;
 
     my $self = {
         options       => {},    # DHCP options
-        options_order => []     # order in which the options were added
+        options_order => [],    # order in which the options were added
+
+        # defaults
+        comment => undef,
+        op      => BOOTREQUEST(),
+        htype   => 1,    # 10mb ethernet
+        hlen    => 6,     # Use 6 bytes MAC
+        hops    => 0,
+        xid     => 0x12345678,
+        secs    => 0,
+        flags   => 0,
+        ciaddr  => "\0\0\0\0",
+        yiaddr  => "\0\0\0\0",
+        siaddr  => "\0\0\0\0",
+        giaddr  => "\0\0\0\0",
+        chaddr  => q||,
+        sname   => q||,
+        file    => q||,
+        padding => q||,
+        isDhcp  => 1,
+
     };
 
     bless $self, $class;
@@ -41,112 +86,32 @@ sub new {
         my %args         = @_;
         my @ordered_args = @_;
 
-        if ( exists $args{Comment} ) {
-            $self->comment( $args{Comment} );
-        }
-        else {
-            $self->{comment} = undef;
-        }
+        while (my($k,$v) = each %args) {
 
-        if ( exists $args{Op} ) {
-            $self->op( $args{Op} );
-        }
-        else { $self->{op} = BOOTREQUEST(); }
+            next if $k =~ m/^\d+$/; # ignore numbered args
 
-        if ( exists $args{Htype} ) { $self->htype( $args{Htype} ) }
-        else {
-            $self->{htype} = 1;    # 10mb ethernet
-        }
+            if ($newargs{$k}) {
+                $newargs{$k}->($self, $v);
+                next
+            }
 
-        if ( exists $args{Hlen} ) {
-            $self->hlen( $args{Hlen} );
-        }
-        else {
-            $self->{hlen} = 6;     # Use 6 bytes MAC
-        }
+            carp sprintf 'Ingoring unknown new() argument: %s', $k;
 
-        if ( exists $args{Hops} ) {
-            $self->hops( $args{Hops} );
         }
-        else { $self->{hops} = 0; }
-
-        if ( exists $args{Xid} ) {
-            $self->xid( $args{Xid} );
-        }
-        else { $self->{xid} = 0x12345678; }
-
-        if ( exists $args{Secs} ) {
-            $self->secs( $args{Secs} );
-        }
-        else { $self->{secs} = 0; }
-
-        if ( exists $args{Flags} ) {
-            $self->flags( $args{Flags} );
-        }
-        else { $self->{flags} = 0; }
-
-        if ( exists $args{Ciaddr} ) {
-            $self->ciaddr( $args{Ciaddr} );
-        }
-        else { $self->{ciaddr} = "\0\0\0\0"; }
-
-        if ( exists $args{Yiaddr} ) {
-            $self->yiaddr( $args{Yiaddr} );
-        }
-        else { $self->{yiaddr} = "\0\0\0\0"; }
-
-        if ( exists $args{Siaddr} ) {
-            $self->siaddr( $args{Siaddr} );
-        }
-        else { $self->{siaddr} = "\0\0\0\0"; }
-
-        if ( exists $args{Giaddr} ) {
-            $self->giaddr( $args{Giaddr} );
-        }
-        else { $self->{giaddr} = "\0\0\0\0"; }
-
-        if ( exists $args{Chaddr} ) {
-            $self->chaddr( $args{Chaddr} );
-        }
-        else { $self->{chaddr} = q||; }
-
-        if ( exists $args{Sname} ) {
-            $self->sname( $args{Sname} );
-        }
-        else { $self->{sname} = q||; }
-
-        if ( exists $args{File} ) {
-            $self->file( $args{File} );
-        }
-        else { $self->{file} = q||; }
-
-        if ( exists $args{Padding} ) {
-            $self->padding( $args{Padding} );
-        }
-        else { $self->{padding} = q||; }
-
-        if ( exists $args{IsDhcp} ) {
-            $self->isDhcp( $args{IsDhcp} );
-        }
-        else { $self->{isDhcp} = 1; }
 
         # TBM add DHCP option parsing
         while ( defined( my $key = shift @ordered_args ) ) {
 
             my $value = shift @ordered_args;
-            my $is_numeric;
-            {
-                no warnings;
-                $is_numeric = ( $key eq ( 0 + $key ) );
-            }
-
-            if ($is_numeric) {
+            if ($key =~ m/^\d+$/) {
                 $self->addOptionValue( $key, $value );
             }
         }
     }
 
     return $self
+
+}
 
 }
 
@@ -923,7 +888,7 @@ sub packinet {    # bullet-proof version, never complains
     use bytes;
     my $addr = shift;
 
-    if ( $addr && $addr =~ /(\d+)\.(\d+)\.(\d+)\.(\d+)/ ) {
+    if ( $addr && $addr =~ m/(\d+)\.(\d+)\.(\d+)\.(\d+)/ ) {
         return chr($1) . chr($2) . chr($3) . chr($4);
     }
 
@@ -977,7 +942,7 @@ sub packcsr {
 
     for my $pair ( @{$_[0]} ) {
         push @$results, ''
-        	if (length($results->[-1]) > 255 - 8);
+            if (length($results->[-1]) > 255 - 8);
 
         my ($ip, $mask) = split /\//, $pair->[0];
         $mask = '32'

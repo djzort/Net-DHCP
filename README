@@ -1,18 +1,24 @@
 Net-DHCP version 0.66
 =====================
 
-0. DOCS/ FILES WARNING
+0. DOCS/ AND T/DATA FILES WARNING
 ----------------------
 
 Some files in the docs/ directory are copied from IANA.
 They may not be compatible with the Perl license. I have
 included them in the tar ball as-is for the sake of reference.
-Please remove them if needed for distribution packaging etc.
 
 Currently these files are:
 - docs/bootp-dhcp-parameters.txt
 
+Some files in t/data are copied from various sources:
+- http://packetlife.net/captures/DHCP_MessageType%2010%2C11%2C12%20and%2013.cap
+- http://packetlife.net/captures/DHCP_Inter_VLAN.cap
+- http://uluru.ee.unsw.edu.au/~tim/zoo/f994f275.pcap
+
 All other files are licensed as described at the bottom of this file.
+
+Please remove the problem files if needed for distribution packaging etc.
 
 You can fork and submit enhancements etc via https://github.com/djzort/Net-DHCP
 Sorry, I know github sucks but its popular.

@@ -33,7 +33,7 @@ my $ref_packet = pack( 'H*',
 my $packet;
 warnings_are {
     $packet = Net::DHCP::Packet->new(
-        op                           => BOOTREQUEST(),
+        Op                           => BOOTREQUEST(),
         Htype                        => HTYPE_ETHER(),
         Hlen                         => 6,
         Hops                         => 0,
