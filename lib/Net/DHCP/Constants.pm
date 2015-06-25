@@ -1,17 +1,15 @@
 #!/bin/false
 # Net::DHCP::Constants.pm
 # Author: Dean Hamstead, Stephan Hadinger
+use strict;
+use warnings;
+use 5.8.0;
 
 package Net::DHCP::Constants;
 
 # standard module declaration
-use 5.8.0;
-use strict;
-use warnings;
-
-our ( @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $VERSION );
+our ( @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS );
 use Exporter;
-$VERSION = 0.696;
 @ISA     = qw(Exporter);
 
 @EXPORT = qw(MAGIC_COOKIE);
