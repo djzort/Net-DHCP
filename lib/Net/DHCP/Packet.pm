@@ -239,8 +239,8 @@ sub giaddrRaw {
 # chaddr attribute
 sub chaddr {
     my $self = shift;
-    if (@_) { $self->{chaddr} = pack( "H*", shift ) }
-    return unpack( "H*", $self->{chaddr} );
+    if (@_) { $self->{chaddr} = pack( 'H*', shift ) }
+    return unpack( 'H*', $self->{chaddr} );
 }
 
 # chaddr attribute, Raw version
@@ -306,7 +306,7 @@ sub addOptionValue {
     my $code  = shift;    # option code
     my $value = shift;
 
-    # my $value_bin;        # option value in binary format
+    # my $value_bin;      # option value in binary format
 
     carp("addOptionValue: unknown format for code ($code)")
       unless exists $DHO_FORMATS{$code};
@@ -327,7 +327,7 @@ sub addOptionValue {
 
     # verify number of parameters
     if ( $format eq 'string' || $format eq 'csr' ) {
-        @values = ($value);                # don't change format
+        @values = ($value);     # don't change format
     }
     elsif ( $format =~ m/s$/ )
     {    # ends with an 's', meaning any number of parameters
@@ -466,7 +466,7 @@ sub getOptionRaw {
     my ( $self, $key ) = @_;
     return $self->{options}->{$key}
       if exists( $self->{options}->{$key} );
-    return;
+    return
 }
 
 sub getOptionValue {
@@ -805,7 +805,7 @@ sub encodeRelayAgent {
         $buf .= pack( 'C/a*', $value );
     }
 
-    return $buf;
+    return $buf
 
 }
 
@@ -892,7 +892,7 @@ sub packinet {    # bullet-proof version, never complains
         return chr($1) . chr($2) . chr($3) . chr($4);
     }
 
-    return "\0\0\0\0";
+    return "\0\0\0\0"
 }
 
 sub unpackinet {    # bullet-proof version, never complains
@@ -914,7 +914,7 @@ sub packinets {     # multiple ip addresses, space delimited
 }
 
 sub unpackinets {    # multiple ip addresses
-    return join( q| |, map { unpackinet($_) } unpack( "(a4)*", shift || 0 ) );
+    return join( q| |, map { unpackinet($_) } unpack( '(a4)*', shift || 0 ) );
 }
 
 sub packinets_array {    # multiple ip addresses, space delimited
@@ -923,7 +923,7 @@ sub packinets_array {    # multiple ip addresses, space delimited
 }
 
 sub unpackinets_array {    # multiple ip addresses, returns an array
-    return map { unpackinet($_) } unpack( "(a4)*", shift || 0 );
+    return map { unpackinet($_) } unpack( '(a4)*', shift || 0 );
 }
 
 sub unpackRelayAgent {     # prints a human readable 'relay agent options'
@@ -1677,7 +1677,7 @@ this server.
 
 =head1 AUTHOR
 
-Dean Hamstead E<lt>djzort@cpan.orgE<gt>
+Dean Hamstead E<lt>dean@bytefoundry.com.au<gt>
 Previously Stephan Hadinger E<lt>shadinger@cpan.orgE<gt>.
 Original version by F. van Dun.
 

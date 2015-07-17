@@ -712,7 +712,7 @@ L<Net::DHCP::Packet>, L<Net::DHCP::Options>
 
 =head1 AUTHOR
 
-Dean Hamstead E<lt>djzort@cpan.orgE<gt> and past Authors (see README)
+Dean Hamstead E<lt>dean@bytefoundy.com.au<gt> and past Authors (see README)
 
 =head1 GOT PATCHES?
 
