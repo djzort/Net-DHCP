@@ -15,6 +15,7 @@ Some files in t/data are copied from various sources:
 - http://packetlife.net/captures/DHCP_MessageType%2010%2C11%2C12%20and%2013.cap
 - http://packetlife.net/captures/DHCP_Inter_VLAN.cap
 - http://uluru.ee.unsw.edu.au/~tim/zoo/f994f275.pcap
+- https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=dhcp-auth.pcap.gz
 
 All other files are licensed as described at the bottom of this file.
 

@@ -60,7 +60,7 @@ sub new {
         comment => undef,
         op      => BOOTREQUEST(),
         htype   => 1,    # 10mb ethernet
-        hlen    => 6,     # Use 6 bytes MAC
+        hlen    => 6,    # Use 6 bytes MAC
         hops    => 0,
         xid     => 0x12345678,
         secs    => 0,
@@ -357,11 +357,10 @@ sub addOptionValue {
         },
         string => sub { return shift },
         csr    => sub { return packcsr(shift) },
+        relays => sub { return packra(@_) },
 
     );
 
-    #  } elsif ($format eq 'relays') {
-    #    $value_bin = $self->encodeRelayAgent(@values);
     #  } elsif ($format eq 'ids') {
     #    $value_bin = $values[0];
     #    # TBM bad format
@@ -449,8 +448,6 @@ sub addSubOptionValue {
         string => sub { return shift },
     );
 
-    #  } elsif ($format eq 'relays') {
-    #    $value_bin = $self->encodeRelayAgent(@values);
     #  } elsif ($format eq 'ids') {
     #    $value_bin = $values[0];
     #    # TBM bad format
@@ -496,12 +493,10 @@ sub getOptionValue {
         bytes  => sub { return unpack( 'C*', shift ) },
         string => sub { return shift },
         csr    => sub { return unpackcsr(shift) },
+        relays => sub { return unpackra(shift) },
 
     );
 
-    #  } elsif ($format eq 'relays') {
-    #    @values = $self->decodeRelayAgent($value_bin);
-    #    # TBM, bad format
     #  } elsif ($format eq 'ids') {
     #    $values[0] = $value_bin;
     #    # TBM, bad format
@@ -717,7 +712,7 @@ sub marshall {
     ) = unpack( $BOOTP_FORMAT, $buf );
 
     $self->{isDhcp} = 0;    # default to BOOTP
-    if (   ( length($opt_buf) > 4 )
+    if (   ( length( $opt_buf ) > 4 )
         && ( substr( $opt_buf, 0, 4 ) eq MAGIC_COOKIE() ) )
     {
 
@@ -811,7 +806,7 @@ sub encodeRelayAgent {
 
 #=======================================================================
 sub toString {
-    my ($self) = @_;
+    my $self = shift;
     my $s;
 
     $s .= sprintf( "comment = %s\n", $self->comment() )
@@ -926,13 +921,40 @@ sub unpackinets_array {    # multiple ip addresses, returns an array
     return map { unpackinet($_) } unpack( '(a4)*', shift || 0 );
 }
 
-sub unpackRelayAgent {     # prints a human readable 'relay agent options'
-
+sub packra {
     my %relay_opt = @_
       or return;
 
-    return
-      join( q|,|, map { "($_)=" . $relay_opt{$_} } ( sort keys %relay_opt ) )
+    my $buf = '';
+    for my $suboption (sort keys %relay_opt) {
+        my $value = pack( 'C/a*', $relay_opt{$suboption});
+        $buf .= pack( 'C', $suboption)
+             . pack( 'C', length($value))
+             . $value;
+    }
+    return pack( 'C', length($buf) ) . $buf
+}
+
+sub unpackra {     # prints a human readable 'relay agent options'
+
+    use bytes;
+    my $opt_buf = shift or return;
+
+    my @opt;
+    my $pos   = 0;
+    my $total = length($opt_buf);
+
+    while ( $pos < $total ) {
+        my $type = ord( substr( $opt_buf, $pos++, 1 ) );
+        my $len  = ord( substr( $opt_buf, $pos++, 1 ) );
+        my $option = substr( $opt_buf, $pos, $len );
+        $pos += $len;
+        push @opt, [ $REV_RELAYAGENT_CODES{$type} || $type, $option ];
+    }
+
+    return join("\n",
+        map { sprintf q|[ %s => '%s' ]|, @{$_} }
+        @opt)
 
 }
 
