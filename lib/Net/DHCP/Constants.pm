@@ -311,6 +311,8 @@ BEGIN {
         'RA_VENDOR_INFO'        => 9,
         'RA_FLAGS'              => 10,
         'RA_SERVER_ID_OVERRIDE' => 11,
+        'RA_DHCPV4_VIRTUAL_SUBNET_SELECTION' => 151, # rfc 6607
+        'RA_DHCPV4_VIRTUAL_SUBNET_SELECTION_CONTROL' => 152, # rfc 6607
     );
 }
 
@@ -441,7 +443,7 @@ our %DHO_FORMATS = (
 
 #    DHO_USER_CLASS()  => '',                        # rfc 3004
 #    DHO_FQDN()  => '',                              # draft-ietf-dhc-fqdn-option-10.txt
-#    DHO_DHCP_AGENT_OPTIONS()  => 'relays',             # rfc 3046
+    DHO_DHCP_AGENT_OPTIONS()  => 'relays',             # rfc 3046
     DHO_DHCP_AGENT_OPTIONS()           => 'string',    # rfc 3046
     DHO_NDS_SERVERS()                  => 'inets',     # rfc 2241
     DHO_NDS_TREE_NAME()                => 'string',    # rfc 2241
