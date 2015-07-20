@@ -7,13 +7,13 @@ BEGIN { use_ok( 'Net::DHCP::Constants' ); }
 
 use strict;
 
-my $ip0 = "0.0.0.0";
+my $ip0 = '0.0.0.0';
 my $pac0 = "\0\0\0\0";
 
 my $pac;
 
 eval {
-  $pac = Net::DHCP::Packet->new("");
+  $pac = Net::DHCP::Packet->new('');
 };
 #diag($@);
 like( $@, qr/marshall: packet too small/, "packet too small");
@@ -22,15 +22,15 @@ eval {
   $pac = Net::DHCP::Packet->new("\0" x 2000);
 };
 #diag($@);
-like( $@, qr/marshall: packet too big/, "packet too big");
+like( $@, qr/marshall: packet too big/, 'packet too big');
 
 eval {
   $pac = Net::DHCP::Packet->new( Net::DHCP::Packet->new()->serialize());
 };
 #diag($@);
-ok( ! $@, "verifying default packet");
+ok( ! $@, 'verifying default packet');
 
-my $pac_without_option_end = pack("H*",
+my $pac_without_option_end = pack('H*',
 "0101060012345678000000000000000000000000000000000000000000000000".
 "0000000000000000000000000000000000000000000000000000000000000000".
 "0000000000000000000000000000000000000000000000000000000000000000".
@@ -46,7 +46,7 @@ eval {
   $pac = Net::DHCP::Packet->new($pac_without_option_end);
 };
 #diag($@);
-like( $@, qr/marshall: unexpected end of options/, "marshall: unexpected end of options");
+like( $@, qr/marshall: unexpected end of options/, 'marshall: unexpected end of options');
 
 # now test serialize
 $pac = Net::DHCP::Packet->new();

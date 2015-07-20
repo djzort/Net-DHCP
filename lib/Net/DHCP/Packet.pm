@@ -256,9 +256,8 @@ sub sname {
     my $self = shift;
     if (@_) { $self->{sname} = shift }
     if ( length( $self->{sname} ) > 63 ) {
-        carp(   q|'sname' must not be > 63 bytes, (currently |
-              . length( $self->{sname} )
-              . ')' );
+        carp( sprintf q|'sname' must not be > 63 bytes, (currently %d)|,
+              length( $self->{sname} ));
         $self->{sname} = substr( $self->{sname}, 0, 63 );
     }
     return $self->{sname};
@@ -270,9 +269,8 @@ sub file {
     my $self = shift;
     if (@_) { $self->{file} = shift }
     if ( length( $self->{file} ) > 127 ) {
-        carp(   q|'file' must not be > 127 bytes, (currently |
-              . length( $self->{file} )
-              . ')' );
+        carp(   q|'file' must not be > 127 bytes, (currently %d)|,
+              length( $self->{file} ));
         $self->{file} = substr( $self->{file}, 0, 127 );
     }
     return $self->{file};
@@ -327,10 +325,9 @@ sub addOptionValue {
 
     # verify number of parameters
     if ( $format eq 'string' || $format eq 'csr' ) {
-        @values = ($value);     # don't change format
+        @values = ($value);      # don't change format
     }
-    elsif ( $format =~ m/s$/ )
-    {    # ends with an 's', meaning any number of parameters
+    elsif ( $format =~ m/s$/ ) { # ends with an 's', meaning any number of parameters
         ;
     }
     elsif ( $format =~ m/2$/ ) { # ends with a '2', meaning couples of parameters
@@ -680,22 +677,22 @@ sub marshall {
     my $opt_buf;
 
     if ( length($buf) < BOOTP_ABSOLUTE_MIN_LEN() ) {
-        croak(  'marshall: packet too small ('
-              . length($buf)
-              . '), absolute minimum size is '
-              . BOOTP_ABSOLUTE_MIN_LEN() );
+        croak( sprintf
+            'marshall: packet too small (%d), absolute minimum size is %d',
+            length($buf),
+            BOOTP_ABSOLUTE_MIN_LEN() );
     }
     if ( length($buf) < BOOTP_MIN_LEN() ) {
-        carp(   'marshall: packet too small ('
-              . length($buf)
-              . '), minimum size is '
-              . BOOTP_MIN_LEN() );
+        carp( sprintf
+            'marshall: packet too small (%d), minimum size is %d',
+            length($buf),
+            BOOTP_MIN_LEN() );
     }
     if ( length($buf) > DHCP_MAX_MTU() ) {
-        croak(  'marshall: packet too big ('
-              . length($buf)
-              . '), max MTU size is '
-              . DHCP_MAX_MTU() );
+        croak( sprintf
+            'marshall: packet too big (%d), max MTU size is %s',
+            length($buf),
+            DHCP_MAX_MTU() );
     }
 
     # if we are re-using this object, then we need to clear out these arrays
@@ -1263,7 +1260,7 @@ formats.
 If you need access to the raw binary values, please use C<addSubOptionRaw()>.
 
    $pac = Net::DHCP::Packet->new();
-   # FIXME update exampls
+   # FIXME update examples
    $pac->addSubOption(DHO_DHCP_MESSAGE_TYPE(), DHCPINFORM());
    $pac->addSubOption(DHO_NAME_SERVERS(), "10.0.0.1", "10.0.0.2"));
 
@@ -1667,21 +1664,21 @@ Sending a LEASEQUERY (provided by John A. Murphy).
   $usage = "usage: $0 DHCP_SERVER_IP DHCP_CLIENT_IP\n"; $ARGV[1] || die $usage;
 
   # create a socket
-  $handle = IO::Socket::INET->new(Proto => 'udp',
+  $handle = IO::Socket::INET->new(Proto     => 'udp',
                                   Broadcast => 1,
-                                  PeerPort => '67',
+                                  PeerPort  => '67',
                                   LocalPort => '67',
-                                  PeerAddr => $ARGV[0])
+                                  PeerAddr  => $ARGV[0])
                 or die "socket: $@";     # yes, it uses $@ here
 
   # create DHCP Packet
   $inform = Net::DHCP::Packet->new(
-                      op => BOOTREQUEST(),
+                      op     => BOOTREQUEST(),
                       Htype  => '0',
                       Hlen   => '0',
                       Ciaddr => $ARGV[1],
                       Giaddr => $handle->sockhost(),
-                      Xid => int(rand(0xFFFFFFFF)),     # random xid
+                      Xid    => int(rand(0xFFFFFFFF)), # random xid
                       DHO_DHCP_MESSAGE_TYPE() => DHCPLEASEQUERY
                       );
 
@@ -1696,6 +1693,14 @@ Sending a LEASEQUERY (provided by John A. Murphy).
 A simple DHCP Server is provided in the "examples" directory. It is composed of
 "dhcpd.pl" a *very* simple server example, and "dhcpd_test.pl" a simple tester for
 this server.
+
+=head1 IMPORTANT QUIRKS
+
+Cable vendors really want option 82 to always be last.
+
+Intel PXE really wants option 60 before option 43.
+
+Minimum frame size is 300, but we only warn (carp) if its not.
 
 =head1 AUTHOR
 
