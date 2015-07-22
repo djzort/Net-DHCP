@@ -12,7 +12,7 @@ package Net::DHCP::Packet;
 our ( @ISA, @EXPORT, @EXPORT_OK );
 use Exporter;
 @ISA       = qw(Exporter);
-@EXPORT    = qw( packinet packinets unpackinet unpackinets );
+@EXPORT    = qw( packinet packinets unpackinet unpackinets ); # FIXME this is rude
 @EXPORT_OK = qw( );
 
 use Socket;
@@ -269,7 +269,7 @@ sub file {
     my $self = shift;
     if (@_) { $self->{file} = shift }
     if ( length( $self->{file} ) > 127 ) {
-        carp(   q|'file' must not be > 127 bytes, (currently %d)|,
+        carp( sprintf q|'file' must not be > 127 bytes, (currently %d)|,
               length( $self->{file} ));
         $self->{file} = substr( $self->{file}, 0, 127 );
     }
@@ -293,10 +293,32 @@ sub padding {
 
 #=======================================================================
 
+sub optionsorder {
+
+    # 53 54 55 51 at the start
+    return -1 if $a == 53;
+    return -1 if $a == 54;
+    return -1 if $a == 55;
+    return -1 if $a == 51;
+
+    # 82 at the end
+    return 1 if $a == 82;
+
+    # 60 needs to be immediately before 43. not sure how
+    $a <=> $b
+
+}
+
 sub addOptionRaw {
-    my ( $self, $key, $value_bin ) = @_;
+    my ( $self, $key, $value_bin, $sort ) = @_;
     $self->{options}->{$key} = $value_bin;
-    push @{ $self->{options_order} }, ($key);
+    push @{ $self->{options_order} }, $key;
+
+    return 1 if $sort;
+
+    @{ $self->{options_order} } = sort optionsorder @{ $self->{options_order} };
+
+    return 1
 }
 
 sub addOptionValue {
@@ -354,7 +376,7 @@ sub addOptionValue {
         },
         string => sub { return shift },
         csr    => sub { return packcsr(shift) },
-        relays => sub { return packra(@_) },
+        suboptions => sub { return packsuboptions(@_) },
 
     );
 
@@ -393,7 +415,8 @@ sub addSubOptionValue {
 
     carp(
 "addSubOptionValue: unknown format for subcode ($subcode) on code ($code)"
-    ) unless ( $DHO_FORMATS{$code} eq 'suboptions' );
+      )
+      unless ( $DHO_FORMATS{$code} eq 'suboptions' );
 
     carp("addSubOptionValue: no suboptions defined for code ($code)?")
       unless exists $SUBOPTION_CODES{$code};
@@ -471,6 +494,11 @@ sub getOptionValue {
       unless exists( $DHO_FORMATS{$code} );
 
     my $format = $DHO_FORMATS{$code};
+    my $subcodes;
+
+    if ($format eq 'suboptions') {
+        $subcodes = $REV_SUBOPTION_CODES{$code} || {}
+    }
 
     my $value_bin = $self->getOptionRaw($code);
 
@@ -490,7 +518,7 @@ sub getOptionValue {
         bytes  => sub { return unpack( 'C*', shift ) },
         string => sub { return shift },
         csr    => sub { return unpackcsr(shift) },
-        relays => sub { return unpackra(shift) },
+        suboptions => sub { return unpacksuboptions(shift) },
 
     );
 
@@ -499,13 +527,17 @@ sub getOptionValue {
     #    # TBM, bad format
 
     # decode the options if we know the format
-    return join( q| |, $options{$format}->($value_bin) )
-      if $options{$format};
+    if ($options{$format}) {
+        $value_bin = join(q|, |,
+        map { ref $_ ? sprintf '%s => %s', $subcodes->{$_->[0]} || $_->[0], # FIXME needs to guess if hex or ascii, quote if whitespace padding
+            unpack('a*',$_->[1]) : $_ }
+        ( $options{$format}->($value_bin) ))
+    }
 
     # if we cant work out the format
     return $value_bin
 
-}    # getOptionValue
+}   # getOptionValue
 
 sub getSubOptionRaw {
     my ( $self, $key, $subkey ) = @_;
@@ -716,7 +748,7 @@ sub marshall {
         # it is definitely DHCP
         $self->{isDhcp} = 1;
 
-        my $pos   = 4;                  # Skip magic cookie
+        my $pos   = 4;     # Skip magic cookie
         my $total = length($opt_buf);
         my $type;
 
@@ -725,10 +757,10 @@ sub marshall {
             $type = ord( substr( $opt_buf, $pos++, 1 ) );
             next if ( $type eq DHO_PAD() );  # Skip padding bytes
             last if ( $type eq DHO_END() );  # Type 'FF' signals end of options.
-            my $len = ord( substr( $opt_buf, $pos++, 1 ) );
+            my $len = ord( substr( $opt_buf, $pos++, 1 ) ); # FIXME sanity check length
             my $option = substr( $opt_buf, $pos, $len );
             $pos += $len;
-            $self->addOptionRaw( $type, $option );
+            $self->addOptionRaw( $type, $option, 1 );
 
         }
 
@@ -755,51 +787,7 @@ sub marshall {
 
     return $self
 
-}    # end sub marshall
-
-#=======================================================================
-sub decodeRelayAgent {
-
-    use bytes;
-    my $self = shift;
-    my ($opt_buf) = @_;
-    my @opt;
-
-    if ( length($opt_buf) > 1 ) {
-
-        my $pos   = 0;
-        my $total = length($opt_buf);
-
-        while ( $pos < $total ) {
-            my $type = ord( substr( $opt_buf, $pos++, 1 ) );
-            my $len  = ord( substr( $opt_buf, $pos++, 1 ) );
-            my $option = substr( $opt_buf, $pos, $len );
-            $pos += $len;
-            push @opt, $type, $option;
-        }
-
-    }
-
-    return @opt
-
-}
-
-sub encodeRelayAgent {
-
-    use bytes;
-    my $self = shift;
-    my @opt;    # expect key-value pairs
-    my $buf;
-
-    while ( defined( my $key = shift(@opt) ) ) {
-        my $value = shift(@opt);
-        $buf .= pack( 'C',    $key );
-        $buf .= pack( 'C/a*', $value );
-    }
-
-    return $buf
-
-}
+}   # end sub marshall
 
 #=======================================================================
 sub toString {
@@ -850,14 +838,17 @@ sub toString {
               || $self->getOptionValue($key);
         }
         else {
+
             if ( exists( $DHO_FORMATS{$key} ) ) {
                 $value = join( q| |, $self->getOptionValue($key) );
             }
             else {
                 $value = $self->getOptionRaw($key);
             }
+
+            # convert to printable text
             $value =~
-              s/([[:^print:]])/ sprintf q[\x%02X], ord $1 /eg;  # printable text
+              s/([[:^print:]])/ sprintf q[\x%02X], ord $1 /eg;
         }
         $s .= sprintf( " %s(%d) = %s\n",
             exists $REV_DHO_CODES{$key} ? $REV_DHO_CODES{$key} : '',
@@ -871,7 +862,7 @@ sub toString {
 
     return $s
 
-}    # end toString
+}   # end toString
 
 #=======================================================================
 # internal utility functions
@@ -918,40 +909,39 @@ sub unpackinets_array {    # multiple ip addresses, returns an array
     return map { unpackinet($_) } unpack( '(a4)*', shift || 0 );
 }
 
-sub packra {
-    my %relay_opt = @_
+sub packsuboptions {
+    my @relay_opt = @_
       or return;
 
     my $buf = '';
-    for my $suboption (sort keys %relay_opt) {
-        my $value = pack( 'C/a*', $relay_opt{$suboption});
-        $buf .= pack( 'C', $suboption)
+    for my $opt (@relay_opt) {
+        my $value = pack( 'C/a*', $opt->[1]);
+        $buf .= pack( 'C', $opt->[0])
              . pack( 'C', length($value))
              . $value;
     }
+
     return pack( 'C', length($buf) ) . $buf
 }
 
-sub unpackra {     # prints a human readable 'relay agent options'
+sub unpacksuboptions {     # prints a human readable suboptions
 
     use bytes;
     my $opt_buf = shift or return;
 
-    my @opt;
+    my @relay_opt;
     my $pos   = 0;
     my $total = length($opt_buf);
 
     while ( $pos < $total ) {
         my $type = ord( substr( $opt_buf, $pos++, 1 ) );
-        my $len  = ord( substr( $opt_buf, $pos++, 1 ) );
+        my $len  = ord( substr( $opt_buf, $pos++, 1 ) ); # FIXME check this more
         my $option = substr( $opt_buf, $pos, $len );
         $pos += $len;
-        push @opt, [ $REV_RELAYAGENT_CODES{$type} || $type, $option ];
+        push @relay_opt, [ $type, $option ];
     }
 
-    return join("\n",
-        map { sprintf q|[ %s => '%s' ]|, @{$_} }
-        @opt)
+    return @relay_opt
 
 }
 
@@ -1281,10 +1271,14 @@ Return value is either a string or an array, depending on the context.
   $ip  = $pac->getOptionValue(DHO_SUBNET_MASK());
   $ips = $pac->getOptionValue(DHO_NAME_SERVERS());
 
-=item addOptionRaw ( CODE, VALUE )
+=item addOptionRaw ( CODE, VALUE, BOOLEAN )
 
 Adds a DHCP OPTION provided in packed binary format.
 Please see corresponding RFC for manual type conversion.
+
+BOOLEAN indicates if options should be inserted in the order provided.
+Default is to sort options to work around known quirky clients.
+See L<QUIRK WORK-AROUNDS>
 
 =item addSubOptionRaw ( CODE, SUBCODE, VALUE )
 
@@ -1312,19 +1306,6 @@ This is an empty stub for now
 =item removeOption ( CODE )
 
 Remove option from option list.
-
-=item encodeRelayAgent ()
-
-These are half baked, but will encode the relay agent options in the future
-
-=item decodeRelayAgent ()
-
-These are half baked, but will decode the relay agent options in the future
-
-=item unpackRelayAgent ( HASH )
-
-returns a human readable 'relay agent options', not to be confused with
-C<decodeRelayAgent>
 
 =item I packcsr( ARRAYREF )
 
@@ -1564,6 +1545,11 @@ Transforms a list of space delimited IP addresses into a packed bytes string.
 
 Transforms an array (list) of IP addresses into a packed bytes string.
 
+=item packsuboptions ( LIST )
+
+Transforms an list of lists into packed option.
+For option 43 (vendor specific), 82 (relay agent) etc.
+
 =item unpackinet ( STRING )
 
 Transforms a packed bytes IP address into a "xx.xx.xx.xx" string.
@@ -1577,6 +1563,10 @@ Transforms a packed bytes list of IP addresses into a list of
 
 Transforms a packed bytes list of IP addresses into a array of
 "xx.xx.xx.xx" strings.
+
+=item unpacksuboptions ( STRING )
+
+Unpacks sub-options to a list of lists
 
 =back
 
@@ -1694,7 +1684,7 @@ A simple DHCP Server is provided in the "examples" directory. It is composed of
 "dhcpd.pl" a *very* simple server example, and "dhcpd_test.pl" a simple tester for
 this server.
 
-=head1 IMPORTANT QUIRKS
+=head1 QUIRK WORK-AROUNDS
 
 Cable vendors really want option 82 to always be last.
 
