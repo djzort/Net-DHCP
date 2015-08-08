@@ -97,6 +97,6 @@ is( $pac->getOptionValue( DHO_DHCP_SERVER_IDENTIFIER() ), '12.34.56.68' );
 is( $pac->getOptionValue( DHO_DHCP_LEASE_TIME() ),        86400 );
 is( $pac->getOptionValue( DHO_SUBNET_MASK() ),            '255.255.255.0' );
 is( $pac->getOptionValue( DHO_ROUTERS() ),                '10.0.0.254' );
-is( $pac->getOptionValue( DHO_STATIC_ROUTES() ), '22.33.44.55 10.0.0.254' );
+is( $pac->getOptionValue( DHO_STATIC_ROUTES() ), '22.33.44.55, 10.0.0.254' );
 is( $pac->getOptionValue( DHO_WWW_SERVER() ),    '10.0.0.6' );
 is( $pac->getOptionValue( DHO_IRC_SERVER() ),    undef );

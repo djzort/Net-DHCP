@@ -59,10 +59,10 @@ is($pac->getOptionValue(DHO_NAME_SERVERS()), undef);
 $pac = Net::DHCP::Packet->new();
 is($pac->getOptionValue(DHO_STATIC_ROUTES()), undef, "testing inets2 format");
 # test for 'inet2' data type
-$pac->addOptionValue(DHO_STATIC_ROUTES(), "1.2.3.15 4.5.6.14");
+$pac->addOptionValue(DHO_STATIC_ROUTES(), '1.2.3.15, 4.5.6.14');
 
 is($pac->getOptionRaw(DHO_STATIC_ROUTES()), "\1\2\3\x0F\4\5\6\x0E");
-is($pac->getOptionValue(DHO_STATIC_ROUTES()), "1.2.3.15 4.5.6.14");
+is($pac->getOptionValue(DHO_STATIC_ROUTES()), '1.2.3.15, 4.5.6.14');
 # empty
 $pac->addOptionValue(DHO_STATIC_ROUTES());
 is($pac->getOptionValue(DHO_STATIC_ROUTES()), undef);
@@ -108,7 +108,7 @@ $pac = Net::DHCP::Packet->new();
 is($pac->getOptionValue(DHO_DHCP_PARAMETER_REQUEST_LIST()), undef, 'testing bytes format is init\'d as empty');
 # test for 'bytes' format
 $pac->addOptionValue(DHO_DHCP_PARAMETER_REQUEST_LIST(),  "1 3 5 1278 ".0xFFFFFFFF,);
-is($pac->getOptionValue(DHO_DHCP_PARAMETER_REQUEST_LIST()), '1 3 5 254 255', 'testing bytes format with some integers, a wrap and a hex');
+is($pac->getOptionValue(DHO_DHCP_PARAMETER_REQUEST_LIST()), '1, 3, 5, 254, 255', 'testing bytes format with some integers, a wrap and a hex');
 is($pac->getOptionRaw(DHO_DHCP_PARAMETER_REQUEST_LIST()), "\x01\x03\x05\xFE\xFF", 'testing bytes format as above, using hex format');
 $pac->addOptionValue(DHO_DHCP_PARAMETER_REQUEST_LIST(), undef);
 is($pac->getOptionValue(DHO_DHCP_PARAMETER_REQUEST_LIST()), q(), 'testing bytes format, clearing with undef');
@@ -134,7 +134,7 @@ $pac->addOptionValue(DHO_DEFAULT_TCP_TTL(), 0x78);
 $pac->addOptionValue(DHO_DHCP_PARAMETER_REQUEST_LIST(),  "1 3 5 254 255");
 $pac->addOptionValue(DHO_TFTP_SERVER(), $foo);
 is($pac->getOptionValue(DHO_TFTP_SERVER()), $foo, "testing option removal");
-is($pac->getOptionValue(DHO_DHCP_PARAMETER_REQUEST_LIST()), '1 3 5 254 255');
+is($pac->getOptionValue(DHO_DHCP_PARAMETER_REQUEST_LIST()), '1, 3, 5, 254, 255');
 is($pac->getOptionValue(DHO_DEFAULT_TCP_TTL()), 0x78);
 # now remove one middle one
 $pac->removeOption(DHO_DHCP_PARAMETER_REQUEST_LIST());

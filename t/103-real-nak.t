@@ -2,6 +2,7 @@
 
 use Test::More tests => 19;
 use Test::Warn;
+use FindBin;
 
 use strict;
 
@@ -36,7 +37,7 @@ my %options = (
 #
 # Simple offline anaysis
 #
-my $file = 'data/DHCP-NAK-SMALL.cap';
+my $file = "$FindBin::Bin/data/DHCP-NAK-SMALL.cap";
 my $oDump = Net::Frame::Dump::Offline->new(
     file => $file) or BAIL_OUT( "Could not open $file" );
 

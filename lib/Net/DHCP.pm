@@ -1,9 +1,9 @@
 #!/bin/false
+use strict;
+use warnings;
 
 package Net::DHCP;
 
-use strict;
-use warnings;
 
 1;
 
