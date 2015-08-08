@@ -1,8 +1,10 @@
 Net::DHCP - A DHCP packet object
-0.7    2015-07-17
+0.7    2015-08-08
 	- Reworked ->new()
 	- Bring back Net/DHCP.pm
 	- Add Virtual Subnet Selection constant from rfc 6607
+	- Add tests examining real packets from tcpdump
+	- Option 82 decoding
 
 0.696  2015-06-10
 	- Fixed up dist.ini
