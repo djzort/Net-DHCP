@@ -5,6 +5,7 @@ Net::DHCP - A DHCP packet object
 	- Add Virtual Subnet Selection constant from rfc 6607
 	- Add tests examining real packets from tcpdump
 	- Option 82 decoding
+	- Lists of values are now retured with commas
 
 0.696  2015-06-10
 	- Fixed up dist.ini
