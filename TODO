@@ -1,0 +1,7 @@
+- Enchance DHCP clientid decoding, see also https://www.ietf.org/rfc/rfc2132.txt section 9.14
+  - character 1 = 0, then hostname (free text)
+  - character 1 = arp hardware types, hardware details
+
+- Carefully, remove all 'use byte' statements
+
+- You name it, you can do it!
