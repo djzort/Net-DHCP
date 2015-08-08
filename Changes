@@ -1,4 +1,7 @@
 Net::DHCP - A DHCP packet object
+
+0.7   2015-08-08
+	- Add author covenant
 0.7_001  2015-08-08
 	- Reworked ->new()
 	- Bring back Net/DHCP.pm
