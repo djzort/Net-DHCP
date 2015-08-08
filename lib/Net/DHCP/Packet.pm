@@ -1199,6 +1199,11 @@ hence whether the packet is DHCP or BOOTP.
 
 Default value is C<1>, valid DHCP cookie.
 
+=item optionsorder ( )
+
+TODO This will rearrange the order of options to accomidate as many
+quirky cliens as possible.
+
 =item padding ( [BYTES] )
 
 Sets/gets the optional padding at the end of the DHCP packet, i.e. after
