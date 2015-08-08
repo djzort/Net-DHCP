@@ -48,10 +48,10 @@ like( $@, qr/addOptionValue: exactly one value expected/);
 $pac = Net::DHCP::Packet->new();
 is($pac->getOptionValue(DHO_NAME_SERVERS()), undef, "testing inets format");
 # test for 'inets' data type
-$pac->addOptionValue(DHO_NAME_SERVERS(), "1.2.3.15 4.5.6.14");
+$pac->addOptionValue(DHO_NAME_SERVERS(), '1.2.3.15, 4.5.6.14');
 
 is($pac->getOptionRaw(DHO_NAME_SERVERS()), "\1\2\3\x0F\4\5\6\x0E");
-is($pac->getOptionValue(DHO_NAME_SERVERS()), "1.2.3.15 4.5.6.14");
+is($pac->getOptionValue(DHO_NAME_SERVERS()), '1.2.3.15, 4.5.6.14');
 # empty
 $pac->addOptionValue(DHO_NAME_SERVERS());
 is($pac->getOptionValue(DHO_NAME_SERVERS()), undef);
