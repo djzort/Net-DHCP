@@ -43,7 +43,6 @@ my $oDump = Net::Frame::Dump::Offline->new(
 
 $oDump->start;
 
-my $count = 0;
 my $h = $oDump->next;
 my $f = Net::Frame::Simple->new(
     raw        => $h->{raw},
