@@ -1,4 +1,5 @@
 #!/bin/false
+# ABSTRACT: DHCP packet object
 use strict;
 use warnings;
 
