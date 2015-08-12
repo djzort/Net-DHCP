@@ -1308,11 +1308,11 @@ This is an empty stub for now
 
 This is an empty stub for now
 
-=item removeOption ( CODE )
+=item I<removeOption ( CODE )>
 
 Remove option from option list.
 
-=item I packcsr( ARRAYREF )
+=item I<packcsr( ARRAYREF )>
 
 returns the packed Classless Static Route option built from a list of CIDR style address/mask combos
 
