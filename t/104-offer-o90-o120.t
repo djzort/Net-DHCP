@@ -60,7 +60,6 @@ my $f = Net::Frame::Simple->new(
 );
 $f->unpack;
 
-my $len = length($h->{raw});
 my $dhcp = Net::DHCP::Packet->new($f->ref->{UDP}->payload);
 
 $oDump->stop;
@@ -77,7 +76,7 @@ for my $key (sort keys %options) {
 
 }
 
-print $dhcp->toString;
+# print $dhcp->toString;
 
 1
 

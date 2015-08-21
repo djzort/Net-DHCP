@@ -51,7 +51,6 @@ my $f = Net::Frame::Simple->new(
 );
 $f->unpack;
 
-my $len = length($h->{raw});
 my $smallnak;
 warning_like { $smallnak = Net::DHCP::Packet->new($f->ref->{UDP}->payload) }
     qr/too small/i, 'nak is actually a little small';
