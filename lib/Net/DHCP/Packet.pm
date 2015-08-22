@@ -1209,6 +1209,9 @@ quirky cliens as possible.
 Sets/gets the optional padding at the end of the DHCP packet, i.e. after
 DHCP options.
 
+Convert to hex with:
+ unpack( 'H*', $obj->padding() )
+
 =back
 
 =head2 DHCP OPTIONS METHODS
