@@ -76,7 +76,7 @@ for my $key (sort keys %options) {
 
 }
 
-# print $dhcp->toString;
+print $dhcp->toString;
 
 1
 
