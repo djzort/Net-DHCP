@@ -86,13 +86,13 @@ use constant DHCP_MIN_LEN           => 548;
 BEGIN {
     %BOOTP_CODES = (
         'BOOTREQUEST' => 1,
-        'BOOTREPLY'   => 2
+        'BOOTREPLY'   => 2,
     );
 
     %HTYPE_CODES = (
         'HTYPE_ETHER'   => 1,
         'HTYPE_IEEE802' => 6,
-        'HTYPE_FDDI'    => 8
+        'HTYPE_FDDI'    => 8,
     );
 
     %DHO_CODES = (    # RFC 2132
@@ -431,7 +431,7 @@ our %DHO_FORMATS = (
     DHO_DHCP_REBINDING_TIME()         => 'int',
     DHO_VENDOR_CLASS_IDENTIFIER()     => 'string',
 
-    #    DHO_DHCP_CLIENT_IDENTIFIER()  => 'ids',
+    DHO_DHCP_CLIENT_IDENTIFIER()      => 'clientid',
     DHO_NWIP_DOMAIN_NAME()            => 'string',    # rfc 2242
 
     DHO_NWIP_SUBOPTIONS()             => 'suboptions',                    # rfc 2242

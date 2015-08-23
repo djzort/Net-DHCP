@@ -369,13 +369,14 @@ sub addOptionValue {
         inets2 => sub { return packinets_array(@_) },
         int    => sub { return pack( 'N', shift ) },
         short  => sub { return pack( 'n', shift ) },
-        byte   => sub { return pack( 'C', 255 & shift ) }
-        ,    # 255 & trims the input to single octet
-        bytes => sub {
+        # 255 & trims the input to single octet
+        byte   => sub { return pack( 'C', 255 & shift ) },
+        bytes  => sub {
             return pack( 'C*', map { 255 & $_ } @_ );
         },
-        string => sub { return shift },
-        csr    => sub { return packcsr(shift) },
+        string     => sub { return shift },
+        clientid   => sub { return packclientid(shift) },
+        csr        => sub { return packcsr(shift) },
         suboptions => sub { return packsuboptions(@_) },
 
     );
@@ -517,7 +518,8 @@ sub getOptionValue {
         byte   => sub { return unpack( 'C', shift ) },
         bytes  => sub { return unpack( 'C*', shift ) },
         string => sub { return shift },
-        csr    => sub { return unpackcsr(shift) },
+        clientid   => sub { return unpackclientid(shift) },
+        csr        => sub { return unpackcsr(shift) },
         suboptions => sub { return unpacksuboptions(shift) },
 
     );
@@ -945,6 +947,31 @@ sub unpacksuboptions {     # prints a human readable suboptions
 
 }
 
+sub packclientid {
+   return shift
+   # croak('pack clientid field still WIP');
+}
+
+sub unpackclientid {
+
+    my $clientid = shift
+      or return;
+
+    my $type = unpack('C',substr( $clientid, 0, 1 ));
+
+    if ($type == 0) { # text
+        return substr( $clientid, 1, length($clientid) )
+    }
+    if ($type == 1) { # ethernet
+        return unpack('H*',substr( $clientid, 1, length($clientid) ))
+    }
+
+    return $clientid
+
+   #croak('unpack clientid field still WIP');
+
+}
+
 sub packcsr {
     # catch empty value
     my $results = [ '' ];
@@ -1317,6 +1344,19 @@ This is an empty stub for now
 =item I<removeOption ( CODE )>
 
 Remove option from option list.
+
+=item I<packclientid( VALUE )>
+
+returns the packed Client-identifier (pass-through currently)
+
+=item I<unpackclientid>
+
+returns the unpackged clientid.
+
+Decodes:
+ type 0 as a string
+ type 1 as a mac address (hex string)
+ everything is passes through
 
 =item I<packcsr( ARRAYREF )>
 
