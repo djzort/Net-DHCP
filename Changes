@@ -2,11 +2,18 @@ Net::DHCP - A DHCP packet object
 
 0.7   2015-08-15
 	- Add author covenant
+	- Moved various methods to Net::DHCP::Packet::Attributes
+	- Moved various methods to Net::DHCP::Packet::IPv4Utils
+	- Adjusted tests accordingly
+	- Net::DHCP no longer exports unpackinet, packinet, unpackinets, packinets
+
 0.7_003  TBD
 	- Add more test examining reeal packets
 	- Start handling client id's
+
 0.7_002  2015-08-15
 	- Add tests examining real packets from tcpdump
+
 0.7_001  2015-08-08
 	- Reworked ->new()
 	- Bring back Net/DHCP.pm

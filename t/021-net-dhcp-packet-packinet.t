@@ -2,7 +2,7 @@
 
 use Test::More tests => 39;
 
-BEGIN { use_ok( 'Net::DHCP::Packet' ); }
+BEGIN { use_ok( 'Net::DHCP::Packet::IPv4Utils', ':all' ); }
 BEGIN { use_ok( 'Net::DHCP::Constants' ); }
 
 use strict;
@@ -13,11 +13,11 @@ my $pac3 = "\1\2\3\4\5\6";
 my $pac4 = "\1\2";
 my $pac5 = "\1\2\0\0";
 
-my $ip1 = "0.0.0.0";
-my $ip2 = "1.2.3.4";
-my $ip3 = "1.2.3.4.5.6";
+my $ip1 = '0.0.0.0';
+my $ip2 = '1.2.3.4';
+my $ip3 = '1.2.3.4.5.6';
 my $ip4 = " 1 . 2 . 3 . \t4 ";
-my $ip5 = "1.2.0.0";
+my $ip5 = '1.2.0.0';
 
 is( packinet($ip1), $pac1, 'packinet 1');
 is( packinet($ip2), $pac2 ,'packinet 2');
@@ -37,7 +37,7 @@ is( unpackinet(q||), $ip1);
 is( unpackinet(0), $ip1);
 is( unpackinet(0x04030201), $ip1);
 
-is( packinets("$ip1 $ip1"), $pac1.$pac1, "packinets");
+is( packinets("$ip1 $ip1"), $pac1.$pac1, 'packinets');
 is( packinets("$ip2 $ip5"), $pac2.$pac5);
 is( packinets("$ip1,$ip2;$ip1/$ip2\t$ip1;;;$ip2"), $pac1.$pac2.$pac1.$pac2.$pac1.$pac2);
 is( packinets($ip1), $pac1);
@@ -49,7 +49,7 @@ is( packinets(undef), $pac1,'packinets undef returns 0.0.0.0');
 is( packinets(''), $pac1,'packinets "" returns 0.0.0.0');
 is( packinets(0), $pac1,'0 goes to 0.0.0.0');
 
-is( unpackinets($pac1), $ip1, "unpackinets");
+is( unpackinets($pac1), $ip1, 'unpackinets');
 is( unpackinets($pac2), $ip2);
 is( unpackinets($pac3), "$ip2 $ip1");
 is( unpackinets($pac4), $ip1);
@@ -59,9 +59,9 @@ is( unpackinets(0), $ip1);
 is( unpackinets(0x04030201), '54.55.51.48 53.57.56.53'); # decimal value 67305985
 
 my @arr;
-@arr = Net::DHCP::Packet::unpackinets_array($pac3);
+@arr = unpackinets_array($pac3);
 is_deeply( \@arr, [$ip2, $ip1], 'unpackinets_array');
 
 @arr = ($ip2, $ip5);
-is( Net::DHCP::Packet::packinets_array(@arr), $pac2.$pac5, 'packinets_array');
+is( packinets_array(@arr), $pac2.$pac5, 'packinets_array');
 

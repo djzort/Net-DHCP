@@ -8,16 +8,10 @@ use 5.8.0;
 
 package Net::DHCP::Packet;
 
-# standard module declaration
-our ( @ISA, @EXPORT, @EXPORT_OK );
-use Exporter;
-@ISA       = qw(Exporter);
-@EXPORT    = qw( packinet packinets unpackinet unpackinets ); # FIXME this is rude
-@EXPORT_OK = qw( );
-
-use Socket;
 use Carp;
 use Net::DHCP::Constants qw(:DEFAULT :dhcp_hashes :dhcp_other %DHO_FORMATS);
+use Net::DHCP::Packet::Attributes qw(:all);
+use Net::DHCP::Packet::IPv4Utils qw(:all);
 use List::Util qw(first);
 
 #=======================================================================
@@ -114,183 +108,7 @@ sub new {
 
 }
 
-#=======================================================================
-# comment attribute : enables transaction number identification
-sub comment {
-    my $self = shift;
-    if (@_) { $self->{comment} = shift }
-    return $self->{comment};
-}
 
-# op attribute
-sub op {
-    my $self = shift;
-    if (@_) { $self->{op} = shift }
-    return $self->{op};
-}
-
-# htype attribute
-sub htype {
-    my $self = shift;
-    if (@_) { $self->{htype} = shift }
-    return $self->{htype};
-}
-
-# hlen attribute
-sub hlen {
-    my $self = shift;
-    if (@_) { $self->{hlen} = shift }
-    if ( $self->{hlen} < 0 ) {
-        carp( 'hlen must not be < 0 (currently ' . $self->{hlen} . ')' );
-        $self->{hlen} = 0;
-    }
-    if ( $self->{hlen} > 16 ) {
-        carp( 'hlen must not be > 16 (currently ' . $self->{hlen} . ')' );
-        $self->{hlen} = 16;
-    }
-    return $self->{hlen};
-}
-
-# hops attribute
-sub hops {
-    my $self = shift;
-    if (@_) { $self->{hops} = shift }
-    return $self->{hops};
-}
-
-# xid attribute
-sub xid {
-    my $self = shift;
-    if (@_) { $self->{xid} = shift }
-    return $self->{xid};
-}
-
-# secs attribute
-sub secs {
-    my $self = shift;
-    if (@_) { $self->{secs} = shift }
-    return $self->{secs};
-}
-
-# flags attribute
-sub flags {
-    my $self = shift;
-    if (@_) { $self->{flags} = shift }
-    return $self->{flags};
-}
-
-# ciaddr attribute
-sub ciaddr {
-    my $self = shift;
-    if (@_) { $self->{ciaddr} = packinet(shift) }
-    return unpackinet( $self->{ciaddr} );
-}
-
-# ciaddr attribute, Raw version
-sub ciaddrRaw {
-    my $self = shift;
-    if (@_) { $self->{ciaddr} = shift }
-    return $self->{ciaddr};
-}
-
-# yiaddr attribute
-sub yiaddr {
-    my $self = shift;
-    if (@_) { $self->{yiaddr} = packinet(shift) }
-    return unpackinet( $self->{yiaddr} );
-}
-
-# yiaddr attribute, Raw version
-sub yiaddrRaw {
-    my $self = shift;
-    if (@_) { $self->{yiaddr} = shift }
-    return $self->{yiaddr};
-}
-
-# siaddr attribute
-sub siaddr {
-    my $self = shift;
-    if (@_) { $self->{siaddr} = packinet(shift) }
-    return unpackinet( $self->{siaddr} );
-}
-
-# siaddr attribute, Raw version
-sub siaddrRaw {
-    my $self = shift;
-    if (@_) { $self->{siaddr} = shift }
-    return $self->{siaddr};
-}
-
-# giaddr attribute
-sub giaddr {
-    my $self = shift;
-    if (@_) { $self->{giaddr} = packinet(shift) }
-    return unpackinet( $self->{giaddr} );
-}
-
-# giaddr attribute, Raw version
-sub giaddrRaw {
-    my $self = shift;
-    if (@_) { $self->{giaddr} = shift }
-    return $self->{giaddr};
-}
-
-# chaddr attribute
-sub chaddr {
-    my $self = shift;
-    if (@_) { $self->{chaddr} = pack( 'H*', shift ) }
-    return unpack( 'H*', $self->{chaddr} );
-}
-
-# chaddr attribute, Raw version
-sub chaddrRaw {
-    my $self = shift;
-    if (@_) { $self->{chaddr} = shift }
-    return $self->{chaddr};
-}
-
-# sname attribute
-sub sname {
-    use bytes;
-    my $self = shift;
-    if (@_) { $self->{sname} = shift }
-    if ( length( $self->{sname} ) > 63 ) {
-        carp( sprintf q|'sname' must not be > 63 bytes, (currently %d)|,
-              length( $self->{sname} ));
-        $self->{sname} = substr( $self->{sname}, 0, 63 );
-    }
-    return $self->{sname};
-}
-
-# file attribute
-sub file {
-    use bytes;
-    my $self = shift;
-    if (@_) { $self->{file} = shift }
-    if ( length( $self->{file} ) > 127 ) {
-        carp( sprintf q|'file' must not be > 127 bytes, (currently %d)|,
-              length( $self->{file} ));
-        $self->{file} = substr( $self->{file}, 0, 127 );
-    }
-    return $self->{file};
-}
-
-# is it DHCP or BOOTP
-#   -> DHCP needs magic cookie and options
-sub isDhcp {
-    my $self = shift;
-    if (@_) { $self->{isDhcp} = shift }
-    return $self->{isDhcp};
-}
-
-# padding attribute
-sub padding {
-    my $self = shift;
-    if (@_) { $self->{padding} = shift }
-    return $self->{padding};
-}
-
-#=======================================================================
 
 sub optionsorder {
 
@@ -867,48 +685,6 @@ sub toString {
 
 #=======================================================================
 # internal utility functions
-# never failing versions of the "Socket" module functions
-sub packinet {    # bullet-proof version, never complains
-    use bytes;
-    my $addr = shift;
-
-    if ( $addr && $addr =~ m/(\d+)\.(\d+)\.(\d+)\.(\d+)/ ) {
-        return chr($1) . chr($2) . chr($3) . chr($4);
-    }
-
-    return "\0\0\0\0"
-}
-
-sub unpackinet {    # bullet-proof version, never complains
-    use bytes;
-    my $ip = shift;
-    return '0.0.0.0' unless ( $ip && length($ip) == 4 );
-    return
-        ord( substr( $ip, 0, 1 ) ) . q|.|
-      . ord( substr( $ip, 1, 1 ) ) . q|.|
-      . ord( substr( $ip, 2, 1 ) ) . q|.|
-      . ord( substr( $ip, 3, 1 ) );
-}
-
-sub packinets {     # multiple ip addresses, space delimited
-    return join(
-        q(), map { packinet($_) }
-          split( /[\s\/,;]+/, shift || 0 )
-    );
-}
-
-sub unpackinets {    # multiple ip addresses
-    return join( q| |, map { unpackinet($_) } unpack( '(a4)*', shift || 0 ) );
-}
-
-sub packinets_array {    # multiple ip addresses, space delimited
-    return unless @_;
-    return join( q(), map { packinet($_) } @_ );
-}
-
-sub unpackinets_array {    # multiple ip addresses, returns an array
-    return map { unpackinet($_) } unpack( '(a4)*', shift || 0 );
-}
 
 sub packsuboptions {
     my @relay_opt = @_
@@ -1115,133 +891,8 @@ Note: DHCP options are created in the same order as key-value pairs.
 
 =head2 ATTRIBUTE METHODS
 
-=over 4
+See L<Net::DHCP::Packet::Attributes>
 
-=item comment( [STRING] )
-
-Sets or gets the comment attribute (object meta-data only)
-
-=item op( [BYTE] )
-
-Sets/gets the I<BOOTP opcode>.
-
-Normal values are:
-
-  BOOTREQUEST()
-  BOOTREPLY()
-
-=item htype( [BYTE] )
-
-Sets/gets the I<hardware address type>.
-
-Common value is: C<HTYPE_ETHER()> (1) = ethernet
-
-=item hlen ( [BYTE] )
-
-Sets/gets the I<hardware address length>. Value must be between C<0> and C<16>.
-
-For most NIC's, the MAC address has 6 bytes.
-
-=item hops ( [BYTE] )
-
-Sets/gets the I<number of hops>.
-
-This field is incremented by each encountered DHCP relay agent.
-
-=item xid ( [INTEGER] )
-
-Sets/gets the 32 bits I<transaction id>.
-
-This field should be a random value set by the DHCP client.
-
-=item secs ( [SHORT] )
-
-Sets/gets the 16 bits I<elapsed boot time> in seconds.
-
-=item flags ( [SHORT] )
-
-Sets/gets the 16 bits I<flags>.
-
-  0x8000 = Broadcast reply requested.
-
-=item ciaddr ( [STRING] )
-
-Sets/gets the I<client IP address>.
-
-IP address is only accepted as a string like '10.24.50.3'.
-
-Note: IP address is internally stored as a 4 bytes binary string.
-See L<Special methods> below.
-
-=item yiaddr ( [STRING] )
-
-Sets/gets the I<your IP address>.
-
-IP address is only accepted as a string like '10.24.50.3'.
-
-Note: IP address is internally stored as a 4 bytes binary string.
-See L<Special methods> below.
-
-=item siaddr ( [STRING] )
-
-Sets/gets the I<next server IP address>.
-
-IP address is only accepted as a string like '10.24.50.3'.
-
-Note: IP address is internally stored as a 4 bytes binary string.
-See L<Special methods> below.
-
-=item giaddr ( [STRING] )
-
-Sets/gets the I<relay agent IP address>.
-
-IP address is only accepted as a string like '10.24.50.3'.
-
-Note: IP address is internally stored as a 4 bytes binary string.
-See L<Special methods> below.
-
-=item chaddr ( [STRING] )
-
-Sets/gets the I<client hardware address>. Its length is given by the C<hlen> attribute.
-
-Value is formatted as an Hexadecimal string representation.
-
-  Example: "0010A706DFFF" for 6 bytes mac address.
-
-Note : internal format is packed bytes string.
-See L<Special methods> below.
-
-=item sname ( [STRING] )
-
-Sets/gets the "server host name". Maximum size is 63 bytes. If greater
-a warning is issued.
-
-=item file ( [STRING] )
-
-Sets/gets the "boot file name". Maximum size is 127 bytes. If greater
-a warning is issued.
-
-=item isDhcp ( [BOOLEAN] )
-
-Sets/gets the I<DHCP cookie>. Returns whether the cookie is valid or not,
-hence whether the packet is DHCP or BOOTP.
-
-Default value is C<1>, valid DHCP cookie.
-
-=item optionsorder ( )
-
-TODO This will rearrange the order of options to accomidate as many
-quirky cliens as possible.
-
-=item padding ( [BYTES] )
-
-Sets/gets the optional padding at the end of the DHCP packet, i.e. after
-DHCP options.
-
-Convert to hex with:
- unpack( 'H*', $obj->padding() )
-
-=back
 
 =head2 DHCP OPTIONS METHODS
 
@@ -1581,39 +1232,6 @@ If the packet is malformed, a fatal error is produced.
 
 Returns a textual representation of the packet, for debugging.
 
-=item packinet ( STRING )
-
-Transforms a IP address "xx.xx.xx.xx" into a packed 4 bytes string.
-
-These are simple never failing versions of inet_ntoa and inet_aton.
-
-=item packinets ( STRING )
-
-Transforms a list of space delimited IP addresses into a packed bytes string.
-
-=item packinets_array( LIST )
-
-Transforms an array (list) of IP addresses into a packed bytes string.
-
-=item packsuboptions ( LIST )
-
-Transforms an list of lists into packed option.
-For option 43 (vendor specific), 82 (relay agent) etc.
-
-=item unpackinet ( STRING )
-
-Transforms a packed bytes IP address into a "xx.xx.xx.xx" string.
-
-=item unpackinets ( STRING )
-
-Transforms a packed bytes list of IP addresses into a list of
-"xx.xx.xx.xx" space delimited string.
-
-=item unpackinets_array ( STRING )
-
-Transforms a packed bytes list of IP addresses into a array of
-"xx.xx.xx.xx" strings.
-
 =item unpacksuboptions ( STRING )
 
 Unpacks sub-options to a list of lists
@@ -1624,6 +1242,8 @@ Unpacks sub-options to a list of lists
 
 These methods are provided for performance tuning only. They give access
 to internal data representation , thus avoiding unnecessary type conversion.
+
+See also L<Net::DHCP::Packet::IPv4Utils>
 
 =over 4
 
