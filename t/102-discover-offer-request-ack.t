@@ -1,6 +1,6 @@
 #!/usr/bin/env perl -wT
 
-use Test::More tests => 64;
+use Test::More tests => 79;
 use Test::Warn;
 use FindBin;
 
