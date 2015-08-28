@@ -18,7 +18,6 @@ use Exporter;
 use Socket;
 use Carp;
 use Net::DHCP::Constants qw(:DEFAULT :dhcp_hashes :dhcp_other %DHO_FORMATS);
-use Scalar::Util qw(looks_like_number);    # for numerical testing
 use List::Util qw(first);
 
 #=======================================================================
