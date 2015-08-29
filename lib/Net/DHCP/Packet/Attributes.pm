@@ -334,11 +334,6 @@ hence whether the packet is DHCP or BOOTP.
 
 Default value is C<1>, valid DHCP cookie.
 
-=item optionsorder ( )
-
-TODO This will rearrange the order of options to accomidate as many
-quirky cliens as possible.
-
 =item padding ( [BYTES] )
 
 Sets/gets the optional padding at the end of the DHCP packet, i.e. after
@@ -346,6 +341,36 @@ DHCP options.
 
 Convert to hex with:
  unpack( 'H*', $obj->padding() )
+
+=back
+
+=head2 SPECIAL METHODS
+
+These methods are provided for performance tuning only. They give access
+to internal data representation , thus avoiding unnecessary type conversion.
+
+=over 4
+
+=item ciaddrRaw ( [STRING])
+
+Sets/gets the I<client IP address> in packed 4 characters binary strings.
+
+=item yiaddrRaw ( [STRING] )
+
+Sets/gets the I<your IP address> in packed 4 characters binary strings.
+
+=item siaddrRaw ( [STRING] )
+
+Sets/gets the I<next server IP address> in packed 4 characters binary strings.
+
+=item giaddrRaw ( [STRING] )
+
+Sets/gets the I<relay agent IP address> in packed 4 characters binary strings.
+
+=item chaddrRaw ( [STRING] )
+
+Sets/gets the I<client hardware address> in packed binary string.
+Its length is given by the C<hlen> attribute.
 
 =back
 

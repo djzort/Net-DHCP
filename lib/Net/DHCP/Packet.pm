@@ -108,8 +108,6 @@ sub new {
 
 }
 
-
-
 sub optionsorder {
 
     # 53 54 55 51 at the start
@@ -1232,43 +1230,23 @@ If the packet is malformed, a fatal error is produced.
 
 Returns a textual representation of the packet, for debugging.
 
+=item packsuboptions ( LIST )
+
+Transforms an list of lists into packed option.
+For option 43 (vendor specific), 82 (relay agent) etc.
+
 =item unpacksuboptions ( STRING )
 
 Unpacks sub-options to a list of lists
 
+=item optionsorder ( )
+
+TODO This will rearrange the order of options to accomidate as many
+quirky cliens as possible.
+
 =back
-
-=head2 SPECIAL METHODS
-
-These methods are provided for performance tuning only. They give access
-to internal data representation , thus avoiding unnecessary type conversion.
 
 See also L<Net::DHCP::Packet::IPv4Utils>
-
-=over 4
-
-=item ciaddrRaw ( [STRING])
-
-Sets/gets the I<client IP address> in packed 4 characters binary strings.
-
-=item yiaddrRaw ( [STRING] )
-
-Sets/gets the I<your IP address> in packed 4 characters binary strings.
-
-=item siaddrRaw ( [STRING] )
-
-Sets/gets the I<next server IP address> in packed 4 characters binary strings.
-
-=item giaddrRaw ( [STRING] )
-
-Sets/gets the I<relay agent IP address> in packed 4 characters binary strings.
-
-=item chaddrRaw ( [STRING] )
-
-Sets/gets the I<client hardware address> in packed binary string.
-Its length is given by the C<hlen> attribute.
-
-=back
 
 =head1 EXAMPLES
 

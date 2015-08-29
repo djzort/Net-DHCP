@@ -99,11 +99,6 @@ Transforms a list of space delimited IP addresses into a packed bytes string.
 
 Transforms an array (list) of IP addresses into a packed bytes string.
 
-=item packsuboptions ( LIST )
-
-Transforms an list of lists into packed option.
-For option 43 (vendor specific), 82 (relay agent) etc.
-
 =item unpackinet ( STRING )
 
 Transforms a packed bytes IP address into a "xx.xx.xx.xx" string.
@@ -117,6 +112,8 @@ Transforms a packed bytes list of IP addresses into a list of
 
 Transforms a packed bytes list of IP addresses into a array of
 "xx.xx.xx.xx" strings.
+
+=back
 
 =head1 AUTHOR
 
