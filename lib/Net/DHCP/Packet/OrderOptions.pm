@@ -18,7 +18,7 @@ use Carp qw/ carp /;
 
 my @order = (
 
-# taken from isc-dhcp...
+# taken from isc-dhcp... i think its wrong though
 53, # message type
 54, # server id
 51, # lease time
