@@ -93,6 +93,7 @@ BEGIN {
         'HTYPE_ETHER'   => 1,
         'HTYPE_IEEE802' => 6,
         'HTYPE_FDDI'    => 8,
+        'HTYPE_INFINIBAND' => 32,
     );
 
     %DHO_CODES = (    # RFC 2132
@@ -311,18 +312,19 @@ BEGIN {
 
     # Type 82 sub option codes
     %RELAYAGENT_CODES = (
-        'RA_CIRCUIT_ID'         => 1,
-        'RA_REMOTE_ID'          => 2,
-        'RA_DOCSIS_CLASS'       => 4,
-        'RA_LINK_SELECTION'     => 5,
-        'RA_SUBSCRIBER_ID'      => 6,
-        'RA_RADIUS_ATTRIBUTES'  => 7,
-        'RA_AUTHENTICATION'     => 8,
-        'RA_VENDOR_INFO'        => 9,
-        'RA_FLAGS'              => 10,
-        'RA_SERVER_ID_OVERRIDE' => 11,
-        'RA_DHCPV4_VIRTUAL_SUBNET_SELECTION' => 151, # rfc 6607
-        'RA_DHCPV4_VIRTUAL_SUBNET_SELECTION_CONTROL' => 152, # rfc 6607
+        'RAI_CIRCUIT_ID'         => 1,
+        'RAI_REMOTE_ID'          => 2,
+        'RAI_AGENT_ID'           => 3,
+        'RAI_DOCSIS_CLASS'       => 4,
+        'RAI_LINK_SELECTION'     => 5,
+        'RAI_SUBSCRIBER_ID'      => 6,
+        'RAI_RADIUS_ATTRIBUTES'  => 7,
+        'RAI_AUTHENTICATION'     => 8,
+        'RAI_VENDOR_INFO'        => 9,
+        'RAI_FLAGS'              => 10,
+        'RAI_SERVER_ID_OVERRIDE' => 11,
+        'RAI_DHCPV4_VIRTUAL_SUBNET_SELECTION' => 151, # rfc 6607
+        'RAI_DHCPV4_VIRTUAL_SUBNET_SELECTION_CONTROL' => 152, # rfc 6607
     );
 }
 
@@ -716,18 +718,18 @@ Import all CableLabs Client Configuration
 
 Import all DHCP Agenet (aka Relay Agent) Codes
 
-  (001) RA_CIRCUIT_ID
-  (002) RA_REMOTE_ID
-  (004) RA_DOCSIS_CLASS
-  (005) RA_LINK_SELECTION
-  (006) RA_SUBSCRIBER_ID
-  (007) RA_RADIUS_ATTRIBUTES
-  (008) RA_AUTHENTICATION
-  (009) RA_VENDOR_INFO
-  (010) RA_FLAGS
-  (011) RA_SERVER_ID_OVERRIDE
-  (151) RA_DHCPV4_VIRTUAL_SUBNET_SELECTION
-  (152) RA_DHCPV4_VIRTUAL_SUBNET_SELECTION_CONTROL
+  (001) RAI_CIRCUIT_ID
+  (002) RAI_REMOTE_ID
+  (004) RAI_DOCSIS_CLASS
+  (005) RAI_LINK_SELECTION
+  (006) RAI_SUBSCRIBER_ID
+  (007) RAI_RADIUS_ATTRIBUTES
+  (008) RAI_AUTHENTICATION
+  (009) RAI_VENDOR_INFO
+  (010) RAI_FLAGS
+  (011) RAI_SERVER_ID_OVERRIDE
+  (151) RAI_DHCPV4_VIRTUAL_SUBNET_SELECTION
+  (152) RAI_DHCPV4_VIRTUAL_SUBNET_SELECTION_CONTROL
 
 =item * CABLELABS_OPTION43
 
