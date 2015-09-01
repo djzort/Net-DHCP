@@ -108,22 +108,6 @@ sub new {
 
 }
 
-sub optionsorder {
-
-    # 53 54 55 51 at the start
-    return -1 if $a == 53;
-    return -1 if $a == 54;
-    return -1 if $a == 55;
-    return -1 if $a == 51;
-
-    # 82 at the end
-    return 1 if $a == 82;
-
-    # 60 needs to be immediately before 43. not sure how
-    $a <=> $b
-
-}
-
 sub addOptionRaw {
     my ( $self, $key, $value_bin, $sort ) = @_;
     $self->{options}->{$key} = $value_bin;
@@ -1239,11 +1223,6 @@ For option 43 (vendor specific), 82 (relay agent) etc.
 
 Unpacks sub-options to a list of lists
 
-=item optionsorder ( )
-
-TODO This will rearrange the order of options to accomidate as many
-quirky cliens as possible.
-
 =back
 
 See also L<Net::DHCP::Packet::IPv4Utils>
@@ -1332,14 +1311,6 @@ A simple DHCP Server is provided in the "examples" directory. It is composed of
 "dhcpd.pl" a *very* simple server example, and "dhcpd_test.pl" a simple tester for
 this server.
 
-=head1 QUIRK WORK-AROUNDS
-
-Cable vendors really want option 82 to always be last.
-
-Intel PXE really wants option 60 before option 43.
-
-Minimum frame size is 300, but we only warn (carp) if its not.
-
 =head1 AUTHOR
 
 Dean Hamstead E<lt>dean@bytefoundry.com.au<gt>
@@ -1363,6 +1334,7 @@ Perl itself.
 
 =head1 SEE ALSO
 
-L<Net::DHCP::Options>, L<Net::DHCP::Constants>.
+L<Net::DHCP::Options>, L<Net::DHCP::Constants>, L<Net::DHCP::IPv4Utils>,
+L<Net::DHCP::Attributes>, L<Net::DHCP::OrderOptions>.
 
 =cut
