@@ -1,6 +1,6 @@
 #!/usr/bin/env perl -wT
 
-use Test::More tests => 79;
+use Test::More tests => 81;
 use Test::Warn;
 use FindBin;
 
@@ -33,6 +33,7 @@ push @data, [
     padding => '00000000000000',
 }, {
     53 => DHCPDISCOVER,
+    61 => '000b8201fc42',
     50 => '0.0.0.0',
     55 => '1, 3, 6, 42',
 },
@@ -57,11 +58,11 @@ push @data, [
     padding => '0000000000000000000000000000000000000000000000000000',
 }, {
     53 => DHCPOFFER,
+    1 => '255.255.255.0',
     58 => 1800,
     59 => 3150,
     51 => 3600,
     54 => '192.168.0.1',
-    1 => '255.255.255.0',
 }
 ];
 
@@ -84,7 +85,7 @@ push @data, [
     padding => '00',
 }, {
     53 => DHCPREQUEST,
-    # 61 => TODO
+    61 => '000b8201fc42',
     50 => '192.168.0.10',
     54 => '192.168.0.1',
     55 => '1, 3, 6, 42',
@@ -173,7 +174,7 @@ for my $key (sort keys %options) {
 
 }
 
-print $dhcp->toString;
+# print $dhcp->toString;
 
 } # while (my $h
 
