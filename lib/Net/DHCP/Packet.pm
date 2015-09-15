@@ -115,7 +115,7 @@ sub addOptionRaw {
 
     return 1 if $sort;
 
-    @{ $self->{options_order} } = sort optionsorder @{ $self->{options_order} };
+#FIXME    @{ $self->{options_order} } = sort optionsorder @{ $self->{options_order} };
 
     return 1
 }
