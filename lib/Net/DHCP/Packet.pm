@@ -175,6 +175,7 @@ sub addOptionValue {
         },
         string     => sub { return shift },
         clientid   => sub { return packclientid(shift) },
+        sipserv    => sub { return packsipserv(shift) },
         csr        => sub { return packcsr(shift) },
         suboptions => sub { return packsuboptions(@_) },
 
@@ -318,6 +319,7 @@ sub getOptionValue {
         bytes  => sub { return unpack( 'C*', shift ) },
         string => sub { return shift },
         clientid   => sub { return unpackclientid(shift) },
+        sipserv    => sub { return unpacksipserv(shift) },
         csr        => sub { return unpackcsr(shift) },
         suboptions => sub { return unpacksuboptions(shift) },
 
@@ -645,6 +647,7 @@ sub toString {
             }
             else {
                 $value = $self->getOptionRaw($key);
+		print "went here for $key\n";
             }
 
             # convert to printable text
@@ -725,7 +728,28 @@ sub unpackclientid {
 
     return $clientid
 
-   #croak('unpack clientid field still WIP');
+}
+
+sub packsipserv {
+   return shift
+   # croak('pack sipserv field still WIP');
+}
+
+sub unpacksipserv {
+
+    my $sipserv = shift
+      or return;
+
+    my $type = unpack('C',substr( $sipserv, 0, 1 ));
+
+#    if ($type == 0) { # text
+#        return substr( $sipserv, 1, length($clientid) )
+#    }
+    if ($type == 1) { # ipv4
+        return unpackinet(substr( $sipserv, 1, length($sipserv) ))
+    }
+
+    return $sipserv
 
 }
 
@@ -983,12 +1007,24 @@ returns the packed Client-identifier (pass-through currently)
 
 =item I<unpackclientid>
 
-returns the unpackged clientid.
+returns the unpacked clientid.
 
 Decodes:
  type 0 as a string
  type 1 as a mac address (hex string)
- everything is passes through
+ everything is passed through
+
+=item I<packsipserv( VALUE)>
+
+returns the packed sip server field (pass-through currently)
+
+=item I<unpacksipserv>
+
+returns the unpacked sip server.
+
+Decodes:
+ type 1 as an ipv4 address
+ everything is passed through
 
 =item I<packcsr( ARRAYREF )>
 

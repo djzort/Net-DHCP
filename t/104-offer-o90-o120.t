@@ -1,6 +1,6 @@
 #!/usr/bin/env perl -wT
 
-use Test::More tests => 24;
+use Test::More tests => 25;
 use Test::Warn;
 use FindBin;
 
@@ -37,7 +37,7 @@ my %options = (
     3 => '10.10.8.254',
     6 => '143.209.4.1, 143.209.5.1',
     66 => '172.22.178.234',
-    # 120 => sip server
+    120 => '172.22.178.234',
     61 =>  'nathan1clientid',
     # 90 => auth
     # 82 => agent

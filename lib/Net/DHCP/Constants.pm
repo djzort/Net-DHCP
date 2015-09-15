@@ -440,7 +440,7 @@ our %DHO_FORMATS = (
     DHO_NISV3_DOMAIN()                => 'string',
     DHO_NISV3_SERVER()                => 'string',
     DHO_TFTP_SERVER()                 => 'string',
-    DHO_BOOTFILE()                    => 'string',
+    DHO_BOOTFILE()                    => 'string', # 67
     DHO_MOBILE_IP_HOME_AGENT()        => 'inets',
     DHO_SMTP_SERVER()                 => 'inets',
     DHO_POP3_SERVER()                 => 'inets',
@@ -451,7 +451,9 @@ our %DHO_FORMATS = (
     DHO_STREETTALK_SERVER()           => 'inets',
     DHO_STDA_SERVER()                 => 'inets',
 
-    DHO_CCC                           => 'suboptions',
+    DHO_SIP_SERVERS()                 => 'sipserv',
+    DHO_CLASSLESS_STATIC_ROUTE()      => 'csr',        # rfc 3442
+    DHO_CCC                           => 'suboptions', # 122
 
 #    DHO_USER_CLASS()  => '',                        # rfc 3004
 #    DHO_FQDN()  => '',                              # draft-ietf-dhc-fqdn-option-10.txt
@@ -464,7 +466,6 @@ our %DHO_FORMATS = (
     DHO_NAME_SERVICE_SEARCH()          => 'shorts',    # rfc 2937
     DHO_SUBNET_SELECTION()             => 'inet',      # rfc 3011
 
-    DHO_CLASSLESS_STATIC_ROUTE()      => 'csr',        # rfc 3442
     DHO_CLASSLESS_STATIC_ROUTE_MS()   => 'csr',
 );
 
