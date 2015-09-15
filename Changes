@@ -1,5 +1,8 @@
 Net::DHCP - A DHCP packet object
 
+0.7_004  2015-09-15
+	- Some basic support for option 120
+
 0.7_003  2015-08-28
 	- Add more test examining reeal packets
 	- Start handling client id's
