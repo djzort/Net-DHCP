@@ -1,5 +1,8 @@
 Net::DHCP - A DHCP packet object
 
+0.7_005  2015-09-21
+	- Fix build deps for BZ107212
+
 0.7_004  2015-09-15
 	- Some basic support for option 120
 
