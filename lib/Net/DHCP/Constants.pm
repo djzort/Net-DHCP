@@ -455,7 +455,9 @@ our %DHO_FORMATS = (
     DHO_CLASSLESS_STATIC_ROUTE()      => 'csr',        # rfc 3442
     DHO_CCC                           => 'suboptions', # 122
 
-#    DHO_USER_CLASS()  => '',                        # rfc 3004
+    # While not perfect, usage is primarily as a string.  iPXE is
+    # a common use case for this option.
+    DHO_USER_CLASS()                  => 'string',     # rfc 3004
 #    DHO_FQDN()  => '',                              # draft-ietf-dhc-fqdn-option-10.txt
     DHO_DHCP_AGENT_OPTIONS()           => 'suboptions', # rfc 3046
 #    DHO_DHCP_AGENT_OPTIONS()           => 'string',    # rfc 3046
