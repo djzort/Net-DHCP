@@ -206,7 +206,7 @@ sub addSubOptionValue {
     my $code    = shift;    # option code
     my $subcode = shift;    # sub option code
     my $value   = shift;
-    my $value_bin;          # option value in binary format
+    # my $value_bin;          # option value in binary format
 
     # FIXME
     carp("addSubOptionValue: unknown format for code ($code)")
@@ -306,7 +306,7 @@ sub getOptionValue {
 
     return unless defined $value_bin;
 
-    my @values;
+    # my @values;
 
     # hash out these options for speed and sanity
     my %options = (
