@@ -1,6 +1,7 @@
 #!/bin/false
-# Net::DHCP::Constants.pm
+# PODNAME: Net::DHCP::Constants
 # Author: Dean Hamstead, Stephan Hadinger
+# ABSTRACT: Constants for DHCP codes and options
 use strict;
 use warnings;
 use 5.8.0;
@@ -491,10 +492,6 @@ our %DHO_FORMATS = (
 
 =pod
 
-=head1 NAME
-
-Net::DHCP::Constants - Constants for DHCP codes and options
-
 =head1 SYNOPSIS
 
   use Net::DHCP::Constants;
@@ -779,20 +776,5 @@ Automatic parsing of DHO_PACKETCABLE_DEPRECATED (code 177 - rfc 3495) is unsuppo
 =head1 SEE ALSO
 
 L<Net::DHCP::Packet>, L<Net::DHCP::Options>
-
-=head1 AUTHOR
-
-Dean Hamstead E<lt>dean@bytefoundy.com.au<gt> and past Authors (see README)
-
-=head1 GOT PATCHES?
-
-Many young people like to use Github, so by all means send me pull requests at
-
-https://github.com/djzort/Net-DHCP
-
-=head1 COPYRIGHT
-
-This program is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
 
 =cut

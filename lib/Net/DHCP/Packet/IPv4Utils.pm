@@ -1,7 +1,8 @@
 #!/bin/false
-# Net::DHCP::Packet::IPv4Utils.pm
+# PODNAME: Net::DHCP::Packet::IPv4Utils
 # Author : D. Hamstead
 # Original Author: F. van Dun, S. Hadinger
+# ABSTRACT: Object methods for IPv4 in Net::DHCP
 use strict;
 use warnings;
 use 5.8.0;
@@ -68,10 +69,6 @@ sub unpackinets_array {    # multiple ip addresses, returns an array
 
 =pod
 
-=head1 NAME
-
-Net::DHCP::Packet::IPv4Utils - Object methods for IPv4 in Net::DHCP
-
 =head1 SYNOPSIS
 
    use Net::DHCP::Packet::IPv4Utils qw( :all );
@@ -114,27 +111,6 @@ Transforms a packed bytes list of IP addresses into a array of
 "xx.xx.xx.xx" strings.
 
 =back
-
-=head1 AUTHOR
-
-Dean Hamstead E<lt>dean@bytefoundry.com.au<gt>
-Previously Stephan Hadinger E<lt>shadinger@cpan.orgE<gt>.
-Original version by F. van Dun.
-
-=head1 BUGS
-
-See L<https://rt.cpan.org/Dist/Display.html?Queue=Net-DHCP>
-
-=head1 GOT PATCHES?
-
-Many young people like to use Github, so by all means send me pull requests at
-
-https://github.com/djzort/Net-DHCP
-
-=head1 COPYRIGHT
-
-This is free software. It can be distributed and/or modified under the same terms as
-Perl itself.
 
 =head1 SEE ALSO
 

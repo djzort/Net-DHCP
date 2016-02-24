@@ -1,7 +1,8 @@
 #!/bin/false
-# Net::DHCP::Packet/Attributes.pm
+# PODNAME: Net::DHCP::Packet::Attributes
 # Author : D. Hamstead
 # Original Author: F. van Dun, S. Hadinger
+# ABSTRACT: Attribute methods for Net::DHCP::Packet
 use strict;
 use warnings;
 use 5.8.0;
@@ -205,10 +206,6 @@ sub padding {
 
 =pod
 
-=head1 NAME
-
-Net::DHCP::Packet::Attributes - Attribute methods for Net::DHCP::Packet
-
 =head1 SYNOPSIS
 
    use Net::DHCP::Packet::Attributes qw( :all );
@@ -373,27 +370,6 @@ Sets/gets the I<client hardware address> in packed binary string.
 Its length is given by the C<hlen> attribute.
 
 =back
-
-=head1 AUTHOR
-
-Dean Hamstead E<lt>dean@bytefoundry.com.au<gt>
-Previously Stephan Hadinger E<lt>shadinger@cpan.orgE<gt>.
-Original version by F. van Dun.
-
-=head1 BUGS
-
-See L<https://rt.cpan.org/Dist/Display.html?Queue=Net-DHCP>
-
-=head1 GOT PATCHES?
-
-Many young people like to use Github, so by all means send me pull requests at
-
-https://github.com/djzort/Net-DHCP
-
-=head1 COPYRIGHT
-
-This is free software. It can be distributed and/or modified under the same terms as
-Perl itself.
 
 =head1 SEE ALSO
 

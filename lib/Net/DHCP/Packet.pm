@@ -1,7 +1,8 @@
 #!/bin/false
-# Net::DHCP::Packet.pm
+# PODNAME: Net::DHCP::Packet
 # Author : D. Hamstead
 # Original Author: F. van Dun, S. Hadinger
+# ABSTRACT: Object methods to create a DHCP packet.
 use strict;
 use warnings;
 use 5.8.0;
@@ -789,10 +790,6 @@ sub unpackcsr {
 
 =pod
 
-=head1 NAME
-
-Net::DHCP::Packet - Object methods to create a DHCP packet.
-
 =head1 SYNOPSIS
 
    use Net::DHCP::Packet;
@@ -1346,27 +1343,6 @@ Sending a LEASEQUERY (provided by John A. Murphy).
 A simple DHCP Server is provided in the "examples" directory. It is composed of
 "dhcpd.pl" a *very* simple server example, and "dhcpd_test.pl" a simple tester for
 this server.
-
-=head1 AUTHOR
-
-Dean Hamstead E<lt>dean@bytefoundry.com.au<gt>
-Previously Stephan Hadinger E<lt>shadinger@cpan.orgE<gt>.
-Original version by F. van Dun.
-
-=head1 BUGS
-
-See L<https://rt.cpan.org/Dist/Display.html?Queue=Net-DHCP>
-
-=head1 GOT PATCHES?
-
-Many young people like to use Github, so by all means send me pull requests at
-
-https://github.com/djzort/Net-DHCP
-
-=head1 COPYRIGHT
-
-This is free software. It can be distributed and/or modified under the same terms as
-Perl itself.
 
 =head1 SEE ALSO
 

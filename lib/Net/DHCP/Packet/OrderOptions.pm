@@ -1,4 +1,6 @@
 #!/bin/false
+# PODNAME: Net::DHCP::Packet::OrderOptions
+# ABSTRACT: Option ordering logic for Net::DHCP
 use strict;
 use warnings;
 use 5.8.0;
@@ -298,10 +300,6 @@ sub optionsorder {
 
 =pod
 
-=head1 NAME
-
-Net::DHCP::Packet::OrderOptions - Option ordering for Net::DHCP::Packet
-
 =head1 SYNOPSIS
 
    use Net::DHCP::Packet::OrderOptions qw( :all );
@@ -334,25 +332,6 @@ TODO This will rearrange the order of options to accomidate as many
 quirky cliens as possible.
 
 =back
-
-=head1 AUTHOR
-
-Dean Hamstead E<lt>dean@bytefoundry.com.au<gt>
-
-=head1 BUGS
-
-See L<https://rt.cpan.org/Dist/Display.html?Queue=Net-DHCP>
-
-=head1 GOT PATCHES?
-
-Many young people like to use Github, so by all means send me pull requests at
-
-https://github.com/djzort/Net-DHCP
-
-=head1 COPYRIGHT
-
-This is free software. It can be distributed and/or modified under the same terms as
-Perl itself.
 
 =head1 SEE ALSO
 

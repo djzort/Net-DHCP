@@ -1,5 +1,8 @@
 Net::DHCP - A DHCP packet object
 
+0.7_006  2016-02-24
+	- Minor change via https://github.com/djzort/Net-DHCP/pull/5
+
 0.7_005  2015-09-21
 	- Fix build deps for BZ107212
 
