@@ -10,7 +10,7 @@ use 5.8.0;
 package Net::DHCP::Packet;
 
 use Carp;
-use Net::DHCP::Constants qw(:DEFAULT :dhcp_hashes :dhcp_other %DHO_FORMATS);
+use Net::DHCP::Constants qw(:DEFAULT :dhcp_hashes :dhcp_other %DHO_FORMATS %SUBOPTION_FORMATS);
 use Net::DHCP::Packet::Attributes qw(:all);
 use Net::DHCP::Packet::IPv4Utils qw(:all);
 use List::Util qw(first);
@@ -197,7 +197,10 @@ sub addSubOptionRaw {
     my ( $self, $key, $subkey, $value_bin ) = @_;
     $self->{options}->{$key}->{$subkey} = $value_bin;
 
-    push @{ $self->{sub_options_order}{$subkey} }, ($key);
+    if ( !grep( /$key/, @{$self->{options_order}} ) ) {
+        push @{ $self->{options_order} }, $key;
+    }
+    push @{ $self->{sub_options_order}{$key} }, ($subkey);
 }
 
 sub addSubOptionValue {
@@ -227,7 +230,7 @@ sub addSubOptionValue {
         "addSubOptionValue: suboption ($subcode) not defined for code ($code)?")
       unless exists $SUBOPTION_CODES{$code}->{$subcode};
 
-    my $format = $SUBOPTION_CODES{$code}->{$subcode};
+    my $format = $SUBOPTION_FORMATS{$code}->{$subcode};
 
     # decompose input value into an array
     my @values;
@@ -268,6 +271,7 @@ sub addSubOptionValue {
             return pack( 'C*', map { 255 & $_ } @_ );
         },
         string => sub { return shift },
+        hexa => sub { return pack( 'H*', shift ) },
     );
 
     #  } elsif ($format eq 'ids') {
@@ -275,7 +279,7 @@ sub addSubOptionValue {
     #    # TBM bad format
 
     # decode the option if we know how, otherwise use the original value
-    $self->addOptionRaw( $code, $options{$format}
+    $self->addSubOptionRaw( $code, $subcode, $options{$format}
         ? $options{$format}->(@values)
         : $value );
 
@@ -456,6 +460,14 @@ sub serialize {
                     $bytes .= pack( 'C',    $key );
                     $bytes .= pack( 'C/a*', $value );
                 }
+            } elsif ( ref($self->{options}->{$key}) eq 'HASH' ) {
+                my $subbytes = q{};
+                for my $subkey ( @{ $self->{sub_options_order}->{$key} } ) {
+                    $subbytes .= pack( 'C',    $subkey );
+                    $subbytes .= pack( 'C/a*', $self->{options}->{$key}->{$subkey} );
+                }
+                $bytes .= pack( 'C',    $key );
+                $bytes .= pack( 'C', length $subbytes ) . $subbytes;
             } else {
                 $bytes .= pack( 'C',    $key );
                 $bytes .= pack( 'C/a*', $self->{options}->{$key} );
@@ -644,7 +656,19 @@ sub toString {
         else {
 
             if ( exists( $DHO_FORMATS{$key} ) ) {
-                $value = join( q| |, $self->getOptionValue($key) );
+                if ( $DHO_FORMATS{$key} eq 'suboptions' ) {
+                    for my $subkey ( @{ $self->{sub_options_order}->{$key} } ) {
+                        my $subvalue = join( q| |, $self->getSubOptionValue($key,$subkey) );  # FIXME fix the getSubOptionValue function
+                        $subvalue =~
+                            s/([[:^print:]])/ sprintf q[\x%02X], ord $1 /eg;
+                        $s .= sprintf( "   %s(%d) = %s\n",
+                            exists $SUBOPTION_CODES{$key} ? $REV_SUBOPTION_CODES{$key}{$subkey} : '',
+                            $key, $subvalue );
+                    }
+                    $value = 'see above';
+                } else {
+                    $value = join( q| |, $self->getOptionValue($key) );
+                }
             }
             else {
                 $value = $self->getOptionRaw($key);

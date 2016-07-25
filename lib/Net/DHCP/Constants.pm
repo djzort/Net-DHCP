@@ -24,6 +24,7 @@ our ( %NWIP_CODES,       %REV_NWIP_CODES );
 our ( %CCC_CODES,        %REV_CCC_CODES );
 our ( %GEOCONF_CODES,    %REV_GEOCONF_CODES );
 our ( %RELAYAGENT_CODES, %REV_RELAYAGENT_CODES );
+our ( %RELAYAGENT_FORMATS, %REV_RELAYAGENT_FORMATS );
 our ( %SUBOPTION_CODES,  %REV_SUBOPTION_CODES );
 
 %EXPORT_TAGS = (
@@ -61,6 +62,7 @@ our ( %SUBOPTION_CODES,  %REV_SUBOPTION_CODES );
   %HTYPE_CODES %REV_HTYPE_CODES
   %CCC_CODES %REV_CCC_CODES
   %DHO_FORMATS
+  %SUBOPTION_FORMATS
   %GEOCONF_CODES %REV_GEOCONF_CODES
   %RELAYAGENT_CODES %REV_RELAYAGENT_CODES
   %SUBOPTION_CODES  %REV_SUBOPTION_CODES
@@ -74,6 +76,7 @@ Exporter::export_tags('nwip_codes');
 Exporter::export_tags('ccc_codes');
 Exporter::export_tags('geoconf_codes');
 Exporter::export_ok_tags('dhcp_other');
+Exporter::export_ok_tags('ra_codes');
 
 # MAGIC_COOKIE for DHCP (otherwise it is BOOTP)
 use constant MAGIC_COOKIE => "\x63\x82\x53\x63";
@@ -353,6 +356,9 @@ use constant \%GEOCONF_CODES;
 use constant \%RELAYAGENT_CODES;
 %REV_RELAYAGENT_CODES = reverse %RELAYAGENT_CODES;
 
+use constant \%RELAYAGENT_FORMATS;
+%REV_RELAYAGENT_FORMATS = reverse %RELAYAGENT_FORMATS;
+
 #
 # Format of DHCP options : for pretty-printing
 #   void : no parameter
@@ -470,6 +476,30 @@ our %DHO_FORMATS = (
     DHO_SUBNET_SELECTION()             => 'inet',      # rfc 3011
 
     DHO_CLASSLESS_STATIC_ROUTE_MS()   => 'csr',
+);
+
+%RELAYAGENT_FORMATS = (
+        RAI_CIRCUIT_ID()       => 'hexa',
+        RAI_REMOTE_ID()        => 'hexa',
+#         RAI_AGENT_ID()           => 'hexa',
+#         RAI_DOCSIS_CLASS()       => 'hexa',
+#         RAI_LINK_SELECTION()     => 'hexa',
+#         RAI_SUBSCRIBER_ID()      => 'hexa',
+#         RAI_RADIUS_ATTRIBUTES()  => 'hexa',
+#         RAI_AUTHENTICATION()     => 'hexa',
+        RAI_VENDOR_INFO()        => 'hexa',
+#         RAI_FLAGS()              => 'hexa',
+#         RAI_SERVER_ID_OVERRIDE() => 'hexa',
+#         RAI_DHCPV4_VIRTUAL_SUBNET_SELECTION() => 'hexa',
+#         RAI_DHCPV4_VIRTUAL_SUBNET_SELECTION_CONTROL() => 'hexa',
+),
+
+our %SUBOPTION_FORMATS = (
+    $DHO_CODES{'DHO_DHCP_AGENT_OPTIONS'}    => \%RELAYAGENT_FORMATS,
+);
+
+our %REV_SUBOPTION_FORMATS = (
+    $DHO_CODES{'DHO_DHCP_AGENT_OPTIONS'}    => \%REV_RELAYAGENT_FORMATS,
 );
 
 # Links option codes with their suboption values
