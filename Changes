@@ -1,5 +1,8 @@
 Net::DHCP - A DHCP packet object
 
+0.7_007  2016-07-25
+	- Merge PR https://github.com/djzort/Net-DHCP/pull/6
+
 0.7_006  2016-02-24
 	- Minor change via https://github.com/djzort/Net-DHCP/pull/5
 
