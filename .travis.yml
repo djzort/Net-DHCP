@@ -1,4 +1,5 @@
-sudo: false
+# not actually required, just because Archive::Zip tests fail
+sudo: required
 language: perl
 os:
    - linux
