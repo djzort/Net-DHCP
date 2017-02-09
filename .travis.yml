@@ -18,6 +18,7 @@ matrix:
    allow_failures:
       - perl: 'blead'
       - perl: '5.8'
+      - perl: '5.10'
    fast_finish: true
    include:
       - perl: '5.24'
