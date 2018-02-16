@@ -19,6 +19,10 @@ matrix:
       - perl: 'blead'
       - perl: '5.8'
       - perl: '5.10'
+      - perl: '5.12'
+      - perl: '5.14'
+      - perl: '5.16'
+      - perl: '5.18'
    fast_finish: true
    include:
       - perl: '5.24'
