@@ -518,23 +518,41 @@ sub serialize {
 }    # end sub serialize
 
 #=======================================================================
+sub min_len_handling {
+    my ( $self, $level )  = @_;
+    return $self->{min_len_handling} || 0 if @_ == 1;
+
+    croak( sprintf q(Invalid handle level '%s', use 0, 1, or 2.),
+        $level ) unless grep $_ eq $level, 0, 1, 2;
+    $self->{min_len_handling} = $level;
+}
+
+#=======================================================================
 sub marshall {
 
     use bytes;
     my ( $self, $buf ) = @_;
     my $opt_buf;
 
-    if ( length($buf) < BOOTP_ABSOLUTE_MIN_LEN() ) {
-        croak( sprintf
+    my $min_len_handling = $self->min_len_handling;
+    if ( $min_len_handling != 2
+         && length($buf) < BOOTP_ABSOLUTE_MIN_LEN()
+     ) {
+        my $message = sprintf
             'marshall: packet too small (%d), absolute minimum size is %d',
             length($buf),
-            BOOTP_ABSOLUTE_MIN_LEN() );
+            BOOTP_ABSOLUTE_MIN_LEN();
+        croak($message) unless $min_len_handling;
+        warn($message);
     }
-    if ( length($buf) < BOOTP_MIN_LEN() ) {
-        carp( sprintf
+    if ( $min_len_handling != 2
+         && length($buf) < BOOTP_MIN_LEN()
+     ) {
+        my $message = sprintf
             'marshall: packet too small (%d), minimum size is %d',
             length($buf),
-            BOOTP_MIN_LEN() );
+            BOOTP_MIN_LEN();
+        carp($message);
     }
     if ( length($buf) > DHCP_MAX_MTU() ) {
         croak( sprintf
@@ -1323,6 +1341,20 @@ For option 43 (vendor specific), 82 (relay agent) etc.
 =item unpacksuboptions ( STRING )
 
 Unpacks sub-options to a list of lists
+
+=item min_len_handling ( LEVEL )
+
+By default, the level is set to 0. If the packet is shorter than the
+minimum C<BOOTP_MIN_LEN>, a warning is issued; if it is shorter than
+the absolute minimum C<BOOTP_ABSOLUTE_MIN_LEN>, an exception is
+thrown.
+
+If the level is set to 1, even the absolute minimum just warns.
+
+Setting the level to 2 means the packet length checks are skipped
+altogether.
+
+Without a parameter, the method returns the current level.
 
 =back
 
