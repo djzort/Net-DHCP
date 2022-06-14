@@ -440,7 +440,7 @@ our %DHO_FORMATS = (
     DHO_DHCP_REBINDING_TIME()         => 'int',
     DHO_VENDOR_CLASS_IDENTIFIER()     => 'string',
 
-    DHO_DHCP_CLIENT_IDENTIFIER()      => 'clientid',
+    DHO_DHCP_CLIENT_IDENTIFIER()      => 'clientid',  # rfc 2132 section 9.14
     DHO_NWIP_DOMAIN_NAME()            => 'string',    # rfc 2242
 
     DHO_NWIP_SUBOPTIONS()             => 'suboptions',                    # rfc 2242

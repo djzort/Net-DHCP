@@ -672,7 +672,6 @@ sub toString {
             }
             else {
                 $value = $self->getOptionRaw($key);
-		print "went here for $key\n";
             }
 
             # convert to printable text
@@ -732,6 +731,7 @@ sub unpacksuboptions {     # prints a human readable suboptions
 
 }
 
+
 sub packclientid {
    return shift
    # croak('pack clientid field still WIP');
@@ -742,14 +742,52 @@ sub unpackclientid {
     my $clientid = shift
       or return;
 
+
+## See https://tools.ietf.org/html/rfc2132#section-9.14
+## See also https://tools.ietf.org/html/rfc4361
+#   The code for this option is 61, and its minimum length is 2.
+#
+#   Code   Len   Type  Client-Identifier
+#   +-----+-----+-----+-----+-----+---
+#   |  61 |  n  |  t1 |  i1 |  i2 | ...
+#   +-----+-----+-----+-----+-----+---
+#
+
     my $type = unpack('C',substr( $clientid, 0, 1 ));
 
-    if ($type == 0) { # text
+    if ($type == 0) { # fqdn i.e. text
         return substr( $clientid, 1, length($clientid) )
     }
+
+    # Types from here on down are from 'Address Resolution Protocol' section in RFC1700
     if ($type == 1) { # ethernet
         return unpack('H*',substr( $clientid, 1, length($clientid) ))
     }
+
+    # Copied here for future reference
+    # Number Hardware Type (hrd)                           References
+    # ------ -----------------------------------           ----------
+    #     1 Ethernet (10Mb)                                    [JBP]
+    #     2 Experimental Ethernet (3Mb)                        [JBP]
+    #     3 Amateur Radio AX.25                                [PXK]
+    #     4 Proteon ProNET Token Ring                          [JBP]
+    #     5 Chaos                                              [GXP]
+    #     6 IEEE 802 Networks                                  [JBP]
+    #     7 ARCNET                                             [JBP]
+    #     8 Hyperchannel                                       [JBP]
+    #     9 Lanstar                                             [TU]
+    #    10 Autonet Short Address                             [MXB1]
+    #    11 LocalTalk                                         [JKR1]
+    #    12 LocalNet (IBM PCNet or SYTEK LocalNET)             [JXM]
+    #    13 Ultra link                                        [RXD2]
+    #    14 SMDS                                              [GXC1]
+    #    15 Frame Relay                                        [AGM]
+    #    16 Asynchronous Transmission Mode (ATM)              [JXB2]
+    #    17 HDLC                                               [JBP]
+    #    18 Fibre Channel                            [Yakov Rekhter]
+    #    19 Asynchronous Transmission Mode (ATM)      [Mark Laubach]
+    #    20 Serial Line                                        [JBP]
+    #    21 Asynchronous Transmission Mode (ATM)              [MXB1]
 
     return $clientid
 
@@ -1026,6 +1064,9 @@ Remove option from option list.
 
 returns the packed Client-identifier (pass-through currently)
 
+See L<https://tools.ietf.org/html/rfc2132#section-9.14>
+See also L<https://tools.ietf.org/html/rfc4361>
+
 =item I<unpackclientid>
 
 returns the unpacked clientid.
@@ -1035,7 +1076,10 @@ Decodes:
  type 1 as a mac address (hex string)
  everything is passed through
 
-=item I<packsipserv( VALUE)>
+See L<https://tools.ietf.org/html/rfc2132#section-9.14>
+See also L<https://tools.ietf.org/html/rfc4361>
+
+=item I<packsipserv( VALUE )>
 
 returns the packed sip server field (pass-through currently)
 
