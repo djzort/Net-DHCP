@@ -5,7 +5,7 @@ Net-DHCP version 0.66
 ----------------------
 
 Some files in the docs/ directory are copied from IANA.
-They may not be compatible with the Perl license. I have
+They may not be compatible with the MIT license. I have
 included them in the tar ball as-is for the sake of reference.
 
 Currently these files are:
@@ -22,7 +22,6 @@ All other files are licensed as described at the bottom of this file.
 Please remove the problem files if needed for distribution packaging etc.
 
 You can fork and submit enhancements etc via https://github.com/djzort/Net-DHCP
-Sorry, I know github sucks but its popular. See TODO for ideas.
 
 1. DESCRIPTION
 --------------
@@ -42,20 +41,6 @@ and has been deeply reorganized.
 ----------------
 
 Net::DHCP requires Perl 5.8.0 or higher.
-
-Net::DHCP has been tested with the following:
-
-    Perl 5.8.5
-
-    Windows XP with cygwin
-    Windows XP with ActivePerl
-
-    RedHat Enterprise Linux 5.5 x86_64
-    CentOS Linux 5.5 x86_64
-    Debian Squeeze x86_64 (Perl 5.10.1)
-    Debian Wheezy x86_64 (Perl 5.14.2)
-
-    Plus CPAN testers
 
 3. INSTALLATION
 ---------------
@@ -85,6 +70,29 @@ Copyright (C) 2002 by Francis van Dun.
 Copyright (C) 2005,2006 by Stephan Hadinger.
 Copyright (C) 2010-2022 by Dean Hamstead.
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.8.5 or,
-at your option, any later version of Perl 5 you may have available.
+The MIT License
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the Software
+without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to
+whom the Software is furnished to do so, subject to the
+following conditions:
+
+The above copyright notice and this permission notice shall
+be included in all copies or substantial portions of the
+Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT
+WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
