@@ -1,16 +1,22 @@
 Net::DHCP - A DHCP packet object
 
+0.7      2002-06-22
+ 	- Increase minimum perl to 5.12 to ensure Socket is new enough for Net::Frame
+	- Update Changes to provide more details
+	- Bump to 0.7
+	- WARNING! This release might break your toys. Please test it first before upgrading!
+
 0.7_010  2022-06-22
 	- Update license to MIT, approved by all contributors https://github.com/djzort/Net-DHCP/issues/11
 
 0.7_009  2022-06-22
-	- Merge PR https://github.com/djzort/Net-DHCP/pull/10
+	- Accepted PR https://github.com/djzort/Net-DHCP/pull/10 - Implement levels of packet minimal length checking
 
 0.7_008  2018-02-16
-	- Merge PR https://github.com/djzort/Net-DHCP/pull/8
+	- Merge PR https://github.com/djzort/Net-DHCP/pull/8 -  Declare provided modules in meta.{yml,json}
 
 0.7_007  2016-07-25
-	- Merge PR https://github.com/djzort/Net-DHCP/pull/6
+	- Merge PR https://github.com/djzort/Net-DHCP/pull/6 - Can use addSubOptionValue for some DHO_DHCP_AGENT_OPTIONS
 
 0.7_006  2016-02-24
 	- Minor change via https://github.com/djzort/Net-DHCP/pull/5
