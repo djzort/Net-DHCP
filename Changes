@@ -1,6 +1,6 @@
 Net::DHCP - A DHCP packet object
 
-0.7      2002-06-22
+0.7      2022-06-22
  	- Increase minimum perl to 5.12 to ensure Socket is new enough for Net::Frame
 	- Update Changes to provide more details
 	- Bump to 0.7
