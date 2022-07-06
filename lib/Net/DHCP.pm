@@ -3,6 +3,7 @@
 # PODNAME: Net::DHCP
 use strict;
 use warnings;
+use 5.8.0;
 
 package Net::DHCP;
 
