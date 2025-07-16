@@ -4,7 +4,7 @@ Net-DHCP version 0.7
 0. DOCS/ AND T/DATA FILES WARNING
 ----------------------
 
-Some files in the docs/ directory are copied from IANA.
+Some files in the `docs/` directory are copied from IANA.
 They may not be compatible with the MIT license. I have
 included them in the tar ball as-is for the sake of reference.
 
@@ -65,11 +65,13 @@ following information:
     * the shortest possible program that exhibits the problem
 
 COPYRIGHT AND LICENCE
+----------------------
 
 Copyright (C) 2002 by Francis van Dun.
 Copyright (C) 2005,2006 by Stephan Hadinger.
 Copyright (C) 2010-2022 by Dean Hamstead.
 
+```
 The MIT License
 
 Permission is hereby granted, free of charge, to any person
@@ -96,3 +98,4 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
+```
