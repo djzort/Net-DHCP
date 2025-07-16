@@ -60,7 +60,7 @@ make install
 If you find a bug, please report it to the author along with the
 following information:
 
- * version of Perl (output of 'perl -V' is best)
+ * version of Perl (output of `perl -V` is best)
  * version of Net::DHCP
  * operating system type and version
  * exact text of error message or description of problem
