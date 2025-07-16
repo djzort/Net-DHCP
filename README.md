@@ -47,10 +47,12 @@ Net::DHCP requires Perl 5.8.0 or higher.
 
 To install this module type the following:
 
-   perl Makefile.PL
-   make
-   make test
-   make install
+```
+perl Makefile.PL
+make
+make test
+make install
+```
 
 4. BUGS
 -------
@@ -58,18 +60,18 @@ To install this module type the following:
 If you find a bug, please report it to the author along with the
 following information:
 
-    * version of Perl (output of 'perl -V' is best)
-    * version of Net::DHCP
-    * operating system type and version
-    * exact text of error message or description of problem
-    * the shortest possible program that exhibits the problem
+ * version of Perl (output of 'perl -V' is best)
+ * version of Net::DHCP
+ * operating system type and version
+ * exact text of error message or description of problem
+ * the shortest possible program that exhibits the problem
 
 COPYRIGHT AND LICENCE
 ----------------------
 
-Copyright (C) 2002 by Francis van Dun.
-Copyright (C) 2005,2006 by Stephan Hadinger.
-Copyright (C) 2010-2022 by Dean Hamstead.
+ * Copyright (C) 2002 by Francis van Dun.
+ * Copyright (C) 2005,2006 by Stephan Hadinger.
+ * Copyright (C) 2010-2022 by Dean Hamstead.
 
 ```
 The MIT License
